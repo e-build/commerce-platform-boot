@@ -1,0 +1,42 @@
+
+spring:
+  application:
+    name: programmers spring assignments
+  #  messages:
+  #    basename: i18n/messages
+  #    encoding: UTF-8
+  #    cache-duration: PT1H
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/commerce?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      auto-commit: false
+      connection-test-query: SELECT 1
+      minimum-idle: 10
+      maximum-pool-size: 50
+      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+      pool-name: pool-commerce
+
+  jpa:
+    open-in-view : false
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      generate-ddl: true
+      hibernate:
+#        use_sql_comments: true # JPQL ??
+#        format_sql: true # SQL?? ??? ?? ??
+#        show_sql: true # ??????? ??? ?? SQL?? ??? ??
+
+  mvc:
+    log-request-details: true
+
+logging.level:
+  org.hibernate.SQL: debug
