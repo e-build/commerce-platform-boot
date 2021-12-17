@@ -2,7 +2,7 @@ package com.ebuild.commerce.business.product.domain.entity;
 
 import com.ebuild.commerce.business.product.domain.common.ProductCategory;
 import com.ebuild.commerce.business.product.domain.common.ProductStatus;
-import com.ebuild.commerce.business.sale_company.domain.Company;
+import com.ebuild.commerce.business.company.domain.Company;
 import com.ebuild.commerce.common.DateTimeAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;

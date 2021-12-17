@@ -1,40 +1,44 @@
-package com.ebuild.commerce.business.sale_company.domain;
+package com.ebuild.commerce.business.orderProduct.domain.entity;
 
+import com.ebuild.commerce.business.order.domain.Order;
 import com.ebuild.commerce.business.product.domain.entity.Product;
+import com.ebuild.commerce.business.user.buyer.domain.Buyer;
 import com.ebuild.commerce.common.DateTimeAuditing;
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Builder
 @Getter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Company extends DateTimeAuditing {
+public class OrderProduct extends DateTimeAuditing {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String name;
-  private String registrationNumber;
-  private String representativeNumber;
-  private String locationAddress;
-  private String locationZipCode;
 
-  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-  private List<Product> productList;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "order_id")
+  private Order order;
 
-  @Embedded
-  private SettlementInfo settlementInfo;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id")
+  private Product product;
+
 }

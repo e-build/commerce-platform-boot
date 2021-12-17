@@ -1,4 +1,4 @@
-package com.ebuild.commerce.business.sale_company.domain;
+package com.ebuild.commerce.business.company.domain;
 
 import javax.persistence.Embeddable;
 import lombok.Getter;
