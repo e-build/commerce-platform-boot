@@ -1,12 +1,15 @@
 package com.ebuild.commerce.business.product.domain.entity;
 
+import com.ebuild.commerce.business.company.domain.Company;
 import com.ebuild.commerce.business.product.domain.common.ProductCategory;
 import com.ebuild.commerce.business.product.domain.common.ProductStatus;
-import com.ebuild.commerce.business.company.domain.Company;
 import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
+import com.ebuild.commerce.business.product.repository.JpaProductRepository;
 import com.ebuild.commerce.common.BaseEntity;
+import com.ebuild.commerce.exception.AlreadyExistsException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -57,7 +60,48 @@ public class Product extends BaseEntity {
   @JoinColumn(name = "company_id")
   private Company company;
 
-  public static Product create(ProductSaveReqDto productSaveReqDto) {
+  public static Product create(JpaProductRepository jpaProductRepository, Company company, ProductSaveReqDto productSaveReqDto) {
+    if ( isExists(jpaProductRepository, company, productSaveReqDto) )
+      throw new AlreadyExistsException("["+productSaveReqDto.getProduct().getName()+"] 은 이미 존재하는 상품명입니다.");
+
+    Product product = of(productSaveReqDto);
+    product.registerCompany(company);
+    return product;
+  }
+
+  public void update(JpaProductRepository jpaProductRepository, Company company, ProductSaveReqDto productSaveReqDto) {
+    if ( isExists(jpaProductRepository, company, productSaveReqDto)
+        && !isSameProduct(productSaveReqDto.getProduct().getId()) )
+      throw new AlreadyExistsException("["+productSaveReqDto.getProduct().getName()+"] 은 다른 상품에서 이미 사용중인 상품명입니다.");
+
+    this.name = productSaveReqDto.getProduct().getName();
+    this.productStatus = ProductStatus.fromValue(productSaveReqDto.getProduct().getProductStatus());
+    this.category = ProductCategory.fromValue(productSaveReqDto.getProduct().getCategory());
+    this.normalAmount = productSaveReqDto.getProduct().getNormalAmount();
+    this.saleAmount = productSaveReqDto.getProduct().getSaleAmount();
+    this.saleStartDate = productSaveReqDto.getProduct().getSaleStartDate();
+    this.saleEndDate = productSaveReqDto.getProduct().getSaleEndDate();
+    this.quantity = productSaveReqDto.getProduct().getQuantity();
+  }
+
+  private boolean isSameProduct(Long targetProductId) {
+    return Objects.equals(this.id, targetProductId);
+  }
+
+  public void registerCompany(Company company){
+    this.company = company;
+  }
+
+  private static boolean isExists(
+      JpaProductRepository jpaProductRepository
+      , Company company
+      , ProductSaveReqDto productSaveReqDto) {
+    return jpaProductRepository
+        .findByCompanyAndName(company, productSaveReqDto.getProduct().getName())
+        .isPresent();
+  }
+
+  private static Product of(ProductSaveReqDto productSaveReqDto){
     return Product.builder()
         .id(productSaveReqDto.getProduct().getId())
         .name(productSaveReqDto.getProduct().getName())
@@ -70,9 +114,4 @@ public class Product extends BaseEntity {
         .quantity(productSaveReqDto.getProduct().getQuantity())
         .build();
   }
-
-  public void registerCompany(Company company){
-    this.company = company;
-  }
-
 }
