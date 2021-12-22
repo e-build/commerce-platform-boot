@@ -8,6 +8,7 @@ import com.ebuild.commerce.business.product.repository.JpaProductRepository;
 import com.ebuild.commerce.exception.AlreadyExistsException;
 import com.ebuild.commerce.exception.NotFoundException;
 import com.ebuild.commerce.util.JsonUtils;
+import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class ProductCommandService {
 
   private final JpaProductRepository jpaProductRepository;
   private final JpaCompanyRepository jpaCompanyRepository;
+  private final EntityManager entityManager;
 
   @Transactional
   public Product register(Long companyId, ProductSaveReqDto productSaveReqDto) {
@@ -35,7 +37,7 @@ public class ProductCommandService {
           throw new AlreadyExistsException("["+p.getName()+"] 은 이미 존재하는 상품명입니다.");
         });
 
-    Product product = productSaveReqDto.toEntity();
+    Product product = Product.create(productSaveReqDto);
     product.registerCompany(company);
 
     return jpaProductRepository.save(product);
