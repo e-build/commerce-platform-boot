@@ -2,7 +2,8 @@ package com.ebuild.commerce.business.company.domain;
 
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.common.Address;
-import com.ebuild.commerce.common.DateTimeAuditing;
+import com.ebuild.commerce.common.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Company extends DateTimeAuditing {
+public class Company extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +38,7 @@ public class Company extends DateTimeAuditing {
   @Embedded
   private Address address;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
   private List<Product> productList;
 

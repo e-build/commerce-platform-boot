@@ -4,7 +4,7 @@ import com.ebuild.commerce.business.delivery.domain.Delivery;
 import com.ebuild.commerce.business.orderProduct.domain.entity.OrderProduct;
 import com.ebuild.commerce.business.orderProduct.domain.common.OrderStatus;
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;
-import com.ebuild.commerce.common.DateTimeAuditing;
+import com.ebuild.commerce.common.BaseEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
-public class Order extends DateTimeAuditing {
+public class Order extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

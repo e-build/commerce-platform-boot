@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.delivery.domain;
 
 import com.ebuild.commerce.business.order.domain.Order;
-import com.ebuild.commerce.common.DateTimeAuditing;
+import com.ebuild.commerce.common.BaseEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Delivery extends DateTimeAuditing {
+public class Delivery extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
