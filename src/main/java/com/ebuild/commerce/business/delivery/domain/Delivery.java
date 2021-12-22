@@ -37,7 +37,9 @@ public class Delivery extends DateTimeAuditing {
   private Order order;
 
   private String trackingNumber;
+
   private LocalDateTime deliveryStartDateTime;
+
   private LocalDateTime deliveryEndDateTime;
 
 

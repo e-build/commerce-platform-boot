@@ -30,9 +30,13 @@ public class Buyer {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   private String email;
+
   private String password;
+
   private String nickName;
+
   private String phoneNumber;
 
   @Embedded

@@ -32,20 +32,32 @@ public class Product extends DateTimeAuditing {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   private String name;
+
   @Enumerated(EnumType.STRING)
   private ProductStatus productStatus;
+
   @Enumerated(EnumType.STRING)
   private ProductCategory category;
+
   private Integer normalAmount;
+
   private Integer saleAmount;
+
   private LocalDate saleStartDate;
+
   private LocalDate saleEndDate;
+
   private Integer quantity;
 
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "company_id")
   private Company company;
+
+  public void registerCompany(Company company){
+    this.company = company;
+  }
 
 }
