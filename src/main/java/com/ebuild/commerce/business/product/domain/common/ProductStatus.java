@@ -1,11 +1,13 @@
 package com.ebuild.commerce.business.product.domain.common;
 
-public enum ProductStatus {
+import com.ebuild.commerce.common.NullableEnumValue;
+
+public enum ProductStatus implements NullableEnumValue {
 
   SALE, STOP;
 
   public String value(){
-    return value();
+    return name();
   }
 
   public static ProductStatus fromValue(String value){
