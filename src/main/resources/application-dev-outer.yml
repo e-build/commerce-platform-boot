@@ -32,5 +32,9 @@ spring:
   mvc:
     log-request-details: true
 
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
 logging.level:
   org.hibernate.SQL: debug
