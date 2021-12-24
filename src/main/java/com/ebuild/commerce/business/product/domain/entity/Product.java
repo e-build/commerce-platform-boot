@@ -114,4 +114,8 @@ public class Product extends BaseEntity {
         .quantity(productSaveReqDto.getProduct().getQuantity())
         .build();
   }
+
+  public void changeSaleStatus(ProductStatus productStatus){
+    this.productStatus = productStatus;
+  }
 }
