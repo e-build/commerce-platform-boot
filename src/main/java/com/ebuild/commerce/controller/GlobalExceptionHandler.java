@@ -12,18 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @ControllerAdvice
-public class ExceptionAdvisor {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {
-        org.springframework.validation.BindException.class,
-        MethodArgumentNotValidException.class,
-        AlreadyExistsException.class,
-        NotFoundException.class
+        org.springframework.validation.BindException.class
+        , MethodArgumentNotValidException.class
+        , AlreadyExistsException.class
+        , NotFoundException.class
+        , IllegalArgumentException.class
         })
     public ResponseEntity<CommonResponse> badRequest(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(CommonResponse.ERROR(e));
+            .status(HttpStatus.BAD_REQUEST)
+            .body(CommonResponse.ERROR(e));
     }
 
 }
