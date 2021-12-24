@@ -1,15 +1,18 @@
 package com.ebuild.commerce.controller;
 
+import com.ebuild.commerce.business.product.domain.dto.ProductQueryReqDto;
 import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
 import com.ebuild.commerce.business.product.domain.dto.ProductSaveResDto;
 import com.ebuild.commerce.business.product.service.ProductCommandService;
 import com.ebuild.commerce.common.http.CommonResponse;
+import com.ebuild.commerce.config.JsonHelper;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SellerApiController {
 
   private final ProductCommandService productCommandService;
+  private final JsonHelper jsonHelper;
 
   @PostMapping("/products")
   public ResponseEntity<CommonResponse> register(
@@ -59,20 +63,21 @@ public class SellerApiController {
       @PathVariable("productId") Long productId ){
 
     productCommandService.delete(productId);
-    return ResponseEntity.ok(CommonResponse.OK());
+    return ResponseEntity.ok(
+        CommonResponse.OK()
+    );
   }
 
-//  @GetMapping("/products")
-//  public ResponseEntity<CommonResponse> searchProduct(
-//      @PathVariable("companyId") Long companyId,
-//      @RequestParam @Valid ProductQueryReqDto productQueryReqDto){
-//
-//    productCommandService.queryByCondition(companyId, productQueryReqDto);
-//
-//    return ResponseEntity.ok(
-//        CommonResponse.OK(
-//        )
-//    );
-//  }
+  @GetMapping("/products")
+  public ResponseEntity<CommonResponse> searchProduct(
+      @PathVariable("companyId") Long companyId,
+      @Valid ProductQueryReqDto productQueryReqDto){
+
+    log.info("productQueryReqDto : {}", jsonHelper.serialize(productQueryReqDto));
+
+    return ResponseEntity.ok(
+        CommonResponse.OK()
+    );
+  }
 
 }
