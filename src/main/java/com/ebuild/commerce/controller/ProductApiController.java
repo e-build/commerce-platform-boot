@@ -1,6 +1,7 @@
 package com.ebuild.commerce.controller;
 
-import com.ebuild.commerce.business.product.domain.dto.ProductQueryReqDto;
+import com.ebuild.commerce.business.product.domain.dto.ProductChangeStatusReqDto;
+import com.ebuild.commerce.business.product.domain.dto.ProductSearchReqDto;
 import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
 import com.ebuild.commerce.business.product.domain.dto.ProductSaveResDto;
 import com.ebuild.commerce.business.product.service.ProductCommandService;
@@ -10,6 +11,8 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,45 +24,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@RequestMapping("/companys/{companyId}")
+@RequestMapping("/products")
 @RestController
 @RequiredArgsConstructor
-public class SellerApiController {
+public class ProductApiController {
 
   private final ProductCommandService productCommandService;
   private final JsonHelper jsonHelper;
 
-  @PostMapping("/products")
+  @PostMapping("")
   public ResponseEntity<CommonResponse> register(
-      @PathVariable("companyId") Long companyId,
       @RequestBody @Valid ProductSaveReqDto productSaveReqDto){
 
     return ResponseEntity.ok(
         CommonResponse.OK(
             Pair.of(
-                "product", ProductSaveResDto.of(productCommandService.register(companyId, productSaveReqDto))
+                "product"
+                , ProductSaveResDto.of(productCommandService.register(productSaveReqDto))
             )
         )
     );
   }
 
-  @PutMapping("/products")
+  @PutMapping("/{productId}")
   public ResponseEntity<CommonResponse> update(
-      @PathVariable("companyId") Long companyId,
+      @PathVariable Long productId,
       @RequestBody @Valid ProductSaveReqDto productSaveReqDto){
 
     return ResponseEntity.ok(
         CommonResponse.OK(
             Pair.of(
-                "product", ProductSaveResDto.of(productCommandService.update(companyId, productSaveReqDto))
+                "product"
+                , ProductSaveResDto.of(productCommandService.update(productId, productSaveReqDto))
             )
         )
     );
   }
 
-  @DeleteMapping("/products/{productId}")
+  @DeleteMapping("/{productId}")
   public ResponseEntity<CommonResponse> delete(
-      @PathVariable("companyId") Long companyId,
       @PathVariable("productId") Long productId ){
 
     productCommandService.delete(productId);
@@ -68,12 +71,25 @@ public class SellerApiController {
     );
   }
 
-  @GetMapping("/products")
+  @GetMapping("")
   public ResponseEntity<CommonResponse> searchProduct(
-      @PathVariable("companyId") Long companyId,
-      @Valid ProductQueryReqDto productQueryReqDto){
+      @PageableDefault(sort={"id"}, direction= Direction.DESC)
+      @Valid ProductSearchReqDto productSearchReqDto){
 
-    log.info("productQueryReqDto : {}", jsonHelper.serialize(productQueryReqDto));
+    log.info("productSearchReqDto : {}", jsonHelper.serialize(productSearchReqDto));
+
+    return ResponseEntity.ok(
+        CommonResponse.OK(
+            Pair.of("products", productCommandService.searchByCondition(productSearchReqDto))
+        )
+    );
+  }
+  @PutMapping("/{productId}/change-status")
+  public ResponseEntity<CommonResponse> changeStatus(
+      @PathVariable("productId") Long productId,
+      @RequestBody @Valid ProductChangeStatusReqDto productChangeStatusReqDto){
+
+    productCommandService.changeStatus(productId, productChangeStatusReqDto);
 
     return ResponseEntity.ok(
         CommonResponse.OK()

@@ -16,12 +16,15 @@ import lombok.Getter;
 public class ProductSaveReqDto {
 
   @Valid
-  private ProductRegisterParam product;
+  private ProductSaveParam product;
 
   @Getter
-  public static class ProductRegisterParam {
+  public static class ProductSaveParam {
 
     private Long id;
+
+    @NotBlank(message = "회사번호는 필수 입력 값입니다.")
+    private Long companyId;
 
     @Size(min = 1, max = 16)
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
