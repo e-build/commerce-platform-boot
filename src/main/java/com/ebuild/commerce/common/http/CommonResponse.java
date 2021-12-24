@@ -1,8 +1,11 @@
 package com.ebuild.commerce.common.http;
 
+import static java.util.Objects.*;
+
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import org.apache.commons.lang3.tuple.Pair;
@@ -12,12 +15,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 @Builder
 public class CommonResponse {
 
+    private boolean result = true;
     private Map<String, Object> data;
     private Error error;
 
     public static CommonResponse OK(){
         Map<String, Object> data = Maps.newHashMap();
-        data.put("result","OK");
         return CommonResponse.of(data, null);
     }
 
@@ -58,9 +61,10 @@ public class CommonResponse {
 
     private static CommonResponse of(Map<String, Object> data, Error error){
         return CommonResponse.builder()
-                .data(data)
-                .error(error)
-                .build();
+            .result(isNull(error))
+            .data(data)
+            .error(error)
+            .build();
     }
 
     private static void put(Map<String, Object> data, Pair<String, Object> pair) {
