@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,6 +51,15 @@ public class SellerApiController {
             )
         )
     );
+  }
+
+  @DeleteMapping("/products/{productId}")
+  public ResponseEntity<CommonResponse> delete(
+      @PathVariable("companyId") Long companyId,
+      @PathVariable("productId") Long productId ){
+
+    productCommandService.delete(productId);
+    return ResponseEntity.ok(CommonResponse.OK());
   }
 
 //  @GetMapping("/products")

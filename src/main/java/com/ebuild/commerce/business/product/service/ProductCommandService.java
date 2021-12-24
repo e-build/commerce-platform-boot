@@ -33,6 +33,10 @@ public class ProductCommandService {
     return findProduct;
   }
 
+  public void delete(Long productId) {
+    jpaProductRepository.delete(findProduct(productId));
+  }
+
   private Product findProduct(Long productId) {
     return jpaProductRepository
         .findById(productId)
@@ -44,7 +48,6 @@ public class ProductCommandService {
         .findById(companyId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 회사 ID 입니다. : " + companyId));
   }
-
 
 
 
