@@ -1,6 +1,7 @@
-package com.ebuild.commerce.business.delivery.domain;
+package com.ebuild.commerce.business.delivery.domain.entity;
 
-import com.ebuild.commerce.business.order.domain.Order;
+import com.ebuild.commerce.business.delivery.domain.common.DeliveryStatus;
+import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.common.BaseEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;

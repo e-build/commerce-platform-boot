@@ -1,9 +1,10 @@
-package com.ebuild.commerce.business.company.domain;
+package com.ebuild.commerce.business.company.domain.entity;
 
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -38,10 +39,20 @@ public class Company extends BaseEntity {
   @Embedded
   private Address address;
 
-  @JsonIgnore
   @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-  private List<Product> productList;
+  private List<Product> productList = Lists.newArrayList();
 
   @Embedded
   private SettlementInfo settlementInfo;
+
+  public Company(String name, String registrationNumber
+      , String representativeNumber, Address address
+      , SettlementInfo settlementInfo) {
+
+    this.name = name;
+    this.registrationNumber = registrationNumber;
+    this.representativeNumber = representativeNumber;
+    this.address = address;
+    this.settlementInfo = settlementInfo;
+  }
 }

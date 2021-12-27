@@ -1,4 +1,4 @@
-package com.ebuild.commerce.business.cart.domain;
+package com.ebuild.commerce.business.cart.domain.entity;
 
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.product.domain.entity.Product;
@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductRow {
+public class CartLine {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

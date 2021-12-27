@@ -1,4 +1,4 @@
-package com.ebuild.commerce.business.delivery.domain;
+package com.ebuild.commerce.business.delivery.domain.common;
 
 public enum DeliveryStatus {
 

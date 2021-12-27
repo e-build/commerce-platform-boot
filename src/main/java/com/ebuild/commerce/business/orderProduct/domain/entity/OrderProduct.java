@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.orderProduct.domain.entity;
 
-import com.ebuild.commerce.business.order.domain.Order;
+import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.common.BaseEntity;
 import javax.persistence.Entity;

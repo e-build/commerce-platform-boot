@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Embeddable
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
 
@@ -16,4 +14,9 @@ public class Address {
   private String detailAddress;
   private String addressZipAddress;
 
+  public Address(String baseAddress, String detailAddress, String addressZipAddress) {
+    this.baseAddress = baseAddress;
+    this.detailAddress = detailAddress;
+    this.addressZipAddress = addressZipAddress;
+  }
 }

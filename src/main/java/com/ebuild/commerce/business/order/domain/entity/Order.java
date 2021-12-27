@@ -1,10 +1,11 @@
-package com.ebuild.commerce.business.order.domain;
+package com.ebuild.commerce.business.order.domain.entity;
 
-import com.ebuild.commerce.business.delivery.domain.Delivery;
+import com.ebuild.commerce.business.delivery.domain.entity.Delivery;
 import com.ebuild.commerce.business.orderProduct.domain.entity.OrderProduct;
 import com.ebuild.commerce.business.orderProduct.domain.common.OrderStatus;
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;
 import com.ebuild.commerce.common.BaseEntity;
+import com.google.common.collect.Lists;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -46,10 +47,10 @@ public class Order extends BaseEntity {
   @JoinColumn(name = "buyer_id")
   private Buyer buyer;
 
-  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-  private List<OrderProduct> orderProductList;
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<OrderProduct> orderProductList = Lists.newArrayList();
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "delivery_id")
   private Delivery devliery;
 
