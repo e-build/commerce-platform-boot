@@ -26,3 +26,8 @@ spring:
 
 logging.level:
   org.hibernate.SQL: debug
+
+
+jwt:
+  secret-key: ZWJ1aWxkIGNvbW1lcmNlIGp3dCBzZWNyZXQga2V5Cg== # base64 encoding 'ebuild commerce jwt secret key'
+

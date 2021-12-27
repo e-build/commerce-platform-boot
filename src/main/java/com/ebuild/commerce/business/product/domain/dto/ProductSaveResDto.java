@@ -2,7 +2,7 @@ package com.ebuild.commerce.business.product.domain.dto;
 
 import static com.ebuild.commerce.util.NullUtils.*;
 
-import com.ebuild.commerce.business.company.domain.Company;
+import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.product.service;
 
-import com.ebuild.commerce.business.company.domain.Company;
+import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.company.repository.JpaCompanyRepository;
 import com.ebuild.commerce.business.product.domain.common.ProductStatus;
 import com.ebuild.commerce.business.product.domain.dto.ProductChangeStatusReqDto;

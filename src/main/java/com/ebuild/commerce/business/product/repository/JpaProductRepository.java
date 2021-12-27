@@ -1,8 +1,7 @@
 package com.ebuild.commerce.business.product.repository;
 
-import com.ebuild.commerce.business.company.domain.Company;
+import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.product.domain.entity.Product;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
