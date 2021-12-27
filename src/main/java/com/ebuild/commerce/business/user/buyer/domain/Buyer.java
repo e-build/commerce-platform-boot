@@ -1,8 +1,11 @@
 package com.ebuild.commerce.business.user.buyer.domain;
 
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
-import com.ebuild.commerce.business.order.domain.Order;
+import com.ebuild.commerce.business.order.domain.entity.Order;
+import com.ebuild.commerce.business.user.commerceUser.CommerceUserDetail;
 import com.ebuild.commerce.common.Address;
+import com.ebuild.commerce.common.BaseEntity;
+import com.google.common.collect.Lists;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -20,33 +23,32 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
-@Getter
 @Entity
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Buyer {
+public class Buyer extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String email;
-
-  private String password;
-
-  private String nickName;
-
-  private String phoneNumber;
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "commerce_user_detail_id")
+  private CommerceUserDetail commerceUserDetail;
 
   @Embedded
-  private Address address;
+  private Address receivingAddress;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(nullable = false)
   private Cart cart;
 
   @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
-  private List<Order> ordersList;
+  private List<Order> ordersList = Lists.newArrayList();
 
+  @Builder
+  public Buyer(CommerceUserDetail commerceUserDetail, Cart cart) {
+    this.commerceUserDetail = commerceUserDetail;
+    this.cart = cart;
+  }
 }
