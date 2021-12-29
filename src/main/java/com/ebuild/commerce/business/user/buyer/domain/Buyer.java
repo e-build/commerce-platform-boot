@@ -2,7 +2,7 @@ package com.ebuild.commerce.business.user.buyer.domain;
 
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.order.domain.entity.Order;
-import com.ebuild.commerce.business.user.commerceUser.CommerceUserDetail;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
 import com.google.common.collect.Lists;
@@ -18,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

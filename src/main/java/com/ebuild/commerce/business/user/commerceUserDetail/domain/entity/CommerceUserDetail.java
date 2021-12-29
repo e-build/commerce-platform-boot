@@ -1,4 +1,4 @@
-package com.ebuild.commerce.business.user.commerceUser;
+package com.ebuild.commerce.business.user.commerceUserDetail.domain.entity;
 
 import com.ebuild.commerce.business.user.admin.domain.Admin;
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;

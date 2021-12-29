@@ -1,7 +1,7 @@
 package com.ebuild.commerce.controller;
 
-import com.ebuild.commerce.business.user.commerceUser.CommerceUserLoginReqDto;
-import com.ebuild.commerce.business.user.commerceUser.CommerceUserService;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceUserLoginReqDto;
+import com.ebuild.commerce.business.user.commerceUserDetail.service.CommerceUserService;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
 import com.ebuild.commerce.config.security.jwt.TokenDto;
@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/users")
 @RestController
 public class CommerceUserApiController {
 
   private final CommerceUserService commerceUserService;
   private final JsonHelper jsonHelper;
 
-  @PostMapping("/login")
-  public ResponseEntity<CommonResponse> login(
+  @PostMapping("/authenticate")
+  public ResponseEntity<CommonResponse> authenticate(
       @RequestBody @Valid CommerceUserLoginReqDto commerceUserLoginReqDto ){
 
     log.info("commerceUserLoginReqDto : {}", jsonHelper.serialize(commerceUserLoginReqDto));

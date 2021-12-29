@@ -1,4 +1,4 @@
-package com.ebuild.commerce.business.user.commerceUser;
+package com.ebuild.commerce.business.user.commerceUserDetail.domain.dto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;

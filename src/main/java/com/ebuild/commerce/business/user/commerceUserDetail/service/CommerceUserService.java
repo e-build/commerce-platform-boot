@@ -1,5 +1,7 @@
-package com.ebuild.commerce.business.user.commerceUser;
+package com.ebuild.commerce.business.user.commerceUserDetail.service;
 
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceUserLoginReqDto;
+import com.ebuild.commerce.config.security.jwt.JwtAuthTokenProvider;
 import com.ebuild.commerce.config.security.jwt.TokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class CommerceUserService {
 
   private final AuthenticationManager authenticationManager;
+  private final JwtAuthTokenProvider jwtAuthTokenProvider;
 
   public TokenDto login(CommerceUserLoginReqDto commerceUserLoginReqDto) {
     Authentication authentication = authenticationManager.authenticate(
@@ -22,6 +25,7 @@ public class CommerceUserService {
                 , commerceUserLoginReqDto.getPassword()
             )
     );
-    return TokenDto.of(authentication);
+
+    return TokenDto.of(authentication, jwtAuthTokenProvider);
   }
 }

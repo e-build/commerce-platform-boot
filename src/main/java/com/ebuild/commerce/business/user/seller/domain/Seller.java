@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.user.seller.domain;
 
 import com.ebuild.commerce.business.company.domain.entity.Company;
-import com.ebuild.commerce.business.user.commerceUser.CommerceUserDetail;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
 import javax.persistence.CascadeType;
@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

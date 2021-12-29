@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 
 public interface AuthTokenProvider<T> {
-  T createAuthToken(String id, String role, Date expiredDate);
+  T createAuthToken(Long id, String role);
   T convertAuthToken(String token);
   Authentication getAuthentication(T authToken);
   Optional<String> resolveAuthToken(HttpServletRequest request);

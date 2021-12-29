@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.user.admin.domain;
 
-import com.ebuild.commerce.business.user.commerceUser.CommerceUserDetail;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.common.BaseEntity;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

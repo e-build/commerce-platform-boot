@@ -2,20 +2,27 @@
 spring:
 
   application:
-    name: programmers spring assignments
+    name: e-commerce-platform
 
   jpa:
-    open-in-view : false
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
-    properties:
-      generate-ddl: true
-      hibernate:
-#        use_sql_comments: true
-        format_sql: true
-        show_sql: true
+      ddl-auto: create
+    show-sql: true
+
+  datasource:
+    #    url: jdbc:mysql://172.30.1.31:3306/commerce?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://127.0.0.1:3306/commerce?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: root
+    #    password: 1234qwer
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      auto-commit: false
+      connection-test-query: SELECT 1
+      minimum-idle: 10
+      maximum-pool-size: 50
+      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+      pool-name: pool-commerce
 
   mvc:
     log-request-details: true
@@ -24,10 +31,15 @@ spring:
     serialization:
       fail-on-empty-beans: false
 
-logging.level:
-  org.hibernate.SQL: debug
-
+logging:
+  level:
+    com.ebuild.commerce: DEBUG
+    org.springframework: INFO
+    org.springframework.web: DEBUG
 
 jwt:
   secret-key: ZWJ1aWxkIGNvbW1lcmNlIGp3dCBzZWNyZXQga2V5Cg== # base64 encoding 'ebuild commerce jwt secret key'
+  auth-token-valid-minute: 30
+  refresh-token-valid-minute: 120
+
 

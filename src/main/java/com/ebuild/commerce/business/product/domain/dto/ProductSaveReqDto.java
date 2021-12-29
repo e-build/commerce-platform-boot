@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class ProductSaveReqDto {
 
     private Long id;
 
-    @NotBlank(message = "회사번호는 필수 입력 값입니다.")
+    @NotNull(message = "회사번호는 필수 입력 값입니다.")
     private Long companyId;
 
     @Size(min = 1, max = 16)
