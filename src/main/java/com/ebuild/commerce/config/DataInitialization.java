@@ -86,7 +86,6 @@ public class DataInitialization {
     private Buyer createBuyer(CommerceUserDetail userDetail) {
       return Buyer.builder()
           .commerceUserDetail(userDetail)
-          .cart(Cart.newInstance())
           .build();
     }
 
@@ -105,7 +104,10 @@ public class DataInitialization {
     }
 
     private CommerceUserDetail createUserDetail(String username, String password) {
-      return new CommerceUserDetail(username, passwordEncoder.encode(password));
+      return CommerceUserDetail.builder()
+          .email(username)
+          .password(passwordEncoder.encode(password))
+          .build();
     }
 
     private Company createCompany(Address address) {
