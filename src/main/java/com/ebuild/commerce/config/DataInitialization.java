@@ -5,7 +5,7 @@ import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.company.domain.entity.SettlementInfo;
 import com.ebuild.commerce.business.user.admin.domain.Admin;
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;
-import com.ebuild.commerce.business.user.commerceUser.CommerceUserDetail;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.business.user.role.CommerceRole;
 import com.ebuild.commerce.business.user.role.domain.Role;
 import com.ebuild.commerce.business.user.seller.domain.Seller;

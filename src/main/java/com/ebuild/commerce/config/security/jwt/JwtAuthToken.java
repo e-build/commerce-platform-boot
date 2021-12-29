@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 import lombok.Getter;
@@ -25,9 +26,9 @@ public class JwtAuthToken implements AuthToken<Claims>{
     this.secretKey = secretKey;
   }
 
-  JwtAuthToken(String userId, String role, Date expiredDate, String secretKey) {
+  JwtAuthToken(String userId, String role, String tokenValidMinute, String secretKey) {
     this.secretKey = secretKey;
-    this.token = createJwtAuthToken(userId, role, expiredDate)
+    this.token = createJwtAuthToken(userId, role, tokenValidMinute)
         .orElseThrow(JwtTokenCreationException::new);
   }
 
@@ -58,15 +59,22 @@ public class JwtAuthToken implements AuthToken<Claims>{
     }
   }
 
-  private Optional<String> createJwtAuthToken(String userId, String role, Date expiredDate) {
+  private Optional<String> createJwtAuthToken(String userId, String role, String tokenValidMinute) {
     return Optional.ofNullable(
         Jwts.builder()
         .setSubject(userId)
         .claim(SecurityConstants.AUTHORITIES_KEY, role)
         .signWith(SignatureAlgorithm.HS256, secretKey)
-        .setExpiration(expiredDate)
+        .setExpiration(resolveExpireDate(tokenValidMinute))
         .compact()
     );
+  }
+
+  private Date resolveExpireDate(String tokenValidMinute) {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(new Date());
+    cal.add(Calendar.MINUTE, Integer.parseInt(tokenValidMinute));
+    return cal.getTime();
   }
 
 }

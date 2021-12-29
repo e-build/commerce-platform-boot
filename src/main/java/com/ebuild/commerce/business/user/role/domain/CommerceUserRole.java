@@ -1,7 +1,6 @@
 package com.ebuild.commerce.business.user.role.domain;
 
-import com.ebuild.commerce.business.user.commerceUser.CommerceUserDetail;
-import javax.persistence.CascadeType;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

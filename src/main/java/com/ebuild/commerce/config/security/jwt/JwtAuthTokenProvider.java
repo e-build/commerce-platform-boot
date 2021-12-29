@@ -21,10 +21,12 @@ public class JwtAuthTokenProvider implements AuthTokenProvider<AuthToken<Claims>
 
   @Value("${jwt.secret-key}")
   private String secretKey;
+  @Value("${jwt.auth-token-valid-minute}")
+  private String tokenValidMinute;
 
   @Override
-  public JwtAuthToken createAuthToken(String userId, String role, Date expiredDate) {
-    return new JwtAuthToken(userId, role, expiredDate, secretKey);
+  public JwtAuthToken createAuthToken(Long userId, String role) {
+    return new JwtAuthToken(String.valueOf(userId), role, tokenValidMinute, secretKey);
   }
 
   @Override
