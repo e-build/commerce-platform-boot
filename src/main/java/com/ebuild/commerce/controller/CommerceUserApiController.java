@@ -31,17 +31,9 @@ public class CommerceUserApiController {
 
   private final JsonHelper jsonHelper;
   private final CommerceUserService commerceUserService;
-  private final BuyerService buyerService;
+
   private final SellerService sellerService;
   private final AdminService adminService;
-
-  @PostMapping("/buyer")
-  public ResponseEntity<CommonResponse> buyerSignup(
-      @RequestBody @Valid BuyerSaveReqDto buyerSaveReqDto){
-    return ResponseEntity.ok(
-        CommonResponse.OK(Pair.of("buyer", buyerService.signup(buyerSaveReqDto)))
-    );
-  }
 
   @PostMapping("/seller")
   public ResponseEntity<CommonResponse> buyerSignup(

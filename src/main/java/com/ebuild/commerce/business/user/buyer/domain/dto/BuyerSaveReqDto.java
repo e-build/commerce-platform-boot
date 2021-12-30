@@ -8,6 +8,8 @@ import lombok.Getter;
 @Getter
 public class BuyerSaveReqDto {
 
+  private Long id;
+
   @Valid
   private CommerceUserSaveReqDto commerceUser;
 

@@ -59,9 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests() // 요청에 대한 사용권한 체크
         .antMatchers(
-              "/api/v1/users/buyer"
-            , "/api/v1/users/seller"
-            , "/api/v1/users/admin"
+              "/api/v1//buyers"
+            , "/api/v1/sellers"
+            , "/api/v1/admins"
             , "/api/v1/users/authenticate"
         ).permitAll()
         .anyRequest().authenticated()
@@ -69,7 +69,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .addFilterBefore(new JwtAuthFilter(jwtAuthTokenProvider), UsernamePasswordAuthenticationFilter.class)
         ;
-
   }
 
 }
