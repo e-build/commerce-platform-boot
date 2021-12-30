@@ -47,7 +47,8 @@ public class Order extends BaseEntity {
   @JoinColumn(name = "buyer_id")
   private Buyer buyer;
 
-  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true
+      , cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
   private List<OrderProduct> orderProductList = Lists.newArrayList();
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

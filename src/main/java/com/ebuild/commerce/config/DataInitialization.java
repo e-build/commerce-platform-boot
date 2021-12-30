@@ -2,8 +2,8 @@ package com.ebuild.commerce.config;
 
 import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.company.domain.entity.SettlementInfo;
-import com.ebuild.commerce.business.product.domain.common.ProductCategory;
-import com.ebuild.commerce.business.product.domain.common.ProductStatus;
+import com.ebuild.commerce.business.product.domain.entity.ProductCategory;
+import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.business.user.admin.domain.entity.Admin;
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;

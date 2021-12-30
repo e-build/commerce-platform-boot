@@ -1,14 +1,10 @@
 package com.ebuild.commerce.business.product.domain.dto;
 
-import com.ebuild.commerce.business.product.domain.common.ProductStatus;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 

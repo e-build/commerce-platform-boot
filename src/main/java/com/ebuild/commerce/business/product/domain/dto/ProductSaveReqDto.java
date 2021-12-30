@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.product.domain.dto;
 
-import com.ebuild.commerce.business.product.domain.common.ProductCategory;
-import com.ebuild.commerce.business.product.domain.common.ProductStatus;
+import com.ebuild.commerce.business.product.domain.entity.ProductCategory;
+import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.common.Enum;
 import java.time.LocalDate;

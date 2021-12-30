@@ -1,8 +1,6 @@
 package com.ebuild.commerce.business.product.domain.entity;
 
 import com.ebuild.commerce.business.company.domain.entity.Company;
-import com.ebuild.commerce.business.product.domain.common.ProductCategory;
-import com.ebuild.commerce.business.product.domain.common.ProductStatus;
 import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
 import com.ebuild.commerce.business.product.repository.JpaProductRepository;
 import com.ebuild.commerce.common.BaseEntity;
@@ -20,7 +18,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

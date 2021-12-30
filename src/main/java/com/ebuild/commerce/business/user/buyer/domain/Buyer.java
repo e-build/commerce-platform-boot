@@ -44,7 +44,8 @@ public class Buyer extends BaseEntity {
   @JoinColumn(name="cart_id", nullable = false)
   private Cart cart;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "buyer", cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "buyer"
+      , cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
   private List<Order> orderList = Lists.newArrayList();
 
   @Builder
@@ -58,4 +59,5 @@ public class Buyer extends BaseEntity {
     this.commerceUserDetail.update(buyerSaveReqDto.getCommerceUser());
     this.receivingAddress.update(buyerSaveReqDto.getReceiveAddress());
   }
+
 }

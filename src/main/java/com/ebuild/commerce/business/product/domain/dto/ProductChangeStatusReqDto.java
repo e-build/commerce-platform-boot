@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.product.domain.dto;
 
-import com.ebuild.commerce.business.product.domain.common.ProductStatus;
+import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.common.Enum;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;

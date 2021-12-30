@@ -1,4 +1,4 @@
-package com.ebuild.commerce.business.product.domain.common;
+package com.ebuild.commerce.business.product.domain.entity;
 
 import com.ebuild.commerce.common.NullableEnumValue;
 
