@@ -9,9 +9,8 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
-
 @Getter
-public class BuyerSaveResDto {
+public class BuyerResDto {
 
   private final Long buyerId;
   private final CommerceUserSaveResDto commerceUser;
@@ -19,7 +18,7 @@ public class BuyerSaveResDto {
   private final LocalDateTime createdAt;
 
   @Builder
-  public BuyerSaveResDto(Buyer buyer){
+  public BuyerResDto(Buyer buyer){
     this.buyerId = buyer.getId();
     this.commerceUser = new CommerceUserSaveResDto(buyer.getCommerceUserDetail());
     this.receivingAddress = new AddressSaveResDto(buyer.getReceivingAddress());
