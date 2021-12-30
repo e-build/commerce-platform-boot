@@ -1,11 +1,11 @@
 package com.ebuild.commerce.business.user.commerceUserDetail.domain.entity;
 
-import com.ebuild.commerce.business.user.admin.domain.entity.Admin;
-import com.ebuild.commerce.business.user.buyer.domain.Buyer;
+import com.ebuild.commerce.business.admin.domain.entity.Admin;
+import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceUserSaveReqDto;
 import com.ebuild.commerce.business.user.role.domain.CommerceUserRole;
 import com.ebuild.commerce.business.user.role.domain.Role;
-import com.ebuild.commerce.business.user.seller.domain.entity.Seller;
+import com.ebuild.commerce.business.seller.domain.entity.Seller;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,7 +18,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;

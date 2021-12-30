@@ -1,9 +1,9 @@
 package com.ebuild.commerce.config.security;
 
-import com.ebuild.commerce.business.user.admin.repository.JpaAdminRepository;
-import com.ebuild.commerce.business.user.buyer.repository.JpaBuyerRepository;
+import com.ebuild.commerce.business.admin.repository.JpaAdminRepository;
+import com.ebuild.commerce.business.buyer.repository.JpaBuyerRepository;
 import com.ebuild.commerce.business.user.commerceUserDetail.repository.CommerceUserDetailRepository;
-import com.ebuild.commerce.business.user.seller.repository.JpaSellerRepository;
+import com.ebuild.commerce.business.seller.repository.JpaSellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

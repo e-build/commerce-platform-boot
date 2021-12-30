@@ -1,10 +1,9 @@
 package com.ebuild.commerce.business.cart.domain.entity;
 
 import com.ebuild.commerce.business.product.domain.entity.Product;
-import com.ebuild.commerce.business.user.buyer.domain.Buyer;
+import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.common.BaseEntity;
 import com.ebuild.commerce.exception.NotFoundException;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Objects;

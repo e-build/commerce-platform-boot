@@ -3,7 +3,7 @@ package com.ebuild.commerce.business.order.domain.entity;
 import com.ebuild.commerce.business.delivery.domain.entity.Delivery;
 import com.ebuild.commerce.business.orderProduct.domain.entity.OrderProduct;
 import com.ebuild.commerce.business.orderProduct.domain.common.OrderStatus;
-import com.ebuild.commerce.business.user.buyer.domain.Buyer;
+import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.common.BaseEntity;
 import com.google.common.collect.Lists;
 import java.time.LocalDateTime;
