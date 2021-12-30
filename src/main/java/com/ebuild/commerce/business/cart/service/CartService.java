@@ -7,17 +7,23 @@ import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.cart.repository.JpaCartRepository;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.business.product.repository.JpaProductRepository;
+import com.ebuild.commerce.config.JsonHelper;
 import com.ebuild.commerce.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartService {
 
+  private final JsonHelper jsonHelper;
   private final JpaCartRepository jpaCartRepository;
   private final JpaProductRepository jpaProductRepository;
 
+  @Transactional
   public void addCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListAddReqDto) {
     Cart cart = findCartById(cartId);
 
@@ -27,8 +33,10 @@ public class CartService {
           , cartLineDto.getQuantity()
       );
     });
+    log.info("cart : {}", jsonHelper.serialize(cart));
   }
 
+  @Transactional
   public void removeCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListAddReqDto) {
     Cart cart = findCartById(cartId);
 
@@ -38,6 +46,8 @@ public class CartService {
           , cartLineDto.getQuantity()
       );
     });
+
+    log.info("cart : {}", jsonHelper.serialize(cart));
   }
 
   public CartResDto findById(Long cartId) {

@@ -12,18 +12,18 @@ import lombok.Getter;
 @Getter
 public class ProductResDto {
 
-  private Long id;
-  private String name;
-  private String productStatus;
-  private Integer normalAmount;
-  private Integer saleAmount;
-  private String category;
-  private LocalDate saleStartDate;
-  private LocalDate saleEndDate;
-  private Integer quantity;
-  private CompanyResDto company;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+  private final Long id;
+  private final String name;
+  private final String productStatus;
+  private final Integer normalAmount;
+  private final Integer saleAmount;
+  private final String category;
+  private final LocalDate saleStartDate;
+  private final LocalDate saleEndDate;
+  private final Integer quantity;
+  private final CompanyResDto company;
+  private final LocalDateTime createdAt;
+  private final LocalDateTime updatedAt;
 
   @Builder
   public ProductResDto(Product product){

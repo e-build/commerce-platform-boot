@@ -44,8 +44,8 @@ public class Buyer extends BaseEntity {
   @JoinColumn(name="cart_id", nullable = false)
   private Cart cart;
 
-  @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
-  private List<Order> ordersList = Lists.newArrayList();
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "buyer", cascade = CascadeType.ALL)
+  private List<Order> orderList = Lists.newArrayList();
 
   @Builder
   public Buyer(CommerceUserDetail commerceUserDetail, Address receivingAddress) {

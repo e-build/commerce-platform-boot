@@ -2,6 +2,9 @@ package com.ebuild.commerce.config;
 
 import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.company.domain.entity.SettlementInfo;
+import com.ebuild.commerce.business.product.domain.common.ProductCategory;
+import com.ebuild.commerce.business.product.domain.common.ProductStatus;
+import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.business.user.admin.domain.entity.Admin;
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
@@ -9,6 +12,7 @@ import com.ebuild.commerce.business.user.role.CommerceRole;
 import com.ebuild.commerce.business.user.role.domain.Role;
 import com.ebuild.commerce.business.user.seller.domain.entity.Seller;
 import com.ebuild.commerce.common.Address;
+import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +52,12 @@ public class DataInitialization {
       Address address = createAddress();
       Company company = createCompany(address);
       em.persist(company);
+
+      Product product1 = createProduct("와우 빡빡이 아저씨야", company,25000, 20000);
+      Product product2 = createProduct("달러굿즈의 세계모험기", company, 10000, 8000);
+
+      em.persist(product1);
+      em.persist(product2);
     }
 
     public void init2(){
@@ -59,26 +69,10 @@ public class DataInitialization {
       Role sellerRole = new Role(2L, CommerceRole.SELLER);
       Role adminRole = new Role(3L, CommerceRole.ADMIN);
 
-      /*****************
-       **** 사용자 등록 ***
-       *****************/
-//      CommerceUserDetail buyerDetail = createUserDetail("buyer@commerce.com", "1234qwer!@#$");
-//      buyerDetail.addRole(buyerRole);
-//      CommerceUserDetail sellerDetail = createUserDetail("seller@commerce.com", "1234qwer!@#$");
-//      sellerDetail.addRole(sellerRole);
-//      CommerceUserDetail adminDetail = createUserDetail("admin@commerce.com", "1234qwer!@#$");
-//      adminDetail.addRole(adminRole);
-//
-//      Buyer buyer = createBuyer(buyerDetail);
-//      Seller seller = createSeller(sellerDetail, createCompany(createAddress()));
-//      Admin admin = createAdmin(adminDetail);
-
       em.persist(buyerRole);
       em.persist(sellerRole);
       em.persist(adminRole);
-//      em.persist(buyer);
-//      em.persist(seller);
-//      em.persist(admin);
+
 
     }
 
@@ -117,6 +111,14 @@ public class DataInitialization {
     private Address createAddress() {
       return new Address("기본 주소지", "상세 주소", "67812");
     }
+
+    private Product createProduct(String name, Company company, Integer normalAmount, Integer saleAmount){
+      return new Product( name ,ProductStatus.SALE ,ProductCategory.BOOK
+                      ,normalAmount ,saleAmount ,LocalDate.now()
+                      ,LocalDate.now().plusDays(30) ,999 ,company);
+    }
   }
+
+
 
 }
