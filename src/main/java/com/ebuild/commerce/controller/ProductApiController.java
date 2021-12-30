@@ -3,7 +3,7 @@ package com.ebuild.commerce.controller;
 import com.ebuild.commerce.business.product.domain.dto.ProductChangeStatusReqDto;
 import com.ebuild.commerce.business.product.domain.dto.ProductSearchReqDto;
 import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
-import com.ebuild.commerce.business.product.domain.dto.ProductSaveResDto;
+import com.ebuild.commerce.business.product.domain.dto.ProductResDto;
 import com.ebuild.commerce.business.product.service.ProductCommandService;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
@@ -40,7 +40,9 @@ public class ProductApiController {
         CommonResponse.OK(
             Pair.of(
                 "product"
-                , ProductSaveResDto.of(productCommandService.register(productSaveReqDto))
+                , ProductResDto.builder()
+                    .product(productCommandService.register(productSaveReqDto))
+                    .build()
             )
         )
     );
@@ -55,7 +57,9 @@ public class ProductApiController {
         CommonResponse.OK(
             Pair.of(
                 "product"
-                , ProductSaveResDto.of(productCommandService.update(productId, productSaveReqDto))
+                , ProductResDto.builder()
+                    .product(productCommandService.update(productId, productSaveReqDto))
+                    .build()
             )
         )
     );

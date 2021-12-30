@@ -1,0 +1,62 @@
+package com.ebuild.commerce.business.cart.service;
+
+import com.ebuild.commerce.business.cart.domain.dto.CartLineListPlusMinusReqDto;
+import com.ebuild.commerce.business.cart.domain.dto.CartLineListPlusMinusReqDto.CartLineAddParam;
+import com.ebuild.commerce.business.cart.domain.dto.CartResDto;
+import com.ebuild.commerce.business.cart.domain.entity.Cart;
+import com.ebuild.commerce.business.cart.repository.JpaCartRepository;
+import com.ebuild.commerce.business.product.domain.entity.Product;
+import com.ebuild.commerce.business.product.repository.JpaProductRepository;
+import com.ebuild.commerce.exception.NotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class CartService {
+
+  private final JpaCartRepository jpaCartRepository;
+  private final JpaProductRepository jpaProductRepository;
+
+  public void addCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListAddReqDto) {
+    Cart cart = findCartById(cartId);
+
+    cartLineListAddReqDto.getCartLineList().forEach(cartLineDto -> {
+      cart.addProduct(
+          findProductById(cartLineDto)
+          , cartLineDto.getQuantity()
+      );
+    });
+  }
+
+  public void removeCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListAddReqDto) {
+    Cart cart = findCartById(cartId);
+
+    cartLineListAddReqDto.getCartLineList().forEach(cartLineDto -> {
+      cart.removeProduct(
+          findProductById(cartLineDto)
+          , cartLineDto.getQuantity()
+      );
+    });
+  }
+
+  public CartResDto findById(Long cartId) {
+    return CartResDto.builder()
+        .cart(findCartById(cartId))
+        .build();
+  }
+
+  private Product findProductById(CartLineAddParam cartLineDto) {
+    return jpaProductRepository
+        .findById(cartLineDto.getProductId())
+        .orElseThrow(()->new NotFoundException("해당 상품은 존재하지 않습니다."));
+  }
+
+  private Cart findCartById(Long cartId) {
+    return jpaCartRepository
+        .findById(cartId)
+        .orElseThrow(() -> new NotFoundException("장바구니가 존재하지 않습니다. cartId : [" + cartId + "]"));
+  }
+
+
+}
