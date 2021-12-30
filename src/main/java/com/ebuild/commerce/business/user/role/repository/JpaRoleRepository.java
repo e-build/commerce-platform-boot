@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface JpaRoleRepository extends JpaRepository<Role, Long> {
 
   List<Role> findAllByNameIn(List<CommerceRole> commerceRoles);
+
 }

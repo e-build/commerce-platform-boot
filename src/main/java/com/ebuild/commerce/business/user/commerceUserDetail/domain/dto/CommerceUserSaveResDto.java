@@ -2,6 +2,9 @@ package com.ebuild.commerce.business.user.commerceUserDetail.domain.dto;
 
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.business.user.role.domain.Role;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -9,33 +12,24 @@ import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-public class CommerceUserSaveReqDto {
+@Setter
+public class CommerceUserSaveResDto {
 
   private Long id;
-  @NotBlank
-  @Email
   private String email;
-  @NotBlank
-  private String password;
-  @NotBlank
   private String nickname;
-  @NotBlank
   private String phoneNumber;
+  private List<String> roles;
 
-  @Setter
-  private Role[] roles;
-
-  public CommerceUserDetail toEntity() {
-    return CommerceUserDetail.builder()
-        .email(this.email)
-        .password(this.password)
-        .nickname(this.nickname)
-        .phoneNumber(this.phoneNumber)
-        .roles(roles)
-        .build();
+  public CommerceUserSaveResDto(CommerceUserDetail entity) {
+    this.id = entity.getId();
+    this.email = entity.getEmail();
+    this.nickname = entity.getNickname();
+    this.phoneNumber = entity.getPhoneNumber();
+    this.roles = entity.getRoleList()
+        .stream()
+        .map(r -> r.getRole().getName().getCode())
+        .collect(Collectors.toList());
   }
 
-  public void encryptPassword(PasswordEncoder passwordEncoder) {
-    this.password = passwordEncoder.encode(password);
-  }
 }

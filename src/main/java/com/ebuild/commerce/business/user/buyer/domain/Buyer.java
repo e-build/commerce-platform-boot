@@ -39,7 +39,7 @@ public class Buyer extends BaseEntity {
   private Address receivingAddress;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(nullable = false)
+  @JoinColumn(name="cart_id", nullable = false)
   private Cart cart;
 
   @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)

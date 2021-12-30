@@ -10,7 +10,6 @@ import com.ebuild.commerce.business.user.role.CommerceRole;
 import com.ebuild.commerce.business.user.role.domain.Role;
 import com.ebuild.commerce.business.user.role.repository.JpaRoleRepository;
 import com.ebuild.commerce.exception.AlreadyExistsException;
-import com.ebuild.commerce.exception.CommerceServerError;
 import com.google.common.collect.Lists;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class BuyerService {
   private final PasswordEncoder passwordEncoder;
 
   public BuyerSaveResDto signup(BuyerSaveReqDto buyerSaveReqDto) {
-    String email = buyerSaveReqDto.getCommerceUser().getUsername();
+    String email = buyerSaveReqDto.getCommerceUser().getEmail();
     findCommerceUserByEmail(email)
         .ifPresent(user -> {
           throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
@@ -35,9 +34,10 @@ public class BuyerService {
 
     // 권한 부여
     buyerSaveReqDto.getCommerceUser()
-        .setRoles(jpaRoleRepository
-            .findAllByNameIn(Lists.newArrayList(CommerceRole.BUYER))
-            .toArray(new Role[0])
+        .setRoles(
+            jpaRoleRepository
+                .findAllByNameIn(Lists.newArrayList(CommerceRole.BUYER))
+                .toArray(new Role[0])
         );
 
     // 패스워드 암호화
@@ -47,9 +47,12 @@ public class BuyerService {
         .commerceUserDetail(buyerSaveReqDto.getCommerceUser().toEntity())
         .receivingAddress(buyerSaveReqDto.getReceiveAddress().get())
         .build();
+
     jpaBuyerRepository.save(buyer);
 
-    return BuyerSaveResDto.of( buyer ) ;
+    return BuyerSaveResDto.builder()
+        .buyer(buyer)
+        .build();
 
 //    findCommerceUserByEmail(email)
 //        .orElseThrow(()-> new CommerceServerError("사용자 계정 생성 과정에서 서버 오류가 발생하였습니다."))

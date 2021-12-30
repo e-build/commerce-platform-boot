@@ -1,36 +1,28 @@
 package com.ebuild.commerce.business.user.buyer.domain.dto;
 
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceUserSaveResDto;
+import com.ebuild.commerce.common.dto.AddressSaveReqDto;
+import com.ebuild.commerce.common.dto.AddressSaveResDto;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
+
 
 @Getter
 public class BuyerSaveResDto {
-  
-  private Long id;
-  private String email;
-  private String nickname;
-  private String phoneNumber;
 
-  private String baseAddress;
-  private String detailAddress;
-  private String addressZipAddress;
+  private final Long buyerId;
+  private final CommerceUserSaveResDto commerceUser;
+  private final AddressSaveResDto receivingAddress;
+  private final LocalDateTime createdAt;
 
-  private LocalDateTime createdAt;
-
-  public static BuyerSaveResDto of(Buyer buyer){
-    BuyerSaveResDto dto = new BuyerSaveResDto();
-    dto.id = buyer.getCommerceUserDetail().getId();
-    dto.email = buyer.getCommerceUserDetail().getEmail();
-    dto.nickname = buyer.getCommerceUserDetail().getNickname();
-    dto.phoneNumber = buyer.getCommerceUserDetail().getPhoneNumber();
-    dto.baseAddress = buyer.getReceivingAddress().getBaseAddress();
-    dto.detailAddress = buyer.getReceivingAddress().getDetailAddress();
-    dto.addressZipAddress = buyer.getReceivingAddress().getAddressZipCode();
-    dto.createdAt = buyer.getCreatedAt();
-    return dto;
+  @Builder
+  public BuyerSaveResDto(Buyer buyer){
+    this.buyerId = buyer.getId();
+    this.commerceUser = new CommerceUserSaveResDto(buyer.getCommerceUserDetail());
+    this.receivingAddress = new AddressSaveResDto(buyer.getReceivingAddress());
+    this.createdAt = buyer.getCreatedAt();
   }
-
-
-
 }

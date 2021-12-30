@@ -1,14 +1,13 @@
 package com.ebuild.commerce.config;
 
-import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.company.domain.entity.SettlementInfo;
-import com.ebuild.commerce.business.user.admin.domain.Admin;
+import com.ebuild.commerce.business.user.admin.domain.entity.Admin;
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.business.user.role.CommerceRole;
 import com.ebuild.commerce.business.user.role.domain.Role;
-import com.ebuild.commerce.business.user.seller.domain.Seller;
+import com.ebuild.commerce.business.user.seller.domain.entity.Seller;
 import com.ebuild.commerce.common.Address;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -63,23 +62,23 @@ public class DataInitialization {
       /*****************
        **** 사용자 등록 ***
        *****************/
-      CommerceUserDetail buyerDetail = createUserDetail("buyer@commerce.com", "1234qwer!@#$");
-      buyerDetail.addRole(buyerRole);
-      CommerceUserDetail sellerDetail = createUserDetail("seller@commerce.com", "1234qwer!@#$");
-      sellerDetail.addRole(sellerRole);
-      CommerceUserDetail adminDetail = createUserDetail("admin@commerce.com", "1234qwer!@#$");
-      adminDetail.addRole(adminRole);
-
-      Buyer buyer = createBuyer(buyerDetail);
-      Seller seller = createSeller(sellerDetail, createCompany(createAddress()));
-      Admin admin = createAdmin(adminDetail);
+//      CommerceUserDetail buyerDetail = createUserDetail("buyer@commerce.com", "1234qwer!@#$");
+//      buyerDetail.addRole(buyerRole);
+//      CommerceUserDetail sellerDetail = createUserDetail("seller@commerce.com", "1234qwer!@#$");
+//      sellerDetail.addRole(sellerRole);
+//      CommerceUserDetail adminDetail = createUserDetail("admin@commerce.com", "1234qwer!@#$");
+//      adminDetail.addRole(adminRole);
+//
+//      Buyer buyer = createBuyer(buyerDetail);
+//      Seller seller = createSeller(sellerDetail, createCompany(createAddress()));
+//      Admin admin = createAdmin(adminDetail);
 
       em.persist(buyerRole);
       em.persist(sellerRole);
       em.persist(adminRole);
-      em.persist(buyer);
-      em.persist(seller);
-      em.persist(admin);
+//      em.persist(buyer);
+//      em.persist(seller);
+//      em.persist(admin);
 
     }
 
