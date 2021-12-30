@@ -24,30 +24,19 @@ public class CartService {
   private final JpaProductRepository jpaProductRepository;
 
   @Transactional
-  public void addCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListAddReqDto) {
+  public void addCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListPlusMinusReqDto) {
     Cart cart = findCartById(cartId);
-
-    cartLineListAddReqDto.getCartLineList().forEach(cartLineDto -> {
-      cart.addProduct(
-          findProductById(cartLineDto)
-          , cartLineDto.getQuantity()
-      );
+    cartLineListPlusMinusReqDto.getCartLineList().forEach(cartLineDto -> {
+      cart.addProduct(findProductById(cartLineDto), cartLineDto.getQuantity());
     });
-    log.info("cart : {}", jsonHelper.serialize(cart));
   }
 
   @Transactional
-  public void removeCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListAddReqDto) {
+  public void removeCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListPlusMinusReqDto) {
     Cart cart = findCartById(cartId);
-
-    cartLineListAddReqDto.getCartLineList().forEach(cartLineDto -> {
-      cart.removeProduct(
-          findProductById(cartLineDto)
-          , cartLineDto.getQuantity()
-      );
+    cartLineListPlusMinusReqDto.getCartLineList().forEach(cartLineDto -> {
+      cart.removeProduct(findProductById(cartLineDto), cartLineDto.getQuantity());
     });
-
-    log.info("cart : {}", jsonHelper.serialize(cart));
   }
 
   public CartResDto findById(Long cartId) {
