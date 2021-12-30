@@ -2,6 +2,8 @@ package com.ebuild.commerce.business.user.buyer.domain;
 
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.order.domain.entity.Order;
+import com.ebuild.commerce.business.user.buyer.domain.dto.BuyerSaveReqDto;
+import com.ebuild.commerce.business.user.buyer.repository.JpaBuyerRepository;
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
@@ -52,4 +54,8 @@ public class Buyer extends BaseEntity {
     this.cart = Cart.newInstance();
   }
 
+  public void update(BuyerSaveReqDto buyerSaveReqDto) {
+    this.commerceUserDetail.update(buyerSaveReqDto.getCommerceUser());
+    this.receivingAddress.update(buyerSaveReqDto.getReceiveAddress());
+  }
 }

@@ -16,6 +16,7 @@ public class BuyerResDto {
   private final CommerceUserSaveResDto commerceUser;
   private final AddressSaveResDto receivingAddress;
   private final LocalDateTime createdAt;
+  private final LocalDateTime updatedAt;
 
   @Builder
   public BuyerResDto(Buyer buyer){
@@ -23,5 +24,7 @@ public class BuyerResDto {
     this.commerceUser = new CommerceUserSaveResDto(buyer.getCommerceUserDetail());
     this.receivingAddress = new AddressSaveResDto(buyer.getReceivingAddress());
     this.createdAt = buyer.getCreatedAt();
+    this.updatedAt = buyer.getUpdatedAt();
+
   }
 }

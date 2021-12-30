@@ -1,8 +1,10 @@
 package com.ebuild.commerce.business.user.buyer.service;
 
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;
-import com.ebuild.commerce.business.user.buyer.domain.dto.BuyerSaveReqDto;
 import com.ebuild.commerce.business.user.buyer.domain.dto.BuyerResDto;
+import com.ebuild.commerce.business.user.buyer.domain.dto.BuyerSaveReqDto;
+import com.ebuild.commerce.business.user.buyer.domain.dto.BuyerSearchReqDto;
+import com.ebuild.commerce.business.user.buyer.domain.dto.BuyerSearchResDto;
 import com.ebuild.commerce.business.user.buyer.repository.JpaBuyerRepository;
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.business.user.commerceUserDetail.repository.CommerceUserDetailRepository;
@@ -16,6 +18,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +30,7 @@ public class BuyerService {
   private final PasswordEncoder passwordEncoder;
 
   public BuyerResDto signup(BuyerSaveReqDto buyerSaveReqDto) {
-    String email = buyerSaveReqDto.getCommerceUser().getEmail();
-    findCommerceUserByEmail(email)
+    findCommerceUserByEmail(buyerSaveReqDto.getCommerceUser().getEmail())
         .ifPresent(user -> {
           throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
         });
@@ -56,15 +58,43 @@ public class BuyerService {
         .build();
   }
 
-  private Optional<CommerceUserDetail> findCommerceUserByEmail(String email){
-    return jpaCommerceUserDetailRepository.findOneByEmail(email);
+  @Transactional
+  public BuyerResDto update(BuyerSaveReqDto buyerSaveReqDto) {
+    CommerceUserDetail commerceUserDetail = findCommerceUserByEmail(
+        buyerSaveReqDto.getCommerceUser().getEmail())
+        .orElseThrow(() -> new NotFoundException(
+            "[" + buyerSaveReqDto.getCommerceUser().getEmail() + "]에 해당하는 사용자는 존재하지 않습니다."));
+
+    Buyer buyer = commerceUserDetail.getBuyer();
+    buyer.update(buyerSaveReqDto);
+
+    return BuyerResDto.builder()
+        .buyer(buyer)
+        .build();
   }
 
   public BuyerResDto findOneById(Long buyerId) {
     return BuyerResDto.builder()
         .buyer(jpaBuyerRepository
             .findById(buyerId)
-            .orElseThrow(()->new NotFoundException("해당 사용자를 찾을 수 없습니다.")))
-        .build();
+            .orElseThrow(()->new NotFoundException("해당 사용자를 찾을 수 없습니다."))
+        ).build();
   }
+
+  public void deleteOne(Long buyerId) {
+    jpaBuyerRepository.delete(
+        jpaBuyerRepository
+            .findById(buyerId)
+            .orElseThrow(()->new NotFoundException("해당 사용자를 찾을 수 없습니다."))
+    );
+  }
+
+  public BuyerSearchResDto search(BuyerSearchReqDto buyerSearchReqDto) {
+    return null;
+  }
+
+  private Optional<CommerceUserDetail> findCommerceUserByEmail(String email){
+    return jpaCommerceUserDetailRepository.findOneByEmail(email);
+  }
+
 }

@@ -2,6 +2,7 @@ package com.ebuild.commerce.business.user.commerceUserDetail.domain.entity;
 
 import com.ebuild.commerce.business.user.admin.domain.entity.Admin;
 import com.ebuild.commerce.business.user.buyer.domain.Buyer;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceUserSaveReqDto;
 import com.ebuild.commerce.business.user.role.domain.CommerceUserRole;
 import com.ebuild.commerce.business.user.role.domain.Role;
 import com.ebuild.commerce.business.user.seller.domain.entity.Seller;
@@ -50,14 +51,13 @@ public class CommerceUserDetail implements UserDetails {
   @OneToMany(mappedBy = "commerceUserDetail", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<CommerceUserRole> roleList = Lists.newArrayList();
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="buyer_id")
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "commerceUserDetail")
   private Buyer buyer;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "commerceUserDetail")
   private Seller seller;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "commerceUserDetail")
   private Admin admin;
 
   // security
@@ -88,6 +88,11 @@ public class CommerceUserDetail implements UserDetails {
     if (CollectionUtils.isEmpty(this.roleList))
       this.roleList = Lists.newArrayList();
     this.roleList.add(CommerceUserRole.of(this, role));
+  }
+
+  public void update(CommerceUserSaveReqDto dto){
+    this.nickname = dto.getNickname();
+    this.phoneNumber = dto.getPhoneNumber();
   }
 
   @Override

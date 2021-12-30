@@ -1,5 +1,6 @@
 package com.ebuild.commerce.common;
 
+import com.ebuild.commerce.common.dto.AddressSaveReqDto;
 import javax.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,6 +21,12 @@ public class Address {
     this.baseAddress = baseAddress;
     this.detailAddress = detailAddress;
     this.addressZipCode = addressZipCode;
+  }
+
+  public void update(AddressSaveReqDto dto){
+    this.baseAddress = dto.getBaseAddress();
+    this.detailAddress = dto.getDetailAddress();
+    this.addressZipCode = dto.getAddressZipCode();
   }
 
 }
