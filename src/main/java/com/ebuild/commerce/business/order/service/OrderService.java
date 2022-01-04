@@ -2,12 +2,16 @@ package com.ebuild.commerce.business.order.service;
 
 import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto;
+import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto.OrderLineListDto;
 import com.ebuild.commerce.business.order.domain.dto.OrderResDto;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.order.repository.JpaOrderRepository;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.business.product.repository.JpaProductRepository;
+import com.ebuild.commerce.config.security.annotation.IsAdmin;
+import com.ebuild.commerce.config.security.annotation.IsSeller;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +23,19 @@ public class OrderService {
   private final JpaProductRepository jpaProductRepository;
 
   public OrderResDto createOrder(Buyer buyer, DirectOrderReqDto directOrderReqDto) {
+    List<Product> products = jpaProductRepository
+        .findByIds(
+            directOrderReqDto.getOrderLineList()
+                .stream()
+                .map(OrderLineListDto::getProductId)
+                .collect(Collectors.toList())
+        );
 
-//    List<Product> products = jpaProductRepository.findByIdsIn(directOrderReqDto.getDirectOrderProductInfo().getProductIds());
-//    Order order = Order.createDirectOrder(buyer, products, directOrderReqDto.getBaseOrderInfo());
-    return null;
+    return OrderResDto.builder()
+        .order(
+            jpaOrderRepository.save(
+                Order.createDirectOrder(buyer, products, directOrderReqDto.getBaseOrderInfo())
+            )
+        ).build();
   }
 }
