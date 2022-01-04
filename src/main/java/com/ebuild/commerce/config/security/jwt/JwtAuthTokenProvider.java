@@ -1,6 +1,8 @@
 package com.ebuild.commerce.config.security.jwt;
 
-import com.ebuild.commerce.business.user.commerceUserDetail.service.CommerceUserService;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.CommerceUserAdapter;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
+import com.ebuild.commerce.business.user.commerceUserDetail.service.CommerceUserQueryService;
 import com.ebuild.commerce.config.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import java.util.Arrays;
@@ -20,14 +22,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthTokenProvider implements AuthTokenProvider<AuthToken<Claims>>{
+public class JwtAuthTokenProvider implements AuthTokenProvider<AuthToken<Claims>> {
 
   @Value("${jwt.secret-key}")
   private String secretKey;
   @Value("${jwt.auth-token-valid-minute}")
   private String tokenValidMinute;
 
-//  private final CommerceUserService commerceUserService;
+  private final CommerceUserQueryService commerceUserQueryService;
 
   @Override
   public JwtAuthToken createAuthToken(Long userId, String role) {
@@ -43,17 +45,19 @@ public class JwtAuthTokenProvider implements AuthTokenProvider<AuthToken<Claims>
   public Authentication getAuthentication(AuthToken<Claims> authToken) {
     Claims claims = authToken.getData();
     Collection<? extends GrantedAuthority> authorities = resolveAuthorities(claims);
-    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-        new UsernamePasswordAuthenticationToken(claims.getSubject(), authToken, authorities);
+    CommerceUserDetail commerceUserDetail = commerceUserQueryService.findById(Long.parseLong(claims.getSubject()));
+    commerceUserDetail.passwordMasking();
 
-    // TODO: Redis 에 사용자 정보 캐싱 및 Authentication 객체 생성 로직 추가
-//  CommerceUserDetail commerUserDetail = userDetailRedisTemplate.get(claims.getSubject());
+//     TODO: Redis에 사용자 정보 캐싱 및 Authentication 객체 생성 로직 추가
+//    CommerceUserDetail commerUserDetail = userDetailRedisTemplate.get(claims.getSubject());
 //    if ( commerUserDetail == null ){
 //      commerUserDetail = commerceUserService.findById(claims.getSubject());
-//      commerUserDetail.lazyLoadUserByRole();
 //      userDetailRedisTemplate.set(commerUserDetail);
 //    }
-//    usernamePasswordAuthenticationToken.setDetails(commerUserDetail);
+    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+        new UsernamePasswordAuthenticationToken(new CommerceUserAdapter(commerceUserDetail), authToken, authorities);
+//    usernamePasswordAuthenticationToken.setDetails(claims);
+
     return usernamePasswordAuthenticationToken;
   }
 
@@ -66,8 +70,9 @@ public class JwtAuthTokenProvider implements AuthTokenProvider<AuthToken<Claims>
   @Override
   public Optional<String> resolveAuthTokenFromHeader(HttpServletRequest request) {
     String authToken = request.getHeader(SecurityConstants.AUTH_HEADER);
-    if (StringUtils.isNotBlank(authToken))
+    if (StringUtils.isNotBlank(authToken)) {
       return Optional.of(authToken);
+    }
     return Optional.empty();
   }
 

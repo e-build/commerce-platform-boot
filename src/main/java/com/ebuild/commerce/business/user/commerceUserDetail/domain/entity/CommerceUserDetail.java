@@ -6,6 +6,7 @@ import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceU
 import com.ebuild.commerce.business.user.role.domain.CommerceUserRole;
 import com.ebuild.commerce.business.user.role.domain.Role;
 import com.ebuild.commerce.business.seller.domain.entity.Seller;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,15 +48,18 @@ public class CommerceUserDetail implements UserDetails {
 
   private String phoneNumber;
 
-  @OneToMany(mappedBy = "commerceUserDetail", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "commerceUserDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<CommerceUserRole> roleList = Lists.newArrayList();
 
+  @JsonIgnore
   @OneToOne(fetch = FetchType.LAZY, mappedBy = "commerceUserDetail")
   private Buyer buyer;
 
+  @JsonIgnore
   @OneToOne(fetch = FetchType.LAZY, mappedBy = "commerceUserDetail")
   private Seller seller;
 
+  @JsonIgnore
   @OneToOne(fetch = FetchType.LAZY, mappedBy = "commerceUserDetail")
   private Admin admin;
 
@@ -132,9 +136,7 @@ public class CommerceUserDetail implements UserDetails {
     return this.enabled;
   }
 
-  public void lazyLoadUserByRole() {
-    getBuyer();
-    getSeller();
-    getAdmin();
+  public void passwordMasking() {
+    this.password = "*********";
   }
 }

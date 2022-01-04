@@ -1,7 +1,9 @@
 package com.ebuild.commerce.business.order.controller;
 
+import com.ebuild.commerce.config.security.annotation.CurrentUser;
 import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto;
 import com.ebuild.commerce.business.order.service.OrderService;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
 import javax.validation.Valid;
@@ -25,14 +27,14 @@ public class OrderApiController {
 
   // 바로주문
   @PostMapping("")
-  public ResponseEntity<CommonResponse> createDirectOrder (
-      @RequestBody @Valid DirectOrderReqDto directOrderReqDto)
-  {
+  public ResponseEntity<CommonResponse> createDirectOrder(
+      @CurrentUser CommerceUserDetail commerceUserDetail,
+      @RequestBody @Valid DirectOrderReqDto directOrderReqDto) {
 
-    log.info("directOrderReqDto : {}", jsonHelper.serialize(directOrderReqDto));
     return ResponseEntity.ok(
         CommonResponse.OK(
-//            Pair.of("order", orderService.createOrder(directOrderReqDto))
+            Pair.of("order",
+                orderService.createOrder(commerceUserDetail.getBuyer(), directOrderReqDto))
         )
     );
   }

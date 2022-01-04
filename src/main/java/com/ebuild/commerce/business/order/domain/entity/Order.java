@@ -72,40 +72,46 @@ public class Order extends BaseEntity {
     order.buyer = cart.getBuyer();
     order.orderStatus = OrderStatus.PAYED;
     order.orderDate = LocalDateTime.now();
-    order.payment = Payment.builder().paymentReqDto(baseOrderCreateReqDto.getPayment()).build();
+    order.payment = Payment.builder()
+        .paymentReqDto(baseOrderCreateReqDto.getPayment())
+        .build();
     order.orderProductList = cart.getCartLineList()
         .stream()
-        .map(cartLine -> OrderProduct.builder()
-            .order(order)
-            .cartLine(cartLine)
-            .receivingAddress(
-                baseOrderCreateReqDto.getUseBuyerBasicAddress()
-                ? cart.getBuyer().getReceivingAddress()
-                : new Address(baseOrderCreateReqDto.getReceivingAddress())
-            ).build()
+        .map(cartLine ->
+            OrderProduct.builder()
+                .order(order)
+                .cartLine(cartLine)
+                .receivingAddress(
+                    baseOrderCreateReqDto.getUseBuyerBasicAddress()
+                        ? cart.getBuyer().getReceivingAddress()
+                        : new Address(baseOrderCreateReqDto.getReceivingAddress())
+                ).build()
         ).collect(Collectors.toList());
     return order;
   }
 
-//  public static Order createDirectOrder(Buyer buyer, List<Product> products, BaseOrderCreateReqDto baseOrderCreateReqDto) {
-//    Order order = new Order();
-//    order.buyer = buyer;
-//    order.orderStatus = OrderStatus.PAYED;
-//    order.orderDate = LocalDateTime.now();
-//    order.payment = Payment.builder()
-//        .paymentReqDto(baseOrderCreateReqDto.getPayment())
-//        .build();
-//    order.orderProductList = products.stream()
-//        .map(product ->
-//            OrderProduct.builder()
-//                .order(order)
-//                .product(product)
-//                .receivingAddress(
-//                    baseOrderCreateReqDto.getUseBuyerBasicAddress()
-//                    ? buyer.getReceivingAddress()
-//                    : new Address(baseOrderCreateReqDto.getReceivingAddress())
-//                ).build()
-//        ).collect(Collectors.toList());
-//    return null;
-//  }
+  public static Order createDirectOrder(
+      Buyer buyer,
+      List<Product> products,
+      BaseOrderCreateReqDto baseOrderCreateReqDto) {
+    Order order = new Order();
+    order.buyer = buyer;
+    order.orderStatus = OrderStatus.PAYED;
+    order.orderDate = LocalDateTime.now();
+    order.payment = Payment.builder()
+        .paymentReqDto(baseOrderCreateReqDto.getPayment())
+        .build();
+    order.orderProductList = products.stream()
+        .map(product ->
+            OrderProduct.builder()
+                .order(order)
+                .product(product)
+                .receivingAddress(
+                    baseOrderCreateReqDto.getUseBuyerBasicAddress()
+                        ? buyer.getReceivingAddress()
+                        : new Address(baseOrderCreateReqDto.getReceivingAddress())
+                ).build()
+        ).collect(Collectors.toList());
+    return order;
+  }
 }

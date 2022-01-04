@@ -1,6 +1,7 @@
 package com.ebuild.commerce.business.user.role.domain;
 
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,10 +24,11 @@ public class CommerceUserRole {
   @GeneratedValue
   private Long id;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name="role_id")
   private Role role;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name="commerce_user_detail_id")
   private CommerceUserDetail commerceUserDetail;
