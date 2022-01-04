@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.product.domain.dto;
 
-import com.ebuild.commerce.business.product.domain.common.ProductCategory;
-import com.ebuild.commerce.business.product.domain.common.ProductStatus;
+import com.ebuild.commerce.business.product.domain.entity.ProductCategory;
+import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.common.Enum;
 import java.time.LocalDate;
@@ -57,15 +57,7 @@ public class ProductSaveReqDto {
 
   public Product toEntity() {
     return Product.builder()
-        .id(product.id)
-        .name(product.name)
-        .productStatus(ProductStatus.fromValue(product.productStatus))
-        .category(ProductCategory.fromValue(product.category))
-        .normalAmount(product.normalAmount)
-        .saleAmount(product.saleAmount)
-        .saleStartDate(product.saleStartDate)
-        .saleEndDate(product.saleEndDate)
-        .quantity(product.quantity)
+        .productSaveReqDto(this)
         .build();
   }
 

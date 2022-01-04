@@ -1,9 +1,12 @@
 package com.ebuild.commerce.business.cart.domain.entity;
 
-import com.ebuild.commerce.business.user.buyer.domain.Buyer;
+import com.ebuild.commerce.business.product.domain.entity.Product;
+import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.common.BaseEntity;
+import com.ebuild.commerce.exception.NotFoundException;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,15 +29,59 @@ public class Cart extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(nullable = true)
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "cart")
+  @JoinColumn(name="buyer_id", nullable = true)
   private Buyer buyer;
 
-  @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CartLine> cartLineList = Lists.newArrayList();
 
   public static Cart newInstance(){
     return new Cart();
   }
+
+  public void addProduct(Product product, int quantity){
+    // 장바구니에 해당 상품이 존재하면 수량 증가
+    boolean isProductExists = this.cartLineList
+        .stream()
+        .anyMatch(cartLine ->
+            Objects.equals(cartLine.getProduct().getId(), product.getId())
+        );
+    if (isProductExists){
+      for (CartLine cartLine : this.cartLineList) {
+        if (Objects.equals(cartLine.getProduct().getId(), product.getId())){
+          cartLine.plusQuantity(quantity);
+          return;
+        }
+      }
+    }
+
+    // 장바구니에 해당 상품이 존재하지 않으면 상품 추가
+    this.cartLineList.add(
+        CartLine.builder()
+            .cart(this)
+            .product(product)
+            .quantity(quantity)
+        .build()
+    );
+  }
+
+  public void removeProduct(Product product, int quantity){
+    for (CartLine cartLine : this.cartLineList) {
+      if (Objects.equals(cartLine.getProduct().getId(), product.getId())){
+          cartLine.minusQuantity(quantity);
+          if (cartLine.getQuantity() == 0)
+            this.cartLineList.remove(cartLine);
+          return;
+      }
+    }
+    throw new NotFoundException("장바구니에 해당 상품이 존재하지 않습니다. productId : ["+product.getId()+"]");
+  }
+
+  public void clear(){
+    this.cartLineList.clear();
+  }
+
+
 
 }

@@ -1,11 +1,14 @@
 package com.ebuild.commerce.business.user.commerceUserDetail.domain.entity;
 
-import com.ebuild.commerce.business.user.admin.domain.Admin;
-import com.ebuild.commerce.business.user.buyer.domain.Buyer;
+import com.ebuild.commerce.business.admin.domain.entity.Admin;
+import com.ebuild.commerce.business.buyer.domain.Buyer;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceUserSaveReqDto;
 import com.ebuild.commerce.business.user.role.domain.CommerceUserRole;
 import com.ebuild.commerce.business.user.role.domain.Role;
-import com.ebuild.commerce.business.user.seller.domain.Seller;
+import com.ebuild.commerce.business.seller.domain.entity.Seller;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,8 +22,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,20 +44,23 @@ public class CommerceUserDetail implements UserDetails {
 
   private String password;
 
-  private String nickName;
+  private String nickname;
 
   private String phoneNumber;
 
-  @OneToMany(mappedBy = "commerceUserDetail", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "commerceUserDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<CommerceUserRole> roleList = Lists.newArrayList();
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "commerceUserDetail")
   private Buyer buyer;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "commerceUserDetail")
   private Seller seller;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "commerceUserDetail")
   private Admin admin;
 
   // security
@@ -62,15 +70,32 @@ public class CommerceUserDetail implements UserDetails {
   private Boolean credentialsNonExpired = true;
   private Boolean enabled = true;
 
-  public CommerceUserDetail(String email, String password){
+  @Builder
+  public CommerceUserDetail(String email, String password, String nickname, String phoneNumber, Role... roles){
     this.email = email;
     this.password = password;
+    this.nickname = nickname;
+    this.phoneNumber = phoneNumber;
+
+    if (ArrayUtils.isNotEmpty(roles)){
+      this.roleList = Arrays.stream(roles)
+          .map(r -> CommerceUserRole.builder()
+              .commerceUserDetail(this)
+              .role(r)
+              .build())
+          .collect(Collectors.toList());
+    }
   }
 
   public void addRole(Role role){
     if (CollectionUtils.isEmpty(this.roleList))
       this.roleList = Lists.newArrayList();
     this.roleList.add(CommerceUserRole.of(this, role));
+  }
+
+  public void update(CommerceUserSaveReqDto dto){
+    this.nickname = dto.getNickname();
+    this.phoneNumber = dto.getPhoneNumber();
   }
 
   @Override
@@ -111,4 +136,7 @@ public class CommerceUserDetail implements UserDetails {
     return this.enabled;
   }
 
+  public void passwordMasking() {
+    this.password = "*********";
+  }
 }

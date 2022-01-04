@@ -1,8 +1,6 @@
 package com.ebuild.commerce.business.product.domain.entity;
 
 import com.ebuild.commerce.business.company.domain.entity.Company;
-import com.ebuild.commerce.business.product.domain.common.ProductCategory;
-import com.ebuild.commerce.business.product.domain.common.ProductStatus;
 import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
 import com.ebuild.commerce.business.product.repository.JpaProductRepository;
 import com.ebuild.commerce.common.BaseEntity;
@@ -20,16 +18,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-@Builder
 @Getter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseEntity {
 
@@ -49,6 +44,8 @@ public class Product extends BaseEntity {
 
   private Integer saleAmount;
 
+  private Integer shippingTime;
+
   private LocalDate saleStartDate;
 
   private LocalDate saleEndDate;
@@ -64,7 +61,7 @@ public class Product extends BaseEntity {
     if ( isExists(jpaProductRepository, company, productSaveReqDto) )
       throw new AlreadyExistsException("["+productSaveReqDto.getProduct().getName()+"] 은 이미 존재하는 상품명입니다.");
 
-    Product product = of(productSaveReqDto);
+    Product product = new Product(productSaveReqDto);
     product.registerCompany(company);
     return product;
   }
@@ -101,18 +98,32 @@ public class Product extends BaseEntity {
         .isPresent();
   }
 
-  private static Product of(ProductSaveReqDto productSaveReqDto){
-    return Product.builder()
-        .id(productSaveReqDto.getProduct().getId())
-        .name(productSaveReqDto.getProduct().getName())
-        .productStatus(ProductStatus.fromValue(productSaveReqDto.getProduct().getProductStatus()))
-        .category(ProductCategory.fromValue(productSaveReqDto.getProduct().getCategory()))
-        .normalAmount(productSaveReqDto.getProduct().getNormalAmount())
-        .saleAmount(productSaveReqDto.getProduct().getSaleAmount())
-        .saleStartDate(productSaveReqDto.getProduct().getSaleStartDate())
-        .saleEndDate(productSaveReqDto.getProduct().getSaleEndDate())
-        .quantity(productSaveReqDto.getProduct().getQuantity())
-        .build();
+  public Product(String name, ProductStatus productStatus,
+      ProductCategory category, Integer normalAmount, Integer saleAmount,
+      LocalDate saleStartDate, LocalDate saleEndDate, Integer quantity,
+      Company company) {
+    this.name = name;
+    this.productStatus = productStatus;
+    this.category = category;
+    this.normalAmount = normalAmount;
+    this.saleAmount = saleAmount;
+    this.saleStartDate = saleStartDate;
+    this.saleEndDate = saleEndDate;
+    this.quantity = quantity;
+    this.company = company;
+  }
+
+  @Builder
+  public Product(ProductSaveReqDto productSaveReqDto){
+    this.id = productSaveReqDto.getProduct().getId();
+    this.name = productSaveReqDto.getProduct().getName();
+    this.productStatus = ProductStatus.fromValue(productSaveReqDto.getProduct().getProductStatus());
+    this.category = ProductCategory.fromValue(productSaveReqDto.getProduct().getCategory());
+    this.normalAmount = productSaveReqDto.getProduct().getNormalAmount();
+    this.saleAmount = productSaveReqDto.getProduct().getSaleAmount();
+    this.saleStartDate = productSaveReqDto.getProduct().getSaleStartDate();
+    this.saleEndDate = productSaveReqDto.getProduct().getSaleEndDate();
+    this.quantity = productSaveReqDto.getProduct().getQuantity();
   }
 
   public void changeSaleStatus(ProductStatus productStatus){

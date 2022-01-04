@@ -1,6 +1,7 @@
 package com.ebuild.commerce.business.user.role.domain;
 
 import com.ebuild.commerce.business.user.role.CommerceRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import java.util.List;
 import javax.persistence.Entity;
@@ -27,6 +28,7 @@ public class Role {
   @Enumerated(value = EnumType.STRING)
   private CommerceRole name;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "role")
   private List<CommerceUserRole> commerceUserRoleList = Lists.newArrayList();
 
