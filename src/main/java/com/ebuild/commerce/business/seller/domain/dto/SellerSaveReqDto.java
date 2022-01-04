@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.seller.domain.dto;
 
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceUserSaveReqDto;
-import com.ebuild.commerce.common.dto.AddressSaveReqDto;
+import com.ebuild.commerce.common.dto.AddressReqDto;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
@@ -13,7 +13,7 @@ public class SellerSaveReqDto {
   private CommerceUserSaveReqDto commerceUser;
 
   @Valid
-  private AddressSaveReqDto shippingAddress;
+  private AddressReqDto shippingAddress;
 
   @NotNull
   private Long companyId;
