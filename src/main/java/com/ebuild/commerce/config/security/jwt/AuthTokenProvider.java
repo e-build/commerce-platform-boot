@@ -10,6 +10,6 @@ public interface AuthTokenProvider<T> {
   T createAuthToken(Long id, String role);
   T convertAuthToken(String token);
   Authentication getAuthentication(T authToken);
-  Optional<String> resolveAuthToken(HttpServletRequest request);
+  Optional<String> resolveAuthTokenFromHeader(HttpServletRequest request);
 
 }

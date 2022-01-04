@@ -2,11 +2,8 @@ package com.ebuild.commerce.config.filter;
 
 import com.ebuild.commerce.config.security.jwt.AuthToken;
 import com.ebuild.commerce.config.security.jwt.JwtAuthTokenProvider;
-import com.ebuild.commerce.exception.security.JwtTokenInvalidException;
-import com.ebuild.commerce.exception.security.JwtTokenNotExistsException;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,7 +19,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
   private final JwtAuthTokenProvider jwtAuthTokenProvider;
 
-  public JwtAuthFilter(JwtAuthTokenProvider jwtAuthTokenProvider){
+  public JwtAuthFilter(JwtAuthTokenProvider jwtAuthTokenProvider) {
     this.jwtAuthTokenProvider = jwtAuthTokenProvider;
   }
 
@@ -30,13 +27,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request
       , HttpServletResponse response
-      , FilterChain filterChain ) throws ServletException, IOException {
+      , FilterChain filterChain) throws ServletException, IOException {
+    Optional<String> token = jwtAuthTokenProvider.resolveAuthTokenFromHeader(request);
 
-    String requestUri = request.getRequestURI();
-
-    Optional<String> token = jwtAuthTokenProvider.resolveAuthToken(request);
-    if (token.isPresent()){
+    if (token.isPresent()) {
       AuthToken<Claims> authToken = jwtAuthTokenProvider.convertAuthToken(token.get());
+
       if (authToken.validate()) {
         Authentication authentication = jwtAuthTokenProvider.getAuthentication(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);

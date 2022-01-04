@@ -132,4 +132,9 @@ public class CommerceUserDetail implements UserDetails {
     return this.enabled;
   }
 
+  public void lazyLoadUserByRole() {
+    getBuyer();
+    getSeller();
+    getAdmin();
+  }
 }

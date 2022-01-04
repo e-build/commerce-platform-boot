@@ -73,6 +73,7 @@ public class BuyerService {
         .build();
   }
 
+  @Transactional(readOnly = true)
   public BuyerResDto findOneById(Long buyerId) {
     return BuyerResDto.builder()
         .buyer(jpaBuyerRepository
