@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface JpaProductRepository extends JpaRepository<Product, Long> {
 
   Optional<Product> findByCompanyAndName(Company company, String name);
@@ -16,4 +18,5 @@ public interface JpaProductRepository extends JpaRepository<Product, Long> {
 
   Page<Product> findAll(Specification<Product> spec, Pageable pageable);
 
+//  List<Product> findByIdsIn(List<String> orderProductIds);
 }
