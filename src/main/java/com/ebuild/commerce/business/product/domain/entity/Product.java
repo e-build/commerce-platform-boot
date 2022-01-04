@@ -44,6 +44,8 @@ public class Product extends BaseEntity {
 
   private Integer saleAmount;
 
+  private Integer shippingTime;
+
   private LocalDate saleStartDate;
 
   private LocalDate saleEndDate;
