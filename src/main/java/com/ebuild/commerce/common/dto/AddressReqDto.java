@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class AddressSaveReqDto {
+public class AddressReqDto {
 
     @NotBlank
     private String baseAddress;
