@@ -1,6 +1,6 @@
 ---
 name: Commerce issue template
-about: 'E-commerce 프로젝트 이슈등록을 위한 템플릿 '
+about: '이슈 템플릿 '
 title: ''
 labels: ''
 assignees: ''
