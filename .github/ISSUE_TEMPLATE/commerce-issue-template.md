@@ -1,6 +1,6 @@
 ---
-name: Commerce issue template
-about: '이슈 템플릿 '
+name: ADD_FEATURE_TEMPLATE
+about: '기능 추가 이슈 등록 템플릿 '
 title: ''
 labels: ''
 assignees: 'e-build'
