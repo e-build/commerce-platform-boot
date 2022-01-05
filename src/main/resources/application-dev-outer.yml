@@ -13,3 +13,8 @@
 #      maximum-pool-size: 50
 #      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
 #      pool-name: pool-commerce
+
+spring:
+  redis:
+    host: 121.165.3.233
+    port: 6379
