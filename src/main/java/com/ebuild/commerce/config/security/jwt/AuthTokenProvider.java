@@ -12,4 +12,5 @@ public interface AuthTokenProvider<T> {
   Authentication getAuthentication(T authToken);
   Optional<String> resolveAuthTokenFromHeader(HttpServletRequest request);
 
+  Optional<String> resolveRefreshTokenFromHeader(HttpServletRequest request);
 }

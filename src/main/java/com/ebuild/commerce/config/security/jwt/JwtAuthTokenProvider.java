@@ -69,11 +69,19 @@ public class JwtAuthTokenProvider implements AuthTokenProvider<AuthToken<Claims>
 
   @Override
   public Optional<String> resolveAuthTokenFromHeader(HttpServletRequest request) {
-    String authToken = request.getHeader(SecurityConstants.AUTH_HEADER);
-    if (StringUtils.isNotBlank(authToken)) {
-      return Optional.of(authToken);
+    String token = request.getHeader(SecurityConstants.AUTH_TOKEN_HEADER);
+    if (StringUtils.isNotBlank(token)) {
+      return Optional.of(token);
     }
     return Optional.empty();
   }
 
+  @Override
+  public Optional<String> resolveRefreshTokenFromHeader(HttpServletRequest request) {
+    String token = request.getHeader(SecurityConstants.REFRESH_TOKEN_HEADER);
+    if (StringUtils.isNotBlank(token)) {
+      return Optional.of(token);
+    }
+    return Optional.empty();
+  }
 }

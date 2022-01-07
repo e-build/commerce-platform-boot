@@ -28,15 +28,28 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       HttpServletRequest request
       , HttpServletResponse response
       , FilterChain filterChain) throws ServletException, IOException {
-    Optional<String> token = jwtAuthTokenProvider.resolveAuthTokenFromHeader(request);
+    Optional<String> authJwtToken = jwtAuthTokenProvider.resolveAuthTokenFromHeader(request);
+    Optional<String> refreshJwtToken = jwtAuthTokenProvider.resolveRefreshTokenFromHeader(request);
 
-    if (token.isPresent()) {
-      AuthToken<Claims> authToken = jwtAuthTokenProvider.convertAuthToken(token.get());
+    if (authJwtToken.isPresent()) {
+      AuthToken<Claims> authToken = jwtAuthTokenProvider.convertAuthToken(authJwtToken.get());
 
+      // Refresh Token 검증
       if (authToken.validate()) {
         Authentication authentication = jwtAuthTokenProvider.getAuthentication(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+      } else {
+
+        // Refresh Token 검증
+        AuthToken<Claims> refreshToken = jwtAuthTokenProvider.convertAuthToken(refreshJwtToken.get());
+        if( refreshToken.validate() ){
+          Authentication authentication = jwtAuthTokenProvider.getAuthentication(refreshToken);
+
+        }
+
       }
+
+
     }
     filterChain.doFilter(request, response);
   }
