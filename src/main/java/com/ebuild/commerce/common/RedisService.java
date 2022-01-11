@@ -1,6 +1,8 @@
 package com.ebuild.commerce.common;
 
-import java.util.concurrent.TimeUnit;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
+import com.ebuild.commerce.config.security.SecurityConstants;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,19 @@ public class RedisService {
   }
 
   public void setDataWithDuration(String key, String value){
-    redisTemplate.opsForValue().set(key, value, 60L, TimeUnit.SECONDS);
+    redisTemplate.opsForValue().set(key, value, Duration.ofSeconds(60L));
+  }
+
+  public void setRefreshToken(CommerceUserDetail commerceUserDetail, String token){
+    redisTemplate.opsForValue().set(
+        SecurityConstants.REDIS_REFRESH_TOKEN_KEY + commerceUserDetail.getId()
+        , token
+        , Duration.ofDays(7)
+    );
+  }
+
+  public String getRefreshToken(String userId){
+    return redisTemplate.opsForValue().get(userId);
   }
 
   public String getData(String key){
