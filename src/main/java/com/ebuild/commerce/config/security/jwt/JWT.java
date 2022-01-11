@@ -15,20 +15,20 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class JwtAuthToken implements AuthToken<Claims>{
+public class JWT implements AuthToken<Claims>{
 
   @Getter
   private final String token;
   private final String secretKey;
 
-  JwtAuthToken(String token, String secretKey) {
+  JWT(String token, String secretKey) {
     this.token = token;
     this.secretKey = secretKey;
   }
 
-  JwtAuthToken(String userId, String role, String tokenValidMinute, String secretKey) {
+  JWT(String userId, String role, String tokenValidMinute, String secretKey) {
     this.secretKey = secretKey;
-    this.token = createJwtAuthToken(userId, role, tokenValidMinute)
+    this.token = create(userId, role, tokenValidMinute)
         .orElseThrow(JwtTokenCreationException::new);
   }
 
@@ -59,7 +59,7 @@ public class JwtAuthToken implements AuthToken<Claims>{
     }
   }
 
-  private Optional<String> createJwtAuthToken(String userId, String role, String tokenValidMinute) {
+  private Optional<String> create(String userId, String role, String tokenValidMinute) {
     return Optional.ofNullable(
         Jwts.builder()
         .setSubject(userId)
