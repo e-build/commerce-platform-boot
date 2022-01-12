@@ -1,7 +1,7 @@
 package com.ebuild.commerce.config.security;
 
 import com.ebuild.commerce.config.filter.JwtAuthFilter;
-import com.ebuild.commerce.config.security.jwt.JwtAuthTokenProvider;
+import com.ebuild.commerce.config.security.jwt.JwtTokenProvider;
 import com.ebuild.commerce.exception.security.JwtAccessDeniedHandler;
 import com.ebuild.commerce.exception.security.JwtAuthEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private final JwtAuthTokenProvider jwtAuthTokenProvider;
+  private final JwtTokenProvider jwtTokenProvider;
   private final JwtAuthEntryPoint jwtAuthEntryPoint;
   private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -67,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .anyRequest().authenticated()
 
         .and()
-        .addFilterBefore(new JwtAuthFilter(jwtAuthTokenProvider), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(new JwtAuthFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
         ;
 
   }

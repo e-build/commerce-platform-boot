@@ -3,11 +3,13 @@ package com.ebuild.commerce.business.user.controller;
 import com.ebuild.commerce.business.admin.domain.dto.AdminSaveReqDto;
 import com.ebuild.commerce.business.admin.service.AdminService;
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceUserLoginReqDto;
+import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import com.ebuild.commerce.business.user.commerceUserDetail.service.CommerceUserService;
 import com.ebuild.commerce.business.seller.domain.dto.SellerSaveReqDto;
 import com.ebuild.commerce.business.seller.service.SellerService;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
+import com.ebuild.commerce.config.security.annotation.CurrentUser;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,7 @@ public class CommerceUserApiController {
 
   @PostMapping("/seller")
   public ResponseEntity<CommonResponse> buyerSignup(
-      @RequestBody @Valid SellerSaveReqDto sellerSaveReqDto){
+      @RequestBody @Valid SellerSaveReqDto sellerSaveReqDto) {
     return ResponseEntity.ok(
         CommonResponse.OK(Pair.of("seller", sellerService.signup(sellerSaveReqDto)))
     );
@@ -40,7 +42,7 @@ public class CommerceUserApiController {
 
   @PostMapping("/admin")
   public ResponseEntity<CommonResponse> buyerSignup(
-      @RequestBody @Valid AdminSaveReqDto adminSaveReqDto){
+      @RequestBody @Valid AdminSaveReqDto adminSaveReqDto) {
     return ResponseEntity.ok(
         CommonResponse.OK(Pair.of("admin", adminService.signup(adminSaveReqDto)))
     );
@@ -48,9 +50,18 @@ public class CommerceUserApiController {
 
   @PostMapping("/authenticate")
   public ResponseEntity<CommonResponse> authenticate(
-      @RequestBody @Valid CommerceUserLoginReqDto commerceUserLoginReqDto ){
+      @RequestBody @Valid CommerceUserLoginReqDto commerceUserLoginReqDto) {
     return ResponseEntity.ok(
         CommonResponse.OK(Pair.of("token", commerceUserService.login(commerceUserLoginReqDto)))
+    );
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<CommonResponse> logout(
+      @CurrentUser CommerceUserDetail commerceUserDetail) {
+    commerceUserService.logout(commerceUserDetail);
+    return ResponseEntity.ok(
+        CommonResponse.OK()
     );
   }
 

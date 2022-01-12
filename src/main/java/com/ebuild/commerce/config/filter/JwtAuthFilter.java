@@ -1,7 +1,7 @@
 package com.ebuild.commerce.config.filter;
 
 import com.ebuild.commerce.config.security.jwt.AuthToken;
-import com.ebuild.commerce.config.security.jwt.JwtAuthTokenProvider;
+import com.ebuild.commerce.config.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import java.util.Optional;
@@ -17,9 +17,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-  private final JwtAuthTokenProvider jwtAuthTokenProvider;
+  private final JwtTokenProvider jwtAuthTokenProvider;
 
-  public JwtAuthFilter(JwtAuthTokenProvider jwtAuthTokenProvider) {
+  public JwtAuthFilter(JwtTokenProvider jwtAuthTokenProvider) {
     this.jwtAuthTokenProvider = jwtAuthTokenProvider;
   }
 
@@ -32,7 +32,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     Optional<String> refreshJwtToken = jwtAuthTokenProvider.resolveRefreshTokenFromHeader(request);
 
     if (authJwtToken.isPresent()) {
-      AuthToken<Claims> authToken = jwtAuthTokenProvider.convertAuthToken(authJwtToken.get());
+      AuthToken<Claims> authToken = jwtAuthTokenProvider.convertJWT(authJwtToken.get());
 
       // Refresh Token 검증
       if (authToken.validate()) {
@@ -41,15 +41,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       } else {
 
         // Refresh Token 검증
-        AuthToken<Claims> refreshToken = jwtAuthTokenProvider.convertAuthToken(refreshJwtToken.get());
-        if( refreshToken.validate() ){
-          Authentication authentication = jwtAuthTokenProvider.getAuthentication(refreshToken);
+        if (refreshJwtToken.isPresent()) {
+          AuthToken<Claims> refreshToken = jwtAuthTokenProvider.convertJWT(refreshJwtToken.get());
+          if (refreshToken.validate()) {
+            Authentication authentication = jwtAuthTokenProvider.getAuthentication(refreshToken);
 
+
+          }
         }
 
       }
-
-
     }
     filterChain.doFilter(request, response);
   }

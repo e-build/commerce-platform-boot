@@ -43,12 +43,16 @@ public class CommerceUserService implements UserDetailsService {
     );
 
     TokenDto token = TokenDto.of(authentication, jwtAuthTokenProvider);
-    redisService.setRefreshToken(
-        (CommerceUserDetail)authentication.getPrincipal()
-        , token.getRefreshToken()
-    );
+    CommerceUserDetail commerceUserDetail = (CommerceUserDetail) authentication.getPrincipal();
+    redisService.setRefreshToken(commerceUserDetail, token.getRefreshToken());
+    redisService.setUserDetail(commerceUserDetail);
 
     return token;
+  }
+
+  public void logout(CommerceUserDetail commerceUserDetail){
+    redisService.removeRefreshToken(commerceUserDetail);
+    redisService.removeUserDetail(commerceUserDetail);
   }
 
 }
