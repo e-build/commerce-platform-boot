@@ -1,5 +1,6 @@
 package com.ebuild.commerce.config.filter;
 
+import com.ebuild.commerce.config.security.SecurityConstants;
 import com.ebuild.commerce.config.security.jwt.AuthToken;
 import com.ebuild.commerce.config.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
@@ -41,14 +42,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       } else {
 
         // Refresh Token 검증
-        if (refreshJwtToken.isPresent()) {
-          AuthToken<Claims> refreshToken = jwtAuthTokenProvider.convertJWT(refreshJwtToken.get());
-          if (refreshToken.validate()) {
-            Authentication authentication = jwtAuthTokenProvider.getAuthentication(refreshToken);
-
-
-          }
-        }
+//        if (refreshJwtToken.isPresent()) {
+//          AuthToken<Claims> refreshToken = jwtAuthTokenProvider.convertJWT(refreshJwtToken.get());
+//          if (refreshToken.validate()) {
+//            Authentication authentication = jwtAuthTokenProvider.getAuthentication(refreshToken);
+//            response.setHeader(SecurityConstants.AUTH_TOKEN_HEADER,"");
+//            response.setHeader(SecurityConstants.REFRESH_TOKEN_HEADER,"");
+//
+//          }
+//        }
 
       }
     }

@@ -53,7 +53,8 @@ public class DataInitialization {
       Company company = createCompany(address);
       em.persist(company);
 
-      Product product1 = createProduct("와우 빡빡이 아저씨야", company,25000, 20000);
+
+      Product product1 = createProduct("매슬로우 욕구위계이론", company, 25000, 21000);
       Product product2 = createProduct("달러굿즈의 세계모험기", company, 10000, 8000);
 
       em.persist(product1);
@@ -72,8 +73,6 @@ public class DataInitialization {
       em.persist(buyerRole);
       em.persist(sellerRole);
       em.persist(adminRole);
-
-
     }
 
     private Buyer createBuyer(CommerceUserDetail userDetail) {
