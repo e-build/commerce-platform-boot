@@ -6,10 +6,10 @@ import com.ebuild.commerce.business.seller.domain.entity.Seller;
 import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
 import lombok.Getter;
 
+@Getter
 public class CommerceUserAdapter {
 
-  @Getter
-  private CommerceUserDetail commerceUserDetail;
+  private final CommerceUserDetail commerceUserDetail;
 
   public CommerceUserAdapter(CommerceUserDetail commerceUserDetail){
     this.commerceUserDetail = commerceUserDetail;

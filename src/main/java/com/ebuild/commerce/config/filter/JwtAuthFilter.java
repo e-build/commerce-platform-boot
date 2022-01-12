@@ -1,7 +1,8 @@
 package com.ebuild.commerce.config.filter;
 
+import com.ebuild.commerce.config.security.SecurityConstants;
 import com.ebuild.commerce.config.security.jwt.AuthToken;
-import com.ebuild.commerce.config.security.jwt.JwtAuthTokenProvider;
+import com.ebuild.commerce.config.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import java.util.Optional;
@@ -17,9 +18,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-  private final JwtAuthTokenProvider jwtAuthTokenProvider;
+  private final JwtTokenProvider jwtAuthTokenProvider;
 
-  public JwtAuthFilter(JwtAuthTokenProvider jwtAuthTokenProvider) {
+  public JwtAuthFilter(JwtTokenProvider jwtAuthTokenProvider) {
     this.jwtAuthTokenProvider = jwtAuthTokenProvider;
   }
 
@@ -28,14 +29,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       HttpServletRequest request
       , HttpServletResponse response
       , FilterChain filterChain) throws ServletException, IOException {
-    Optional<String> token = jwtAuthTokenProvider.resolveAuthTokenFromHeader(request);
+    Optional<String> authJwtToken = jwtAuthTokenProvider.resolveAuthTokenFromHeader(request);
+    Optional<String> refreshJwtToken = jwtAuthTokenProvider.resolveRefreshTokenFromHeader(request);
 
-    if (token.isPresent()) {
-      AuthToken<Claims> authToken = jwtAuthTokenProvider.convertAuthToken(token.get());
+    if (authJwtToken.isPresent()) {
+      AuthToken<Claims> authToken = jwtAuthTokenProvider.convertJWT(authJwtToken.get());
 
+      // Refresh Token 검증
       if (authToken.validate()) {
         Authentication authentication = jwtAuthTokenProvider.getAuthentication(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+      } else {
+
+        // Refresh Token 검증
+//        if (refreshJwtToken.isPresent()) {
+//          AuthToken<Claims> refreshToken = jwtAuthTokenProvider.convertJWT(refreshJwtToken.get());
+//          if (refreshToken.validate()) {
+//            Authentication authentication = jwtAuthTokenProvider.getAuthentication(refreshToken);
+//            response.setHeader(SecurityConstants.AUTH_TOKEN_HEADER,"");
+//            response.setHeader(SecurityConstants.REFRESH_TOKEN_HEADER,"");
+//
+//          }
+//        }
+
       }
     }
     filterChain.doFilter(request, response);

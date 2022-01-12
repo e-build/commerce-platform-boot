@@ -16,7 +16,7 @@ public class TokenDto {
   private final String authenticationToken;
   private final String refreshToken;
 
-  public static TokenDto of(Authentication authentication, JwtAuthTokenProvider jwtAuthTokenProvider){
+  public static TokenDto of(Authentication authentication, JwtTokenProvider jwtAuthTokenProvider){
     CommerceUserDetail principal = (CommerceUserDetail) authentication.getPrincipal();
 
     String roles = authentication.getAuthorities()
@@ -24,12 +24,9 @@ public class TokenDto {
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.joining(","));
 
-    JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.createAuthToken(principal.getId(), roles);
-    String jwt = jwtAuthToken.getToken();
-
     return TokenDto.builder()
-        .authenticationToken(jwt)
-//        .refreshToken()
+        .authenticationToken(jwtAuthTokenProvider.createAuthJWT(principal.getId(), roles).getToken())
+        .refreshToken(jwtAuthTokenProvider.createRefreshJWT(principal.getId()).getToken())
         .build();
   }
 

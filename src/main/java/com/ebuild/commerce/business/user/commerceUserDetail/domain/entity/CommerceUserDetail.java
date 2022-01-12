@@ -7,6 +7,7 @@ import com.ebuild.commerce.business.user.role.domain.CommerceUserRole;
 import com.ebuild.commerce.business.user.role.domain.Role;
 import com.ebuild.commerce.business.seller.domain.entity.Seller;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,6 +35,7 @@ import org.springframework.util.CollectionUtils;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CommerceUserDetail implements UserDetails {
 
   @Id
@@ -99,16 +101,19 @@ public class CommerceUserDetail implements UserDetails {
   }
 
   @Override
+  @JsonIgnore
   public String getUsername() {
     return this.email;
   }
 
   @Override
+  @JsonIgnore
   public String getPassword() {
     return this.password;
   }
 
   @Override
+  @JsonIgnore
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return this.roleList
         .stream()
@@ -139,4 +144,5 @@ public class CommerceUserDetail implements UserDetails {
   public void passwordMasking() {
     this.password = "*********";
   }
+
 }

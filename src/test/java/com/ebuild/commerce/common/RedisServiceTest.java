@@ -7,14 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles("dev-inner")
+@ActiveProfiles("dev-outer")
 class RedisServiceTest {
 
   @Autowired
   private RedisService redisService;
 
   @Test
-  void basic_sample(){
+  void basic_operation(){
     // given
 
     // when
