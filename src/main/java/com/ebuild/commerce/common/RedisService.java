@@ -24,8 +24,8 @@ public class RedisService {
     redisTemplate.opsForValue().set(key, value);
   }
 
-  public void setDataWithDuration(String key, String value) {
-    redisTemplate.opsForValue().set(key, value, Duration.ofSeconds(60L));
+  public String getData(String key) {
+    return redisTemplate.opsForValue().get(key);
   }
 
   public void setRefreshToken(CommerceUserDetail commerceUserDetail, String token) {
@@ -36,20 +36,15 @@ public class RedisService {
     );
   }
 
+  public String getRefreshToken(Long commerceUserDetailId) {
+    return redisTemplate.opsForValue().get(SecurityConstants.REDIS_REFRESH_TOKEN_KEY + commerceUserDetailId);
+  }
+
   public void removeRefreshToken(CommerceUserDetail commerceUserDetail) {
     redisTemplate.delete(
         SecurityConstants.REDIS_REFRESH_TOKEN_KEY + commerceUserDetail.getId()
     );
   }
-
-  public String getRefreshToken(String userId) {
-    return redisTemplate.opsForValue().get(userId);
-  }
-
-  public String getData(String key) {
-    return redisTemplate.opsForValue().get(key);
-  }
-
 
   public void removeUserDetail(CommerceUserDetail commerceUserDetail) {
     redisTemplate.delete(String.valueOf(commerceUserDetail.getId()));
@@ -58,12 +53,6 @@ public class RedisService {
   public void setUserDetail(CommerceUserDetail commerceUserDetail) {
     redisTemplate.opsForValue()
         .set(String.valueOf(commerceUserDetail.getId()), jsonHelper.serialize(commerceUserDetail));
-  }
-
-  public CommerceUserDetail getUserDetail(Long commerceUserDetailId) {
-    String serializedUserDetail = redisTemplate.opsForValue()
-        .get(String.valueOf(commerceUserDetailId));
-    return jsonHelper.deserialize(serializedUserDetail, CommerceUserDetail.class);
   }
 
   public CommerceUserDetail getCommerceUserDetail(Long commerceUserDetailId) {
@@ -75,11 +64,7 @@ public class RedisService {
       return jsonHelper.deserialize(cachedData, CommerceUserDetail.class);
 
     CommerceUserDetail commerceUserDetail = commerceUserQueryService.findById(commerceUserDetailId);
-    redisTemplate.opsForValue()
-        .set(
-            String.valueOf(commerceUserDetailId)
-            , jsonHelper.serialize(commerceUserDetail)
-        );
+    setUserDetail(commerceUserDetail);
     return commerceUserDetail;
   }
 }
