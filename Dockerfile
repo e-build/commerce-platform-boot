@@ -1,4 +1,4 @@
-FROM java:11
+FROM openjdk:11-jre-slim
 EXPOSE 8080
 ENV ACTIVE_PROFILE=dev
 ARG JAR_FILE=build/libs/*.jar
