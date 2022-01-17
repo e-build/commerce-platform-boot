@@ -38,17 +38,21 @@ pipeline {
         stage('Build docker image') {
             steps {
                 script {
-                    commerceImage = docker.build '$CONTAINER_IMG_TAG'
+                    commerceImage = docker.build("$CONTAINER_IMG_TAG:${env.BUILD_ID}")
                 }
+            }
+        }
+        stage('Check docker image') {
+            steps {
                 sh 'docker images | grep $CONTAINER_IMG_TAG'
             }
         }
         stage('Push docker image') {
             steps {
                 script {
-                    docker.withRegistry('$CONTAINER_IMG_REGISTRY', '$GITHUB_CREDENTIALS_ID'){
-                        commerceImage.push('$BUILD_NUMBER')
-                        commerceImage.push('latest"')
+                    docker.withRegistry("$CONTAINER_IMG_REGISTRY", "$GITHUB_CREDENTIALS_ID"){
+                        commerceImage.push()
+                        commerceImage.push("latest")
                     }
                 }
             }
