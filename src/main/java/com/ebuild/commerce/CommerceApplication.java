@@ -12,7 +12,7 @@ public class CommerceApplication {
     SpringApplication.run(CommerceApplication.class, args);
 
     System.out.println("#########################################");
-    System.out.println("################ 빌드 성공 ################");
+    System.out.println("################ 빌드 성공 ! ################");
     System.out.println("#########################################");
 
   }
