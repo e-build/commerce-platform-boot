@@ -4,11 +4,11 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
     }
     environment {
+        GITHUB_SOURCE_URL = 'https://github.com/e-build/commerce-platform-boot.git'
+        GITHUB_SOURCE_BRANCH = 'develop'
         CONTAINER_IMG_TAG = "commerce"
-        CONTAINER_IMG_REGISTRY_URL = 'https://ghcr.io/'
         CONTAINER_IMG_REGISTRY = 'ghcr.io/e-build'
-        GITHUB_CREDENTIALS_ID = 'e-build'
-        commerceImage = ''
+        GITHUB_CREDENTIALS = credentials('e-build')
     }
     stages {
         stage('Init') {
@@ -19,8 +19,8 @@ pipeline {
         }
         stage('Git Clone') {
             steps {
-                git url: 'https://github.com/e-build/commerce-platform-boot.git',
-                    branch: 'develop'
+                git url: GITHUB_SOURCE_URL,
+                    branch: GITHUB_SOURCE_BRANCH
                 sh 'ls -al'
             }
         }
@@ -38,7 +38,7 @@ pipeline {
         }
         stage('Build docker image') {
             steps {
-                sh 'docker build -t $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:latest .'
+                sh 'docker build -t $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:$BUILD_NUMBER .'
             }
         }
         stage('Check docker image') {
@@ -48,9 +48,9 @@ pipeline {
         }
         stage('Deploy docker image') {
             steps {
-                withDockerRegistry([credentialsId: GITHUB_CREDENTIALS_ID, url: CONTAINER_IMG_REGISTRY_URL]){
-                    sh 'docker push $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:latest'
-                }
+                sh 'echo $GITHUB_CREDENTIALS | docker login https://ghcr.io -u e-build --password-stdin'
+                sh 'docker push $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:$BUILD_NUMBER'
+                sh 'echo image $CONTAINER_IMG_TAG push complete!'
             }
         }
         stage('Complete') {
@@ -60,6 +60,3 @@ pipeline {
         }
     }
 }
-
-
-
