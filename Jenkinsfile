@@ -37,9 +37,7 @@ pipeline {
         }
         stage('Build docker image') {
             steps {
-                script {
-                    commerceImage = docker.build("$CONTAINER_IMG_TAG:${env.BUILD_ID}")
-                }
+                sh 'docker build -t $CONTAINER_IMG_TAG:latest .'
             }
         }
         stage('Check docker image') {
@@ -47,13 +45,10 @@ pipeline {
                 sh 'docker images | grep $CONTAINER_IMG_TAG'
             }
         }
-        stage('Push docker image') {
+        stage('Deploy docker image') {
             steps {
-                script {
-                    docker.withRegistry("$CONTAINER_IMG_REGISTRY", "$GITHUB_CREDENTIALS_ID"){
-                        commerceImage.push()
-                        commerceImage.push("latest")
-                    }
+                withDockerRegistry([credentialsId: GITHUB_CREDENTIALS_ID, url: CONTAINER_IMG_REGISTRY]){
+                    sh 'docker push $CONTAINER_IMG_TAG:latest'
                 }
             }
         }
