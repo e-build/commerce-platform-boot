@@ -36,14 +36,6 @@ pipeline {
             }
         }
         stage('Build docker image') {
-            agent {
-                dockerfile {
-                    filename 'Dockerfile'
-                    dir '.'
-                    registryUrl 'https://ghcr.io/e-build/'
-                    registryCredentialsId '$GITHUB_CREDENTIALS_ID'
-                }
-            }
             steps {
                 script {
                     commerceImage = docker.build '$CONTAINER_IMG_TAG'
