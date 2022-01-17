@@ -36,11 +36,13 @@ pipeline {
             }
         }
         stage('Build & Push docker image') {
-            dockerfile {
-                filename 'Dockerfile'
-                dir '.'
-                registryUrl 'https://ghcr.io/'
-                registryCredentialsId '$GITHUB_CREDENTIALS_ID'
+            steps {
+                dockerfile {
+                    filename 'Dockerfile'
+                    dir '.'
+                    registryUrl 'https://ghcr.io/'
+                    registryCredentialsId '$GITHUB_CREDENTIALS_ID'
+                }
             }
         }
         stage('Complete') {
