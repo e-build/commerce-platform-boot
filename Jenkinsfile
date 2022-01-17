@@ -4,8 +4,8 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
     }
     environment {
-        CONTAINER_IMG_TAG = "app/commerce"
-        CONTAINER_IMG_REGISTRY = 'ghcr.io/e-build'
+        CONTAINER_IMG_TAG = "e-build/commerce"
+        CONTAINER_IMG_REGISTRY = 'https://ghcr.io/'
         GITHUB_CREDENTIALS_ID = 'e-build'
     }
     stages {
@@ -35,13 +35,29 @@ pipeline {
                 sh 'ls -al build/libs'
             }
         }
-        stage('Build & Push docker image') {
-            steps {
+        stage('Build docker image') {
+            agent {
                 dockerfile {
                     filename 'Dockerfile'
                     dir '.'
-                    registryUrl 'https://ghcr.io/'
+                    registryUrl 'https://ghcr.io/e-build/'
                     registryCredentialsId '$GITHUB_CREDENTIALS_ID'
+                }
+            }
+            steps {
+                script {
+                    commerceImage = docker.build '$CONTAINER_IMG_TAG'
+                }
+                sh 'docker images | grep $CONTAINER_IMG_TAG'
+            }
+        }
+        stage('Push docker image') {
+            steps {
+                script {
+                    docker.withRegistry('$CONTAINER_IMG_REGISTRY', '$GITHUB_CREDENTIALS_ID'){
+                        commerceImage.push('$BUILD_NUMBER')
+                        commerceImage.push('latest"')
+                    }
                 }
             }
         }
@@ -52,3 +68,6 @@ pipeline {
         }
     }
 }
+
+
+
