@@ -12,7 +12,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Getter
-@Builder
 public class CommonResponse {
 
     private boolean result = true;
@@ -60,11 +59,11 @@ public class CommonResponse {
     }
 
     private static CommonResponse of(Map<String, Object> data, Error error){
-        return CommonResponse.builder()
-            .result(isNull(error))
-            .data(data)
-            .error(error)
-            .build();
+        CommonResponse response = new CommonResponse();
+        response.result = isNull(error);
+        response.data = data;
+        response.error = error;
+        return response;
     }
 
     private static void put(Map<String, Object> data, Pair<String, Object> pair) {

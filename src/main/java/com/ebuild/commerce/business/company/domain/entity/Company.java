@@ -19,10 +19,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Getter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Company extends BaseEntity {
 
@@ -45,6 +43,7 @@ public class Company extends BaseEntity {
   @Embedded
   private SettlementInfo settlementInfo;
 
+  @Builder
   public Company(String name, String registrationNumber
       , String representativeNumber, Address address
       , SettlementInfo settlementInfo) {

@@ -45,9 +45,14 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
-test {
-    useJUnitPlatform()
+// *-plain-jar 생성 방지 설정
+jar {
+    enabled = false
 }
+
+//test {
+//    useJUnitPlatform()
+//}
 
 //querydsl 추가 시작
 //def querydslDir = "$buildDir/generated/querydsl"
