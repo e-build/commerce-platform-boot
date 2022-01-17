@@ -7,9 +7,9 @@ pipeline {
         CONTAINER_IMG_TAG = "e-build/commerce"
         CONTAINER_IMG_REGISTRY = 'https://ghcr.io/'
         GITHUB_CREDENTIALS_ID = 'e-build'
+        commerceImage = ''
     }
     stages {
-
         stage('Init') {
             steps {
                 echo 'clear'
