@@ -8,6 +8,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 public class CommerceApplication {
 
-  public static void main(String[] args) { SpringApplication.run(CommerceApplication.class, args); }
+  public static void main(String[] args) {
+    SpringApplication.run(CommerceApplication.class, args);
+
+    System.out.println("#########################################");
+    System.out.println("################ 빌드 성공 ################");
+    System.out.println("#########################################");
+
+  }
 
 }
