@@ -6,6 +6,8 @@ pipeline {
     environment {
         DOCKER_IMG_TAG = "app/commerce"
         IMG_REGISTRY = 'dockerhub'
+        GITHUB_CREDENTIALS_ID = 'e-build'
+        GITHUB_ACCESS_TOKEN = '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'
     }
     stages {
 
@@ -46,7 +48,7 @@ pipeline {
         }
         stage('Deploy docker image') {
             steps {
-                sh 'echo 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 | docker login https://ghcr.io -u e-build --password-stdin'
+                sh 'echo $GITHUB_ACCESS_TOKEN | docker login https://ghcr.io -u e-build --password-stdin'
                 sh 'docker tag $DOCKER_IMG_TAG ghcr.io/e-build/$DOCKER_IMG_TAG:$BUILD_NUMBER'
                 sh 'docker push ghcr.io/e-build/$DOCKER_IMG_TAG:$BUILD_NUMBER'
                 echo 'image [$DOCKER_IMG_TAG] push complete!'
