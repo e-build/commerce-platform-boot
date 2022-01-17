@@ -4,8 +4,9 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
     }
     environment {
-        CONTAINER_IMG_TAG = "e-build/commerce"
-        CONTAINER_IMG_REGISTRY = 'https://ghcr.io/'
+        CONTAINER_IMG_TAG = "commerce"
+        CONTAINER_IMG_REGISTRY_URL = 'https://ghcr.io/'
+        CONTAINER_IMG_REGISTRY = 'ghcr.io/e-build'
         GITHUB_CREDENTIALS_ID = 'e-build'
         commerceImage = ''
     }
@@ -37,7 +38,7 @@ pipeline {
         }
         stage('Build docker image') {
             steps {
-                sh 'docker build -t $CONTAINER_IMG_TAG:latest .'
+                sh 'docker build -t $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:latest .'
             }
         }
         stage('Check docker image') {
@@ -47,8 +48,8 @@ pipeline {
         }
         stage('Deploy docker image') {
             steps {
-                withDockerRegistry([credentialsId: GITHUB_CREDENTIALS_ID, url: CONTAINER_IMG_REGISTRY]){
-                    sh 'docker push $CONTAINER_IMG_TAG:latest'
+                withDockerRegistry([credentialsId: GITHUB_CREDENTIALS_ID, url: CONTAINER_IMG_REGISTRY_URL]){
+                    sh 'docker push $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:latest'
                 }
             }
         }
