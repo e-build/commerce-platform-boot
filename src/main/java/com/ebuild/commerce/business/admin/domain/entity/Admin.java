@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.admin.domain.entity;
 
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.common.BaseEntity;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,10 +23,10 @@ public class Admin extends BaseEntity {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private CommerceUserDetail commerceUserDetail;
+  private AppUserDetails appUserDetails;
 
   @Builder
-  public Admin(CommerceUserDetail commerceUserDetail) {
-    this.commerceUserDetail = commerceUserDetail;
+  public Admin(AppUserDetails appUserDetails) {
+    this.appUserDetails = appUserDetails;
   }
 }

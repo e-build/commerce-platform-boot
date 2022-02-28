@@ -1,16 +1,16 @@
 package com.ebuild.commerce.business.buyer.service;
 
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
+import com.ebuild.commerce.business.auth.domain.entity.Role;
+import com.ebuild.commerce.business.auth.domain.entity.RoleType;
+import com.ebuild.commerce.business.auth.repository.JpaAppUserDetailsRepository;
+import com.ebuild.commerce.business.auth.repository.JpaRoleRepository;
 import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.business.buyer.domain.dto.BuyerResDto;
 import com.ebuild.commerce.business.buyer.domain.dto.BuyerSaveReqDto;
 import com.ebuild.commerce.business.buyer.domain.dto.BuyerSearchReqDto;
 import com.ebuild.commerce.business.buyer.domain.dto.BuyerSearchResDto;
 import com.ebuild.commerce.business.buyer.repository.JpaBuyerRepository;
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
-import com.ebuild.commerce.business.user.commerceUserDetail.repository.CommerceUserDetailRepository;
-import com.ebuild.commerce.business.user.role.CommerceRole;
-import com.ebuild.commerce.business.user.role.domain.Role;
-import com.ebuild.commerce.business.user.role.repository.JpaRoleRepository;
 import com.ebuild.commerce.exception.AlreadyExistsException;
 import com.ebuild.commerce.exception.NotFoundException;
 import com.google.common.collect.Lists;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BuyerService {
 
   private final JpaBuyerRepository jpaBuyerRepository;
-  private final CommerceUserDetailRepository jpaCommerceUserDetailRepository;
+  private final JpaAppUserDetailsRepository jpaAppUserDetailsRepository;
   private final JpaRoleRepository jpaRoleRepository;
   private final PasswordEncoder passwordEncoder;
 
@@ -39,7 +39,7 @@ public class BuyerService {
     buyerSaveReqDto.getCommerceUser()
         .setRoles(
             jpaRoleRepository
-                .findAllByNameIn(Lists.newArrayList(CommerceRole.BUYER))
+                .findAllByNameIn(Lists.newArrayList(RoleType.BUYER))
                 .toArray(new Role[0])
         );
 
@@ -47,7 +47,7 @@ public class BuyerService {
     buyerSaveReqDto.getCommerceUser().encryptPassword(passwordEncoder);
 
     Buyer buyer = Buyer.builder()
-        .commerceUserDetail(buyerSaveReqDto.getCommerceUser().toEntity())
+        .appUserDetails(buyerSaveReqDto.getCommerceUser().toEntity())
         .receivingAddress(buyerSaveReqDto.getReceiveAddress().get())
         .build();
 
@@ -60,12 +60,12 @@ public class BuyerService {
 
   @Transactional
   public BuyerResDto update(BuyerSaveReqDto buyerSaveReqDto) {
-    CommerceUserDetail commerceUserDetail = findCommerceUserByEmail(
+    AppUserDetails appUserDetails = findCommerceUserByEmail(
         buyerSaveReqDto.getCommerceUser().getEmail())
         .orElseThrow(() -> new NotFoundException(
             "[" + buyerSaveReqDto.getCommerceUser().getEmail() + "]에 해당하는 사용자는 존재하지 않습니다."));
 
-    Buyer buyer = commerceUserDetail.getBuyer();
+    Buyer buyer = appUserDetails.getBuyer();
     buyer.update(buyerSaveReqDto);
 
     return BuyerResDto.builder()
@@ -94,8 +94,8 @@ public class BuyerService {
     return null;
   }
 
-  private Optional<CommerceUserDetail> findCommerceUserByEmail(String email){
-    return jpaCommerceUserDetailRepository.findOneByEmail(email);
+  private Optional<AppUserDetails> findCommerceUserByEmail(String email){
+    return jpaAppUserDetailsRepository.findOneByEmail(email);
   }
 
 }

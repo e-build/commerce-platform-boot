@@ -7,11 +7,12 @@ import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.business.admin.domain.entity.Admin;
 import com.ebuild.commerce.business.buyer.domain.Buyer;
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
-import com.ebuild.commerce.business.user.role.CommerceRole;
-import com.ebuild.commerce.business.user.role.domain.Role;
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
+import com.ebuild.commerce.business.auth.domain.entity.RoleType;
+import com.ebuild.commerce.business.auth.domain.entity.Role;
 import com.ebuild.commerce.business.seller.domain.entity.Seller;
 import com.ebuild.commerce.common.Address;
+import com.ebuild.commerce.oauth.domain.ProviderType;
 import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -66,37 +67,53 @@ public class DataInitialization {
       /*****************
        **** 권한 등록 ****
        *****************/
-      Role buyerRole = new Role(1L, CommerceRole.BUYER);
-      Role sellerRole = new Role(2L, CommerceRole.SELLER);
-      Role adminRole = new Role(3L, CommerceRole.ADMIN);
+      Role buyerRole = new Role(1L, RoleType.BUYER);
+      Role sellerRole = new Role(2L, RoleType.SELLER);
+      Role adminRole = new Role(3L, RoleType.ADMIN);
 
       em.persist(buyerRole);
       em.persist(sellerRole);
       em.persist(adminRole);
+
+      AppUserDetails appUserDetails = AppUserDetails.builder()
+          .email("donggeol92@gmail.com")
+          .password("$2a$10$zGIt8X9MFmR.TngaZQzvI..w3qIONVL3CDzTFDKvqP/8DiNpLbRdm") // 1234qwer!
+          .nickname("ebuild")
+          .phoneNumber("010-9747-6477")
+          .providerType(ProviderType.EMAIL)
+          .build();
+      appUserDetails.addRoles(buyerRole);
+      appUserDetails.setEmailVerifiedYn("Y");
+
+      Buyer buyer = Buyer.builder()
+          .appUserDetails(appUserDetails)
+          .build();
+
+      em.persist(buyer);
     }
 
-    private Buyer createBuyer(CommerceUserDetail userDetail) {
+    private Buyer createBuyer(AppUserDetails userDetail) {
       return Buyer.builder()
-          .commerceUserDetail(userDetail)
+          .appUserDetails(userDetail)
           .build();
     }
 
-    private Seller createSeller(CommerceUserDetail userDetail, Company company) {
+    private Seller createSeller(AppUserDetails userDetail, Company company) {
       return Seller.builder()
-          .commerceUserDetail(userDetail)
+          .appUserDetails(userDetail)
           .company(company)
           .shippingAddress(createAddress())
           .build();
     }
 
-    private Admin createAdmin(CommerceUserDetail userDetail) {
+    private Admin createAdmin(AppUserDetails userDetail) {
       return Admin.builder()
-          .commerceUserDetail(userDetail)
+          .appUserDetails(userDetail)
           .build();
     }
 
-    private CommerceUserDetail createUserDetail(String username, String password) {
-      return CommerceUserDetail.builder()
+    private AppUserDetails createUserDetail(String username, String password) {
+      return AppUserDetails.builder()
           .email(username)
           .password(passwordEncoder.encode(password))
           .build();

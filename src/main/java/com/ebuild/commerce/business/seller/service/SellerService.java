@@ -1,11 +1,11 @@
 package com.ebuild.commerce.business.seller.service;
 
+import com.ebuild.commerce.business.auth.repository.JpaAppUserDetailsRepository;
+import com.ebuild.commerce.business.auth.repository.JpaRoleRepository;
 import com.ebuild.commerce.business.company.repository.JpaCompanyRepository;
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
-import com.ebuild.commerce.business.user.commerceUserDetail.repository.CommerceUserDetailRepository;
-import com.ebuild.commerce.business.user.role.CommerceRole;
-import com.ebuild.commerce.business.user.role.domain.Role;
-import com.ebuild.commerce.business.user.role.repository.JpaRoleRepository;
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
+import com.ebuild.commerce.business.auth.domain.entity.RoleType;
+import com.ebuild.commerce.business.auth.domain.entity.Role;
 import com.ebuild.commerce.business.seller.domain.dto.SellerSaveReqDto;
 import com.ebuild.commerce.business.seller.domain.dto.SellerSaveResDto;
 import com.ebuild.commerce.business.seller.domain.entity.Seller;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class SellerService {
 
   private final PasswordEncoder passwordEncoder;
-  private final CommerceUserDetailRepository jpaCommerceUserDetailRepository;
+  private final JpaAppUserDetailsRepository jpaAppUserDetailsRepository;
   private final JpaRoleRepository jpaRoleRepository;
   private final JpaSellerRepository jpaSellerRepository;
   private final JpaCompanyRepository jpaCompanyRepository;
@@ -37,7 +37,7 @@ public class SellerService {
     sellerSaveReqDto.getCommerceUser()
         .setRoles(
             jpaRoleRepository
-                .findAllByNameIn(Lists.newArrayList(CommerceRole.SELLER))
+                .findAllByNameIn(Lists.newArrayList(RoleType.SELLER))
                 .toArray(new Role[0])
         );
 
@@ -45,7 +45,7 @@ public class SellerService {
     sellerSaveReqDto.getCommerceUser().encryptPassword(passwordEncoder);
 
     Seller seller = Seller.builder()
-        .commerceUserDetail(sellerSaveReqDto.getCommerceUser().toEntity())
+        .appUserDetails(sellerSaveReqDto.getCommerceUser().toEntity())
         .shippingAddress(sellerSaveReqDto.getShippingAddress().get())
         .company(jpaCompanyRepository
             .findById(sellerSaveReqDto.getCompanyId())
@@ -59,7 +59,7 @@ public class SellerService {
         .build();
   }
 
-  private Optional<CommerceUserDetail> findCommerceUserByEmail(String email){
-    return jpaCommerceUserDetailRepository.findOneByEmail(email);
+  private Optional<AppUserDetails> findCommerceUserByEmail(String email){
+    return jpaAppUserDetailsRepository.findOneByEmail(email);
   }
 }

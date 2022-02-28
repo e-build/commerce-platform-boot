@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.seller.domain.entity;
 
 import com.ebuild.commerce.business.company.domain.entity.Company;
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
 import javax.persistence.CascadeType;
@@ -27,7 +27,7 @@ public class Seller extends BaseEntity {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private CommerceUserDetail commerceUserDetail;
+  private AppUserDetails appUserDetails;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Company company;
@@ -40,11 +40,11 @@ public class Seller extends BaseEntity {
 
   @Builder
   public Seller(
-      CommerceUserDetail commerceUserDetail
+      AppUserDetails appUserDetails
       , Company company
       , Address shippingAddress)
   {
-    this.commerceUserDetail = commerceUserDetail;
+    this.appUserDetails = appUserDetails;
     this.company = company;
     this.shippingAddress = shippingAddress;
   }

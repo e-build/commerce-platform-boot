@@ -2,8 +2,8 @@ package com.ebuild.commerce.common;
 
 import static java.util.Objects.isNull;
 
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
-import com.ebuild.commerce.business.user.commerceUserDetail.service.CommerceUserQueryService;
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
+import com.ebuild.commerce.business.auth.service.AppUserDetailsQueryService;
 import com.ebuild.commerce.config.JsonHelper;
 import com.ebuild.commerce.config.security.SecurityConstants;
 import java.time.Duration;
@@ -18,7 +18,7 @@ public class RedisService {
 
   private final StringRedisTemplate redisTemplate;
   private final JsonHelper jsonHelper;
-  private final CommerceUserQueryService commerceUserQueryService;
+  private final AppUserDetailsQueryService appUserDetailsQueryService;
 
   public void setData(String key, String value) {
     redisTemplate.opsForValue().set(key, value);
@@ -28,9 +28,9 @@ public class RedisService {
     return redisTemplate.opsForValue().get(key);
   }
 
-  public void setRefreshToken(CommerceUserDetail commerceUserDetail, String token) {
+  public void setRefreshToken(AppUserDetails appUserDetails, String token) {
     redisTemplate.opsForValue().set(
-        SecurityConstants.REDIS_REFRESH_TOKEN_KEY + commerceUserDetail.getId()
+        SecurityConstants.REDIS_REFRESH_TOKEN_KEY + appUserDetails.getId()
         , token
         , Duration.ofDays(7)
     );
@@ -40,31 +40,31 @@ public class RedisService {
     return redisTemplate.opsForValue().get(SecurityConstants.REDIS_REFRESH_TOKEN_KEY + commerceUserDetailId);
   }
 
-  public void removeRefreshToken(CommerceUserDetail commerceUserDetail) {
+  public void removeRefreshToken(AppUserDetails appUserDetails) {
     redisTemplate.delete(
-        SecurityConstants.REDIS_REFRESH_TOKEN_KEY + commerceUserDetail.getId()
+        SecurityConstants.REDIS_REFRESH_TOKEN_KEY + appUserDetails.getId()
     );
   }
 
-  public void removeUserDetail(CommerceUserDetail commerceUserDetail) {
-    redisTemplate.delete(String.valueOf(commerceUserDetail.getId()));
+  public void removeUserDetail(AppUserDetails appUserDetails) {
+    redisTemplate.delete(String.valueOf(appUserDetails.getId()));
   }
 
-  public void setUserDetail(CommerceUserDetail commerceUserDetail) {
+  public void setUserDetail(AppUserDetails appUserDetails) {
     redisTemplate.opsForValue()
-        .set(String.valueOf(commerceUserDetail.getId()), jsonHelper.serialize(commerceUserDetail));
+        .set(String.valueOf(appUserDetails.getId()), jsonHelper.serialize(appUserDetails));
   }
 
-  public CommerceUserDetail getCommerceUserDetail(Long commerceUserDetailId) {
+  public AppUserDetails getAppUserDetail(Long commerceUserDetailId) {
     String cachedData = Optional
         .ofNullable(getData(String.valueOf(commerceUserDetailId)))
         .orElse(null);
 
     if (!isNull(cachedData))
-      return jsonHelper.deserialize(cachedData, CommerceUserDetail.class);
+      return jsonHelper.deserialize(cachedData, AppUserDetails.class);
 
-    CommerceUserDetail commerceUserDetail = commerceUserQueryService.findById(commerceUserDetailId);
-    setUserDetail(commerceUserDetail);
-    return commerceUserDetail;
+    AppUserDetails appUserDetails = appUserDetailsQueryService.findById(commerceUserDetailId);
+    setUserDetail(appUserDetails);
+    return appUserDetails;
   }
 }
