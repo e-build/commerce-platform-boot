@@ -8,6 +8,7 @@ import com.ebuild.commerce.common.RedisService;
 import com.ebuild.commerce.oauth.domain.UserPrincipal;
 import com.ebuild.commerce.oauth.token.JWTProvider;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,21 +40,16 @@ public class AppUserDetailsService{
 
     AppUserDetails appUserDetails = (AppUserDetails) authentication.getPrincipal();
 
+    List<String> roleStringList = appUserDetails.getRoleList()
+        .stream()
+        .map(appUserRole -> appUserRole.getRole().getName().getCode())
+        .collect(Collectors.toList());
+
     TokenDto token = TokenDto.builder()
         .authenticationToken(
-            jwtProvider.createAuthToken(
-                String.valueOf(appUserDetails.getEmail()),
-                appUserDetails.roleListString(),
-                new Date()
-            ).getToken()
-        )
+            jwtProvider.createAccessToken(String.valueOf(appUserDetails.getEmail()), roleStringList).getToken())
         .refreshToken(
-            jwtProvider.createAuthToken(
-                String.valueOf(appUserDetails.getEmail()),
-                appUserDetails.roleListString(),
-                new Date()
-            ).getToken()
-        )
+            jwtProvider.createRefreshToken(String.valueOf(appUserDetails.getEmail()), roleStringList).getToken())
         .build();
 
 

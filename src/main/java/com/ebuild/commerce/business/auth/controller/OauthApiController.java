@@ -22,7 +22,6 @@ public class OauthApiController {
 
   private final JWTProvider JWTProvider;
 
-
   @GetMapping("/redirect")
   public ResponseEntity<CommonResponse> redirect(
       @RequestParam("token") String token,

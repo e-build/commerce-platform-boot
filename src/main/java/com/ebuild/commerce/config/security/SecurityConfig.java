@@ -1,9 +1,9 @@
 package com.ebuild.commerce.config.security;
 
+import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import com.ebuild.commerce.business.auth.repository.JpaRefreshTokenRepository;
 import com.ebuild.commerce.config.security.properties.AppProperties;
 import com.ebuild.commerce.config.security.properties.CorsProperties;
-import com.ebuild.commerce.oauth.domain.RoleType;
 import com.ebuild.commerce.oauth.exception.RestAuthenticationEntryPoint;
 import com.ebuild.commerce.oauth.filter.TokenAuthenticationFilter;
 import com.ebuild.commerce.oauth.handler.OAuth2AuthenticationFailureHandler;
@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/v1/auth/**", "/oauth/redirect").permitAll()
-                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers("/api/**").hasAnyAuthority(RoleType.BUYER.getCode())
                 .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
                 .anyRequest().authenticated()
             .and()

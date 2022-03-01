@@ -1,5 +1,6 @@
 package com.ebuild.commerce.oauth.token;
 
+import com.ebuild.commerce.config.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -8,52 +9,47 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 public class JWT {
 
     @Getter
     private final String token;
     private final Key key;
 
-    private static final String AUTHORITIES_KEY = "role";
-
-    JWT(String id, Date expiry, Key key) {
+    private JWT (String token, Key key){
+        this.token = token;
         this.key = key;
-        this.token = createAuthToken(id, expiry);
     }
 
-    JWT(String id, String role, Date expiry, Key key) {
+    JWT(String id, List<String> role, long expiry, Key key) {
         this.key = key;
-        this.token = createAuthToken(id, role, expiry);
+        this.token = createAuthToken(id, role, resolveExpiredDateFromNow(expiry));
     }
 
-    private String createAuthToken(String id, Date expiry) {
+    private String createAuthToken(String id, List<String> role, Date expiredDate) {
         return Jwts.builder()
                 .setSubject(id)
+                .claim(SecurityConstants.JWT_AUTHORITIES_KEY, role)
                 .signWith(key, SignatureAlgorithm.HS256)
-                .setExpiration(expiry)
+                .setExpiration(expiredDate)
                 .compact();
     }
 
-    private String createAuthToken(String id, String role, Date expiry) {
-        return Jwts.builder()
-                .setSubject(id)
-                .claim(AUTHORITIES_KEY, role)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .setExpiration(expiry)
-                .compact();
+    public static JWT fromToken(String token, Key key){
+        return new JWT(token, key);
     }
 
     public boolean validate() {
-        return this.getTokenClaims() != null;
+        return this.resolveTokenClaims() != null;
     }
 
-    public Claims getTokenClaims() {
+    public Claims resolveTokenClaims() {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -86,5 +82,9 @@ public class JWT {
             return e.getClaims();
         }
         return null;
+    }
+
+    private Date resolveExpiredDateFromNow(long expirySeconds){
+        return new Date(new Date().getTime() + expirySeconds);
     }
 }

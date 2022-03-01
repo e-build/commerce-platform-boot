@@ -1,6 +1,7 @@
 package com.ebuild.commerce.oauth.domain;
 
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
+import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;

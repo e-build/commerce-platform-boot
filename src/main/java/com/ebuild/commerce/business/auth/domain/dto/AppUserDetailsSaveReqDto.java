@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-public class AppUserSaveReqDto {
+public class AppUserDetailsSaveReqDto {
 
   private Long id;
   @NotBlank
@@ -21,7 +21,6 @@ public class AppUserSaveReqDto {
   private String nickname;
   @NotBlank
   private String phoneNumber;
-
   @Setter
   private Role[] roles;
 

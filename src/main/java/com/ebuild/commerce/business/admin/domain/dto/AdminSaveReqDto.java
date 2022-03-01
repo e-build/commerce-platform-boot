@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.admin.domain.dto;
 
-import com.ebuild.commerce.business.auth.domain.dto.AppUserSaveReqDto;
+import com.ebuild.commerce.business.auth.domain.dto.AppUserDetailsSaveReqDto;
 import javax.validation.Valid;
 import lombok.Getter;
 
@@ -8,6 +8,6 @@ import lombok.Getter;
 public class AdminSaveReqDto {
 
   @Valid
-  private AppUserSaveReqDto commerceUser;
+  private AppUserDetailsSaveReqDto commerceUser;
 
 }

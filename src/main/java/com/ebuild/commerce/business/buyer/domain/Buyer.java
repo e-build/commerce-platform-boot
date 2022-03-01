@@ -55,7 +55,7 @@ public class Buyer extends BaseEntity {
   }
 
   public void update(BuyerSaveReqDto buyerSaveReqDto) {
-    this.appUserDetails.update(buyerSaveReqDto.getCommerceUser());
+    this.appUserDetails.update(buyerSaveReqDto.getAppUserDetails());
     this.receivingAddress.update(buyerSaveReqDto.getReceiveAddress());
   }
 

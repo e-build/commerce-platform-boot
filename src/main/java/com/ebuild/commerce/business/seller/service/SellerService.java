@@ -29,12 +29,12 @@ public class SellerService {
   private final JpaCompanyRepository jpaCompanyRepository;
 
   public SellerSaveResDto signup(SellerSaveReqDto sellerSaveReqDto) {
-    findCommerceUserByEmail(sellerSaveReqDto.getCommerceUser().getEmail()).ifPresent(user -> {
+    findCommerceUserByEmail(sellerSaveReqDto.getAppUserDetails().getEmail()).ifPresent(user -> {
       throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
     });
 
     // 권한 부여
-    sellerSaveReqDto.getCommerceUser()
+    sellerSaveReqDto.getAppUserDetails()
         .setRoles(
             jpaRoleRepository
                 .findAllByNameIn(Lists.newArrayList(RoleType.SELLER))
@@ -42,10 +42,10 @@ public class SellerService {
         );
 
     // 패스워드 암호화
-    sellerSaveReqDto.getCommerceUser().encryptPassword(passwordEncoder);
+    sellerSaveReqDto.getAppUserDetails().encryptPassword(passwordEncoder);
 
     Seller seller = Seller.builder()
-        .appUserDetails(sellerSaveReqDto.getCommerceUser().toEntity())
+        .appUserDetails(sellerSaveReqDto.getAppUserDetails().toEntity())
         .shippingAddress(sellerSaveReqDto.getShippingAddress().get())
         .company(jpaCompanyRepository
             .findById(sellerSaveReqDto.getCompanyId())

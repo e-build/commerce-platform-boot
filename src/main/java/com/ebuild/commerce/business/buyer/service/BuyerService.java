@@ -30,13 +30,13 @@ public class BuyerService {
   private final PasswordEncoder passwordEncoder;
 
   public BuyerResDto signup(BuyerSaveReqDto buyerSaveReqDto) {
-    findCommerceUserByEmail(buyerSaveReqDto.getCommerceUser().getEmail())
+    findCommerceUserByEmail(buyerSaveReqDto.getAppUserDetails().getEmail())
         .ifPresent(user -> {
           throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
         });
 
     // 권한 부여
-    buyerSaveReqDto.getCommerceUser()
+    buyerSaveReqDto.getAppUserDetails()
         .setRoles(
             jpaRoleRepository
                 .findAllByNameIn(Lists.newArrayList(RoleType.BUYER))
@@ -44,10 +44,10 @@ public class BuyerService {
         );
 
     // 패스워드 암호화
-    buyerSaveReqDto.getCommerceUser().encryptPassword(passwordEncoder);
+    buyerSaveReqDto.getAppUserDetails().encryptPassword(passwordEncoder);
 
     Buyer buyer = Buyer.builder()
-        .appUserDetails(buyerSaveReqDto.getCommerceUser().toEntity())
+        .appUserDetails(buyerSaveReqDto.getAppUserDetails().toEntity())
         .receivingAddress(buyerSaveReqDto.getReceiveAddress().get())
         .build();
 
@@ -61,9 +61,9 @@ public class BuyerService {
   @Transactional
   public BuyerResDto update(BuyerSaveReqDto buyerSaveReqDto) {
     AppUserDetails appUserDetails = findCommerceUserByEmail(
-        buyerSaveReqDto.getCommerceUser().getEmail())
+        buyerSaveReqDto.getAppUserDetails().getEmail())
         .orElseThrow(() -> new NotFoundException(
-            "[" + buyerSaveReqDto.getCommerceUser().getEmail() + "]에 해당하는 사용자는 존재하지 않습니다."));
+            "[" + buyerSaveReqDto.getAppUserDetails().getEmail() + "]에 해당하는 사용자는 존재하지 않습니다."));
 
     Buyer buyer = appUserDetails.getBuyer();
     buyer.update(buyerSaveReqDto);

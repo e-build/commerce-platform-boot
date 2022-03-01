@@ -3,7 +3,7 @@ package com.ebuild.commerce.business.auth.domain.entity;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 import com.ebuild.commerce.business.admin.domain.entity.Admin;
-import com.ebuild.commerce.business.auth.domain.dto.AppUserSaveReqDto;
+import com.ebuild.commerce.business.auth.domain.dto.AppUserDetailsSaveReqDto;
 import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.business.seller.domain.entity.Seller;
 import com.ebuild.commerce.common.BaseEntity;
@@ -134,7 +134,7 @@ public class AppUserDetails extends BaseEntity implements UserDetails {
     );
   }
 
-  public void update(AppUserSaveReqDto dto){
+  public void update(AppUserDetailsSaveReqDto dto){
     this.nickname = dto.getNickname();
     this.phoneNumber = dto.getPhoneNumber();
   }
