@@ -26,10 +26,6 @@ public class OauthApiController {
   public ResponseEntity<CommonResponse> redirect(
       @RequestParam("token") String token,
       HttpServletRequest request ){
-//    TokenDto tokenDto = TokenDto.builder()
-//        .authenticationToken()
-//        .refreshToken()
-//        .build();
     return ResponseEntity.ok(CommonResponse.OK(Pair.of("token", token)));
   }
 

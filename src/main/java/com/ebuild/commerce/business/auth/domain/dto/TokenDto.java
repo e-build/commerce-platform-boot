@@ -8,12 +8,12 @@ import lombok.Setter;
 @Setter
 public class TokenDto {
 
-  private final String authenticationToken;
+  private final String accessToken;
   private final String refreshToken;
 
   @Builder
-  public TokenDto(String authenticationToken, String refreshToken) {
-    this.authenticationToken = authenticationToken;
+  public TokenDto(String accessToken, String refreshToken) {
+    this.accessToken = accessToken;
     this.refreshToken = refreshToken;
   }
 }

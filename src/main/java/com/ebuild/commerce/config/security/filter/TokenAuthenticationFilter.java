@@ -43,8 +43,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         JWT jwt = jwtProvider.convertAuthToken(tokenStr);
 
         if (jwt.validate()) {
-            Authentication authentication = getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(getAuthentication(jwt));
         }
 
         filterChain.doFilter(request, response);
@@ -53,8 +52,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private Authentication getAuthentication(JWT jwt) {
         Claims claims = jwt.resolveTokenClaims();
         String email = claims.getSubject();
+        String roles = String.valueOf(claims.get(SecurityConstants.JWT_AUTHORITIES_KEY));
         Collection<? extends GrantedAuthority> authorities =
-            Arrays.stream(new String[]{claims.get(SecurityConstants.JWT_AUTHORITIES_KEY).toString()})
+            Arrays.stream(roles.split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 

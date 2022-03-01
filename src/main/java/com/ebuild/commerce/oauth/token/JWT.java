@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
 public class JWT {
@@ -25,19 +26,23 @@ public class JWT {
         this.key = key;
     }
 
-    JWT(String id, List<String> role, long expiry, Key key) {
+    JWT(String id, List<String> roleList, long expiry, Key key) {
         this.key = key;
-        this.token = createAuthToken(id, role, resolveExpiredDateFromNow(expiry));
+        this.token = createAuthToken(id, join(roleList), resolveExpiredDateFromNow(expiry));
+    }
+
+    private String join(List<String> roleList) {
+        return StringUtils.join(roleList, ",");
     }
 
     public static JWT fromTokenString(String token, Key key){
         return new JWT(token, key);
     }
 
-    private String createAuthToken(String id, List<String> role, Date expiredDate) {
+    private String createAuthToken(String id, String roles, Date expiredDate) {
         return Jwts.builder()
                 .setSubject(id)
-                .claim(SecurityConstants.JWT_AUTHORITIES_KEY, role)
+                .claim(SecurityConstants.JWT_AUTHORITIES_KEY, roles)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(expiredDate)
                 .compact();

@@ -52,10 +52,10 @@ public class AppUserDetails extends BaseEntity implements UserDetails {
   @OneToMany(mappedBy = "appUserDetails", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<AppUserRole> roleList = Lists.newArrayList();
 
-  public String roleListString(){
-    return StringUtils.join(roleList.stream()
-        .map(appUserRole -> appUserRole.getRole().getName())
-        .collect(Collectors.toList()), ",");
+  public List<String> mapRoleToString(){
+    return roleList.stream()
+        .map(appUserRole -> appUserRole.getRole().getName().getCode())
+        .collect(Collectors.toList());
   }
 
   @JsonIgnore

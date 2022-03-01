@@ -35,16 +35,12 @@ public class AppUserDetailsService{
 
     AppUserDetails appUserDetails = (AppUserDetails) authentication.getPrincipal();
 
-    List<String> roleStringList = appUserDetails.getRoleList()
-        .stream()
-        .map(appUserRole -> appUserRole.getRole().getName().getCode())
-        .collect(Collectors.toList());
-
+    List<String> roles = appUserDetails.mapRoleToString();
     TokenDto token = TokenDto.builder()
-        .authenticationToken(
-            jwtProvider.createAccessToken(String.valueOf(appUserDetails.getEmail()), roleStringList).getToken())
+        .accessToken(
+            jwtProvider.createAccessToken(String.valueOf(appUserDetails.getEmail()), roles).getToken())
         .refreshToken(
-            jwtProvider.createRefreshToken(String.valueOf(appUserDetails.getEmail()), roleStringList).getToken())
+            jwtProvider.createRefreshToken(String.valueOf(appUserDetails.getEmail()), roles).getToken())
         .build();
 
 
