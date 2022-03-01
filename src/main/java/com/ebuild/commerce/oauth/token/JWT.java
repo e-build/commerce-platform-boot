@@ -11,8 +11,6 @@ import java.security.Key;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,6 +30,10 @@ public class JWT {
         this.token = createAuthToken(id, role, resolveExpiredDateFromNow(expiry));
     }
 
+    public static JWT fromTokenString(String token, Key key){
+        return new JWT(token, key);
+    }
+
     private String createAuthToken(String id, List<String> role, Date expiredDate) {
         return Jwts.builder()
                 .setSubject(id)
@@ -39,10 +41,6 @@ public class JWT {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(expiredDate)
                 .compact();
-    }
-
-    public static JWT fromToken(String token, Key key){
-        return new JWT(token, key);
     }
 
     public boolean validate() {
@@ -66,20 +64,6 @@ public class JWT {
             log.info("Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
             log.info("JWT token compact of handler are invalid.");
-        }
-        return null;
-    }
-
-    public Claims getExpiredTokenClaims() {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token.");
-            return e.getClaims();
         }
         return null;
     }

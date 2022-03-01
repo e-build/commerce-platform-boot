@@ -19,5 +19,8 @@ public class AppUserDetailsQueryService {
         .orElseThrow(()->new NotFoundException("["+appUserDetailsId+"] 사용자를 찾을 수 없습니다."));
   }
 
-
+  public AppUserDetails findByEmail(String email) {
+    return jpaAppUserDetailsRepository.findOneByEmail(email)
+        .orElseThrow(()->new NotFoundException("["+email+"] 사용자를 찾을 수 없습니다."));
+  }
 }

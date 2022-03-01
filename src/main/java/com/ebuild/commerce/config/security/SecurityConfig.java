@@ -2,10 +2,12 @@ package com.ebuild.commerce.config.security;
 
 import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import com.ebuild.commerce.business.auth.repository.JpaRefreshTokenRepository;
+import com.ebuild.commerce.business.auth.service.AppUserDetailsQueryService;
+import com.ebuild.commerce.common.RedisService;
 import com.ebuild.commerce.config.security.properties.AppProperties;
 import com.ebuild.commerce.config.security.properties.CorsProperties;
 import com.ebuild.commerce.oauth.exception.RestAuthenticationEntryPoint;
-import com.ebuild.commerce.oauth.filter.TokenAuthenticationFilter;
+import com.ebuild.commerce.config.security.filter.TokenAuthenticationFilter;
 import com.ebuild.commerce.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.ebuild.commerce.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.ebuild.commerce.oauth.handler.TokenAccessDeniedHandler;
@@ -44,6 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final JpaRefreshTokenRepository userRefreshTokenRepository;
+    private final RedisService redisService;
+    private final AppUserDetailsQueryService appUserDetailsQueryService;
 
     /*
     * UserDetailsService 설정
@@ -79,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/api/v1/auth/**", "/oauth/redirect").permitAll()
+                .antMatchers("/api/v1/auth/**", "/oauth/redirect", "/error").permitAll()
                 .antMatchers("/api/**").hasAnyAuthority(RoleType.BUYER.getCode())
                 .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
                 .anyRequest().authenticated()
@@ -123,7 +127,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     * */
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
+        return new TokenAuthenticationFilter(tokenProvider, redisService, appUserDetailsQueryService);
     }
 
     /*

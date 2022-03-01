@@ -1,24 +1,22 @@
 package com.ebuild.commerce.util;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import com.ebuild.commerce.config.security.SecurityConstants;
 import javax.servlet.http.HttpServletRequest;
 
 public class HeaderUtil {
 
-  private final static String HEADER_AUTHORIZATION = "Authorization";
-  private final static String TOKEN_PREFIX = "Bearer ";
-
   public static String getAccessToken(HttpServletRequest request) {
-    String headerValue = request.getHeader(HEADER_AUTHORIZATION);
+    String accessTokenString = request.getHeader(SecurityConstants.ACCESS_TOKEN_HEADER);
 
-    if (headerValue == null) {
+    if (isBlank(accessTokenString))
       return null;
-    }
 
-    if (headerValue.startsWith(TOKEN_PREFIX)) {
-      return headerValue.substring(TOKEN_PREFIX.length());
-    }
+    if (!accessTokenString.startsWith(SecurityConstants.JWT_TOKEN_PREFIX))
+      return null;
 
-    return null;
+    return accessTokenString.substring(SecurityConstants.JWT_TOKEN_PREFIX.length());
   }
 
 }

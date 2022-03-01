@@ -46,25 +46,26 @@ public class RedisService {
     );
   }
 
-  public void removeUserDetail(AppUserDetails appUserDetails) {
+  public void removeUser(AppUserDetails appUserDetails) {
     redisTemplate.delete(String.valueOf(appUserDetails.getId()));
   }
 
-  public void setUserDetail(AppUserDetails appUserDetails) {
+  public void setUser(AppUserDetails appUserDetails) {
     redisTemplate.opsForValue()
         .set(String.valueOf(appUserDetails.getId()), jsonHelper.serialize(appUserDetails));
   }
 
-  public AppUserDetails getAppUserDetail(Long commerceUserDetailId) {
+  public AppUserDetails getUser(String email) {
     String cachedData = Optional
-        .ofNullable(getData(String.valueOf(commerceUserDetailId)))
+        .ofNullable(getData("USER_" + email))
         .orElse(null);
 
     if (!isNull(cachedData))
       return jsonHelper.deserialize(cachedData, AppUserDetails.class);
 
-    AppUserDetails appUserDetails = appUserDetailsQueryService.findById(commerceUserDetailId);
-    setUserDetail(appUserDetails);
+    AppUserDetails appUserDetails = appUserDetailsQueryService.findByEmail(email);
+    setUser(appUserDetails);
     return appUserDetails;
   }
+
 }
