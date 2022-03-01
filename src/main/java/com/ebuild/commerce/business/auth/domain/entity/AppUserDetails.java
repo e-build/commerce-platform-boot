@@ -1,9 +1,12 @@
 package com.ebuild.commerce.business.auth.domain.entity;
 
+import static org.springframework.util.CollectionUtils.isEmpty;
+
 import com.ebuild.commerce.business.admin.domain.entity.Admin;
 import com.ebuild.commerce.business.auth.domain.dto.AppUserSaveReqDto;
 import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.business.seller.domain.entity.Seller;
+import com.ebuild.commerce.common.BaseEntity;
 import com.ebuild.commerce.oauth.domain.ProviderType;
 import com.ebuild.commerce.oauth.info.OAuth2UserInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,13 +38,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.CollectionUtils;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AppUserDetails implements UserDetails {
+public class AppUserDetails extends BaseEntity implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -118,18 +120,18 @@ public class AppUserDetails implements UserDetails {
   }
 
   public void addRoles(Role... roles){
-    if (CollectionUtils.isEmpty(this.roleList)) {
+    if (isEmpty(this.roleList)) {
       this.roleList = Lists.newArrayList();
     }
-    this.roleList = Arrays.stream(roles)
-        .map(r -> AppUserRole.builder()
-            .appUserDetails(this)
-            .role(r)
-            .build())
-        .collect(Collectors.toList());
-    for (Role role : roles) {
-      this.roleList.add(AppUserRole.of(this, role));
-    }
+
+    this.roleList.addAll(Arrays.stream(roles)
+            .map(r ->
+                AppUserRole.builder()
+                    .appUserDetails(this)
+                    .role(r)
+                    .build()
+            ).collect(Collectors.toList())
+    );
   }
 
   public void update(AppUserSaveReqDto dto){
@@ -195,6 +197,7 @@ public class AppUserDetails implements UserDetails {
         .phoneNumber("NOT_YET")
         .build();
     appUserDetails.setEmailVerifiedYn("Y");
+//    appUserDetails.addRoles();
     return appUserDetails;
   }
 }

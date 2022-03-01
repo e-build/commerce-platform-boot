@@ -27,15 +27,11 @@ public class OauthApiController {
   public ResponseEntity<CommonResponse> redirect(
       @RequestParam("token") String token,
       HttpServletRequest request ){
-    return ResponseEntity.ok(
-        CommonResponse.OK(
-            Pair.of("token", TokenDto.builder()
-                .authenticationToken(token)
-                .refreshToken(CookieUtil.getCookie(request, "refreshToken").get().getValue())
-                .build()
-            )
-        )
-    );
+//    TokenDto tokenDto = TokenDto.builder()
+//        .authenticationToken()
+//        .refreshToken()
+//        .build();
+    return ResponseEntity.ok(CommonResponse.OK(Pair.of("token", token)));
   }
 
 }

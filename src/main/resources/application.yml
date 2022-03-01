@@ -12,7 +12,7 @@ spring:
     hikari:
       auto-commit: false
       connection-test-query: SELECT 1
-제      maximum-pool-size: 10
+      maximum-pool-size: 10
 #      minimum-idle: 10
 #      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
       data-source-properties:

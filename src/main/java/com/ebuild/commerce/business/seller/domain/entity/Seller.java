@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
@@ -27,6 +28,7 @@ public class Seller extends BaseEntity {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "app_user_detail_id")
   private AppUserDetails appUserDetails;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

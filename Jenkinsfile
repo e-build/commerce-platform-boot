@@ -46,7 +46,7 @@ pipeline {
                 sh 'docker images | grep $CONTAINER_IMG_TAG'
             }
         }
-        stage('Deploy docker image') {
+        stage('Push docker image') {
             steps {
                 sh 'echo $GITHUB_CREDENTIALS | docker login https://ghcr.io -u e-build --password-stdin'
                 sh 'docker push $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:$BUILD_NUMBER'

@@ -29,7 +29,7 @@ public class AppUserRole {
 
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="commerce_user_detail_id")
+  @JoinColumn(name="app_user_detail_id")
   private AppUserDetails appUserDetails;
 
   public static AppUserRole of(AppUserDetails appUserDetails, Role role) {

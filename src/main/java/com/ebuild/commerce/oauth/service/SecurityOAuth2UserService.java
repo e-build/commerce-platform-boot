@@ -1,13 +1,19 @@
 package com.ebuild.commerce.oauth.service;
 
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
+import com.ebuild.commerce.business.auth.domain.entity.Role;
+import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import com.ebuild.commerce.business.auth.repository.JpaAppUserDetailsRepository;
+import com.ebuild.commerce.business.auth.repository.JpaRoleRepository;
+import com.ebuild.commerce.business.buyer.domain.Buyer;
+import com.ebuild.commerce.business.buyer.repository.JpaBuyerRepository;
 import com.ebuild.commerce.config.JsonHelper;
 import com.ebuild.commerce.oauth.domain.ProviderType;
 import com.ebuild.commerce.oauth.domain.UserPrincipal;
 import com.ebuild.commerce.oauth.exception.OAuthProviderMissMatchException;
 import com.ebuild.commerce.oauth.info.OAuth2UserInfo;
 import com.ebuild.commerce.oauth.info.OAuth2UserInfoFactory;
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -24,6 +30,8 @@ import org.springframework.stereotype.Service;
 public class SecurityOAuth2UserService extends DefaultOAuth2UserService {
 
     private final JpaAppUserDetailsRepository jpaAppUserDetailsRepository;
+    private final JpaBuyerRepository jpaBuyerRepository;
+    private final JpaRoleRepository jpaRoleRepository;
     private final JsonHelper jsonHelper;
 
     @Override
@@ -61,12 +69,19 @@ public class SecurityOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private AppUserDetails createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-        return jpaAppUserDetailsRepository.saveAndFlush(
-            AppUserDetails.newInstanceByOauth(userInfo, providerType)
-        );
+        AppUserDetails appUserDetails = AppUserDetails.newInstanceByOauth(userInfo, providerType);
+        appUserDetails.addRoles(jpaRoleRepository.findAllByNameIn(Lists.newArrayList(RoleType.BUYER)).toArray(new Role[0]));
+        appUserDetails.setEmailVerifiedYn("Y");
+
+        jpaBuyerRepository.saveAndFlush(Buyer.builder()
+            .appUserDetails(appUserDetails)
+            .build());
+
+        return appUserDetails;
     }
 
     private void updateUser(AppUserDetails appUserDetails, OAuth2UserInfo userInfo) {
         appUserDetails.modifyOauthInfo(userInfo);
     }
+
 }
