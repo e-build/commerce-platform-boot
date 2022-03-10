@@ -55,16 +55,6 @@ pipeline {
                 sh 'echo image $CONTAINER_IMG_TAG push complete!'
             }
         }
-        stage('Deploy docker container') {
-            steps {
-                sh '''
-                ssh $DEPLOY_SERVER
-                "
-                ls -al
-                "
-                '''
-            }
-        }
         stage('Complete') {
             steps {
                 echo 'complete!'
