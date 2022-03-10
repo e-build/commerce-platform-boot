@@ -2,9 +2,9 @@
 spring:
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/commerce?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://172.17.0.3:3306/commerce?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: root
-    password: password
+    password: 1234qwer
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       auto-commit: false
@@ -19,5 +19,5 @@ spring:
       ddl-auto: create
 
   redis:
-    host: 121.165.3.233
+    host: 172.17.0.4
     port: 6379
