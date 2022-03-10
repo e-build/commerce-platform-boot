@@ -62,7 +62,7 @@ pipeline {
                 docker rm $CONTAINER;
                 docker rmi $CONTAINER_IMG_TAG;
                 echo $GITHUB_CREDENTIALS | docker login ghcr.io -u e-build --password-stdin;
-                docker run -d -p 8080:8080 --name=commerce $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:latest;
+                docker run -d --name=commerce $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:latest;
                 docker ps -a;
                 docker logout;
                 '''
