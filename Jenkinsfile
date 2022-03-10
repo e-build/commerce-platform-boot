@@ -39,7 +39,7 @@ pipeline {
         }
         stage('Build docker image') {
             steps {
-                sh 'docker build -t $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:$BUILD_NUMBER .'
+                sh 'docker build -t $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:latest .'
             }
         }
         stage('Check docker image') {
