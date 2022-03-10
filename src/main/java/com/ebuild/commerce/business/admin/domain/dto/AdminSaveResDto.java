@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.admin.domain.dto;
 
 import com.ebuild.commerce.business.admin.domain.entity.Admin;
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.dto.CommerceUserSaveResDto;
+import com.ebuild.commerce.business.auth.domain.dto.AppUserSaveResDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,11 +9,11 @@ import lombok.Getter;
 public class AdminSaveResDto {
 
   private final Long adminId;
-  private final CommerceUserSaveResDto commerceUser;
+  private final AppUserSaveResDto commerceUser;
 
   @Builder
   public AdminSaveResDto(Admin admin) {
     this.adminId = admin.getId();
-    this.commerceUser = new CommerceUserSaveResDto(admin.getCommerceUserDetail());
+    this.commerceUser = new AppUserSaveResDto(admin.getAppUserDetails());
   }
 }

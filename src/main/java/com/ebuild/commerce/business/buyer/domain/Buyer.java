@@ -3,7 +3,7 @@ package com.ebuild.commerce.business.buyer.domain;
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.buyer.domain.dto.BuyerSaveReqDto;
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
 import com.google.common.collect.Lists;
@@ -33,8 +33,8 @@ public class Buyer extends BaseEntity {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "commerce_user_detail_id")
-  private CommerceUserDetail commerceUserDetail;
+  @JoinColumn(name = "app_user_detail_id")
+  private AppUserDetails appUserDetails;
 
   @Embedded
   private Address receivingAddress;
@@ -48,14 +48,14 @@ public class Buyer extends BaseEntity {
   private List<Order> orderList = Lists.newArrayList();
 
   @Builder
-  public Buyer(CommerceUserDetail commerceUserDetail, Address receivingAddress) {
-    this.commerceUserDetail = commerceUserDetail;
+  public Buyer(AppUserDetails appUserDetails, Address receivingAddress) {
+    this.appUserDetails = appUserDetails;
     this.receivingAddress = receivingAddress;
     this.cart = Cart.newInstance();
   }
 
   public void update(BuyerSaveReqDto buyerSaveReqDto) {
-    this.commerceUserDetail.update(buyerSaveReqDto.getCommerceUser());
+    this.appUserDetails.update(buyerSaveReqDto.getAppUserDetails());
     this.receivingAddress.update(buyerSaveReqDto.getReceiveAddress());
   }
 

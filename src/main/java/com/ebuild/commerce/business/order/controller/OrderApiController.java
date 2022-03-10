@@ -3,7 +3,7 @@ package com.ebuild.commerce.business.order.controller;
 import com.ebuild.commerce.config.security.annotation.CurrentUser;
 import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto;
 import com.ebuild.commerce.business.order.service.OrderService;
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
 import javax.validation.Valid;
@@ -28,13 +28,13 @@ public class OrderApiController {
   // 바로주문
   @PostMapping("")
   public ResponseEntity<CommonResponse> createDirectOrder(
-      @CurrentUser CommerceUserDetail commerceUserDetail,
+      @CurrentUser AppUserDetails appUserDetails,
       @RequestBody @Valid DirectOrderReqDto directOrderReqDto) {
 
     return ResponseEntity.ok(
         CommonResponse.OK(
             Pair.of("order",
-                orderService.createOrder(commerceUserDetail.getBuyer(), directOrderReqDto))
+                orderService.createOrder(appUserDetails.getBuyer(), directOrderReqDto))
         )
     );
   }

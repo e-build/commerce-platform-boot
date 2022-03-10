@@ -8,6 +8,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Target(value = {ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@AuthenticationPrincipal(expression = "commerceUserDetail")
+@AuthenticationPrincipal(expression = "appUserDetails")
 public @interface CurrentUser {
 }

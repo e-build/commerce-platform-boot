@@ -4,11 +4,11 @@ import com.ebuild.commerce.business.admin.domain.dto.AdminSaveReqDto;
 import com.ebuild.commerce.business.admin.domain.dto.AdminSaveResDto;
 import com.ebuild.commerce.business.admin.domain.entity.Admin;
 import com.ebuild.commerce.business.admin.repository.JpaAdminRepository;
-import com.ebuild.commerce.business.user.commerceUserDetail.domain.entity.CommerceUserDetail;
-import com.ebuild.commerce.business.user.commerceUserDetail.repository.CommerceUserDetailRepository;
-import com.ebuild.commerce.business.user.role.CommerceRole;
-import com.ebuild.commerce.business.user.role.domain.Role;
-import com.ebuild.commerce.business.user.role.repository.JpaRoleRepository;
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
+import com.ebuild.commerce.business.auth.domain.entity.RoleType;
+import com.ebuild.commerce.business.auth.domain.entity.Role;
+import com.ebuild.commerce.business.auth.repository.JpaAppUserDetailsRepository;
+import com.ebuild.commerce.business.auth.repository.JpaRoleRepository;
 import com.ebuild.commerce.exception.AlreadyExistsException;
 import com.google.common.collect.Lists;
 import java.util.Optional;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
   private final PasswordEncoder passwordEncoder;
-  private final CommerceUserDetailRepository jpaCommerceUserDetailRepository;
+  private final JpaAppUserDetailsRepository jpaAppUserDetailsRepository;
   private final JpaRoleRepository jpaRoleRepository;
   private final JpaAdminRepository jpaSellerRepository;
 
@@ -35,7 +35,7 @@ public class AdminService {
     adminSaveReqDto.getCommerceUser()
         .setRoles(
             jpaRoleRepository
-                .findAllByNameIn(Lists.newArrayList(CommerceRole.ADMIN, CommerceRole.BUYER))
+                .findAllByNameIn(Lists.newArrayList(RoleType.ADMIN, RoleType.BUYER))
                 .toArray(new Role[0])
         );
 
@@ -43,7 +43,7 @@ public class AdminService {
     adminSaveReqDto.getCommerceUser().encryptPassword(passwordEncoder);
 
     Admin admin = Admin.builder()
-        .commerceUserDetail(adminSaveReqDto.getCommerceUser().toEntity())
+        .appUserDetails(adminSaveReqDto.getCommerceUser().toEntity())
         .build();
 
     jpaSellerRepository.save(admin);
@@ -53,7 +53,7 @@ public class AdminService {
         .build();
   }
 
-  private Optional<CommerceUserDetail> findCommerceUserByEmail(String email){
-    return jpaCommerceUserDetailRepository.findOneByEmail(email);
+  private Optional<AppUserDetails> findCommerceUserByEmail(String email){
+    return jpaAppUserDetailsRepository.findOneByEmail(email);
   }
 }

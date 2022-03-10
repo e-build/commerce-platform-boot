@@ -5,9 +5,10 @@ pipeline {
     }
     environment {
         GITHUB_SOURCE_URL = 'https://github.com/e-build/commerce-platform-boot.git'
-        GITHUB_SOURCE_BRANCH = 'develop'
+        GITHUB_SOURCE_BRANCH = 'main'
         CONTAINER_IMG_TAG = "commerce"
         CONTAINER_IMG_REGISTRY = 'ghcr.io/e-build'
+        DEPLOY_SERVER = "ebuild@172.17.0.1"
         GITHUB_CREDENTIALS = credentials('e-build')
     }
     stages {
@@ -46,11 +47,26 @@ pipeline {
                 sh 'docker images | grep $CONTAINER_IMG_TAG'
             }
         }
-        stage('Deploy docker image') {
+        stage('Push docker image') {
             steps {
                 sh 'echo $GITHUB_CREDENTIALS | docker login https://ghcr.io -u e-build --password-stdin'
-                sh 'docker push $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:$BUILD_NUMBER'
+                sh 'docker push $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:latest'
                 sh 'echo image $CONTAINER_IMG_TAG push complete!'
+            }
+        }
+        stage('Deploy docker container') {
+            steps {
+                sh 'ssh $DEPLOY_SERVER \
+                "
+                docker stop commerce;
+                docker rm commerce;
+                docker rmi $CONTAINER_IMG_TAG;
+                echo \'$GITHUB_CREDENTIALS\' | docker login ghcr.io -u e-build --password-stdin;
+                docker run -d -p 8080:8080 --name=commerce $CONTAINER_IMG_REGISTRY/$CONTAINER_IMG_TAG:latest;
+                docker ps -a;
+                docker logout;
+                "
+                '
             }
         }
         stage('Complete') {
