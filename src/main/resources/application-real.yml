@@ -21,3 +21,9 @@ spring:
   redis:
     host: 172.17.0.4
     port: 6379
+
+# 로깅 설정
+logging:
+  level:
+    com.ebuild.commerce: INFO
+    org.springframework.web: INFO
