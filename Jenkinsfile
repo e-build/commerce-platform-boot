@@ -57,7 +57,7 @@ pipeline {
         }
         stage('Deploy docker container') {
             steps {
-                sh 'ssh $DEPLOY_SERVER \
+                sh 'ssh $DEPLOY_SERVER
                 "
                 docker stop $CONTAINER;
                 docker rm $CONTAINER;
