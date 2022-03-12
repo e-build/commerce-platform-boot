@@ -2,7 +2,7 @@ package com.ebuild.commerce.business.auth.controller;
 
 import com.ebuild.commerce.business.auth.domain.dto.LoginReqDto;
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
-import com.ebuild.commerce.business.auth.service.AppUserDetailsService;
+import com.ebuild.commerce.business.auth.service.CommerceAuthService;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
 import com.ebuild.commerce.config.security.annotation.CurrentUser;
@@ -23,18 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthApiController {
 
-  private final AppUserDetailsService appUserDetailsService;
+  private final CommerceAuthService commerceAuthServcie;
   private final JsonHelper jsonHelper;
 
   @PostMapping("/login")
   public ResponseEntity<CommonResponse> login(@RequestBody @Valid LoginReqDto loginReqDto){
-    return ResponseEntity.ok(CommonResponse.OK(Pair.of("token", appUserDetailsService.login(loginReqDto))));
+    return ResponseEntity.ok(CommonResponse.OK(Pair.of("token", commerceAuthServcie.login(loginReqDto))));
   }
 
   @PostMapping("/logout")
   public ResponseEntity<CommonResponse> logout(
       @CurrentUser AppUserDetails appUserDetails) {
-    appUserDetailsService.logout(appUserDetails);
+    commerceAuthServcie.logout(appUserDetails);
     return ResponseEntity.ok(
         CommonResponse.OK()
     );

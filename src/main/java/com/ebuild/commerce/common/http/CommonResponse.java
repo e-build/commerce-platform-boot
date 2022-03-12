@@ -31,6 +31,12 @@ public class CommonResponse {
         return CommonResponse.of(data, null);
     }
 
+    public static CommonResponse OK(String key, Object value){
+        Map<String, Object> data = Maps.newHashMap();
+        data.put(key, value);
+        return CommonResponse.of(data, null);
+    }
+
     /**
      * @param pair left: key, right: value
      * @return CommonResponse

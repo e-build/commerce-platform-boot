@@ -8,5 +8,4 @@ public interface JpaRefreshTokenRepository extends JpaRepository<AppRefreshToken
 
   Optional<AppRefreshToken> findByUserId(String userId);
   AppRefreshToken findByUserIdAndRefreshToken(String userId, String refreshToken);
-
 }

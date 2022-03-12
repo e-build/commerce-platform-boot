@@ -8,11 +8,15 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Slf4j
 public class JWT {
@@ -60,17 +64,35 @@ public class JWT {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (SecurityException e) {
-            log.info("Invalid JWT signature.");
+            log.error("Invalid JWT signature.");
         } catch (MalformedJwtException e) {
-            log.info("Invalid JWT token.");
+            log.error("Invalid JWT token.");
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token.");
+            log.error("Expired JWT token.");
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT token.");
+            log.error("Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
-            log.info("JWT token compact of handler are invalid.");
+            log.error("JWT token compact of handler are invalid.");
         }
         return null;
+    }
+
+    public String resolveEmail(){
+        return resolveTokenClaims().getSubject();
+    }
+
+    public String resolveOAuthLoginSuccessTokenEmail(){
+        return resolveTokenClaims().getSubject().substring(SecurityConstants.OAUTH_LOGIN_SUCCESS_PREFIX.length());
+    }
+
+    public List<? extends GrantedAuthority> resolveRoleList(){
+        return Arrays.stream(
+            String.valueOf(
+                resolveTokenClaims().get(SecurityConstants.JWT_AUTHORITIES_KEY))
+                .split(","))
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList()
+        );
     }
 
     private Date resolveExpiredDateFromNow(long expirySeconds){

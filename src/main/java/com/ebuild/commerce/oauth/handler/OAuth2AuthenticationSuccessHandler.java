@@ -2,7 +2,6 @@ package com.ebuild.commerce.oauth.handler;
 
 import static com.ebuild.commerce.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.*;
 
-import com.ebuild.commerce.business.auth.domain.entity.AppRefreshToken;
 import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import com.ebuild.commerce.business.auth.repository.JpaRefreshTokenRepository;
 import com.ebuild.commerce.config.security.properties.AppProperties;
@@ -18,13 +17,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -33,6 +32,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -63,6 +63,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        log.info("OAuth login success. authenticated user will redirect to [{}]", targetUrl);
 
         OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
         ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
@@ -71,24 +72,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
         Collection<? extends GrantedAuthority> authorities = ((OidcUser) authentication.getPrincipal()).getAuthorities();
 
-        ArrayList<String> roles = Lists.newArrayList(RoleType.BUYER.getCode());
-        JWT accessToken = tokenProvider.createAccessToken(userInfo.getEmail(), roles);
-        JWT refreshToken = tokenProvider.createRefreshToken(userInfo.getEmail(), roles);
-
-        // DB 저장
-        AppRefreshToken userRefreshToken = jpaRefreshTokenRepository
-            .findByUserId(userInfo.getId())
-            .orElseGet(()->
-                jpaRefreshTokenRepository.saveAndFlush(new AppRefreshToken(userInfo.getId(), refreshToken.getToken()))
-            );
-        userRefreshToken.setRefreshToken(refreshToken.getToken());
-
-        int cookieMaxAge = (int)appProperties.getAuth().getRefreshTokenExpiry() / 60;
         CookieUtil.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", accessToken.getToken())
+                .queryParam("token", tokenProvider.createOAuthLoginSuccessToken(userInfo.getEmail()))
                 .build().toUriString();
     }
 

@@ -16,11 +16,11 @@ public class AppUserDetailsQueryService {
 
   public AppUserDetails findById(Long appUserDetailsId){
     return jpaAppUserDetailsRepository.findById(appUserDetailsId)
-        .orElseThrow(()->new NotFoundException("["+appUserDetailsId+"] 사용자를 찾을 수 없습니다."));
+        .orElseThrow(()->new NotFoundException(String.valueOf(appUserDetailsId)));
   }
 
   public AppUserDetails findByEmail(String email) {
     return jpaAppUserDetailsRepository.findOneByEmail(email)
-        .orElseThrow(()->new NotFoundException("["+email+"] 사용자를 찾을 수 없습니다."));
+        .orElseThrow(()->new NotFoundException(email));
   }
 }
