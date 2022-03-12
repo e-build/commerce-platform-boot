@@ -46,8 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final JpaRefreshTokenRepository userRefreshTokenRepository;
-    private final RedisService redisService;
-    private final AppUserDetailsQueryService appUserDetailsQueryService;
 
     /*
     * UserDetailsService 설정
@@ -127,7 +125,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     * */
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider, redisService, appUserDetailsQueryService);
+        return new TokenAuthenticationFilter(tokenProvider);
     }
 
     /*

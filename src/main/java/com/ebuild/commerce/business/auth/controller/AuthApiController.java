@@ -1,5 +1,6 @@
 package com.ebuild.commerce.business.auth.controller;
 
+import com.ebuild.commerce.business.auth.domain.UserSubject;
 import com.ebuild.commerce.business.auth.domain.dto.LoginReqDto;
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.business.auth.service.CommerceAuthService;
@@ -9,7 +10,6 @@ import com.ebuild.commerce.config.security.annotation.CurrentUser;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthApiController {
 
   private final CommerceAuthService commerceAuthService;
+  private final JsonHelper jsonHelper;
 
   @PostMapping("/login")
   public ResponseEntity<CommonResponse> login(@RequestBody @Valid LoginReqDto loginReqDto){
@@ -37,9 +38,15 @@ public class AuthApiController {
     return ResponseEntity.ok(CommonResponse.OK());
   }
 
-  @GetMapping
-  public ResponseEntity<CommonResponse> test(@CurrentUser AppUserDetails appUserDetails){
-    log.info("Security Global Authentication annotation operation check");
+  @GetMapping("/refresh")
+  public ResponseEntity<CommonResponse> tokenRefresh(){
+    return ResponseEntity.ok(CommonResponse.OK());
+  }
+
+
+  @GetMapping("/test")
+  public ResponseEntity<CommonResponse> test(@CurrentUser UserSubject userSubject){
+    log.info("Security Global Authentication annotation operation check - userSubject : {}", jsonHelper.serialize(userSubject));
     return ResponseEntity.ok(CommonResponse.OK());
   }
 
