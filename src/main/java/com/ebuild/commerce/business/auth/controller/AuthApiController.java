@@ -23,18 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthApiController {
 
-  private final CommerceAuthService commerceAuthServcie;
-  private final JsonHelper jsonHelper;
+  private final CommerceAuthService commerceAuthService;
 
   @PostMapping("/login")
   public ResponseEntity<CommonResponse> login(@RequestBody @Valid LoginReqDto loginReqDto){
-    return ResponseEntity.ok(CommonResponse.OK(Pair.of("token", commerceAuthServcie.login(loginReqDto))));
+    return ResponseEntity.ok(CommonResponse.OK("login", commerceAuthService.login(loginReqDto)));
   }
 
   @PostMapping("/logout")
   public ResponseEntity<CommonResponse> logout(
       @CurrentUser AppUserDetails appUserDetails) {
-    commerceAuthServcie.logout(appUserDetails);
+    commerceAuthService.logout(appUserDetails);
     return ResponseEntity.ok(
         CommonResponse.OK()
     );
@@ -42,7 +41,7 @@ public class AuthApiController {
 
   @GetMapping
   public ResponseEntity<CommonResponse> test(@CurrentUser AppUserDetails appUserDetails){
-    log.info("asdfsadfa sdfasdf : {}", jsonHelper.serialize(appUserDetails));
+    log.info("Security Global Authentication annotation operation check");
     return ResponseEntity.ok(CommonResponse.OK());
   }
 

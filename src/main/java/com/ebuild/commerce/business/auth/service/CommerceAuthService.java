@@ -2,13 +2,11 @@ package com.ebuild.commerce.business.auth.service;
 
 import com.ebuild.commerce.business.auth.domain.dto.LoginReqDto;
 import com.ebuild.commerce.business.auth.domain.dto.LoginResDto;
-import com.ebuild.commerce.business.auth.domain.dto.TokenDto;
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.common.RedisService;
 import com.ebuild.commerce.exception.security.JwtTokenInvalidException;
 import com.ebuild.commerce.oauth.token.JWT;
 import com.ebuild.commerce.oauth.token.JWTProvider;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +24,7 @@ public class CommerceAuthService {
   private final JWTProvider jwtProvider;
   private final AppUserDetailsQueryService appUserDetailsQueryService;
 
-  public TokenDto login(LoginReqDto loginReqDto) {
+  public LoginResDto login(LoginReqDto loginReqDto) {
     Authentication authentication = authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             loginReqDto.getUsername()
@@ -36,18 +34,12 @@ public class CommerceAuthService {
 
     AppUserDetails appUserDetails = (AppUserDetails) authentication.getPrincipal();
 
-    List<String> roles = appUserDetails.mapRoleToString();
-    TokenDto token = TokenDto.builder()
-        .accessToken(
-            jwtProvider.createAccessToken(String.valueOf(appUserDetails.getEmail()), roles).getToken())
-        .refreshToken(
-            jwtProvider.createRefreshToken(String.valueOf(appUserDetails.getEmail()), roles).getToken())
-        .build();
+    LoginResDto loginResDto = LoginResDto.of(jwtProvider, appUserDetails);
 
-    redisService.setRefreshToken(appUserDetails, token.getRefreshToken());
+    redisService.setRefreshToken(appUserDetails, loginResDto.getToken().getRefreshToken());
     redisService.setUser(appUserDetails);
 
-    return token;
+    return loginResDto;
   }
 
   public void logout(AppUserDetails appUserDetails){
@@ -69,4 +61,5 @@ public class CommerceAuthService {
 
     return loginResDto;
   }
+
 }

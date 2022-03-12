@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class OauthApiController {
 
   private final JWTProvider JWTProvider;
-  private final CommerceAuthService commerceAuthServcie;
+  private final CommerceAuthService commerceAuthService;
 
   @GetMapping("/redirect")
   public ResponseEntity<CommonResponse> redirect(
       @RequestParam("token") String token,
       HttpServletRequest request ){
-    return ResponseEntity.ok(CommonResponse.OK("login", commerceAuthServcie.oauthLogin(token)));
+    return ResponseEntity.ok(CommonResponse.OK("login", commerceAuthService.oauthLogin(token)));
   }
 
 }
