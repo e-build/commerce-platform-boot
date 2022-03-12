@@ -41,8 +41,8 @@ spring:
     oauth2.client:
       registration:
         kakao:
-          clientId: 51e9697725714014f504371c15a4b733
-          clientSecret: 5AH9bxGyWIvrZXCaY7dN3N7XPDbBrgLQ
+          clientId: bf5948bf69bac0e5ed82cb0ebfa00e44
+          clientSecret: BH8nXgEtgTPM6BiKN22zTrdMroxPPVvo
           clientAuthenticationMethod: post
           authorizationGrantType: authorization_code
           redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
@@ -53,11 +53,6 @@ spring:
           clientName: Kakao
       # Provider 설정
       provider:
-        naver:
-          authorizationUri: https://nid.naver.com/oauth2.0/authorize
-          tokenUri: https://nid.naver.com/oauth2.0/token
-          userInfoUri: https://openapi.naver.com/v1/nid/me
-          userNameAttribute: response
         kakao:
           authorizationUri: https://kauth.kakao.com/oauth/authorize
           tokenUri: https://kauth.kakao.com/oauth/token
@@ -70,6 +65,10 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
 # 로깅 설정
 logging:
