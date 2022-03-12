@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,6 +27,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
@@ -43,13 +46,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AppUserDetails extends BaseEntity implements UserDetails {
+public class AppUserDetails implements UserDetails{
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany(mappedBy = "appUserDetails", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<AppUserRole> roleList = Lists.newArrayList();
 
   public List<String> mapRoleToString(){
@@ -59,15 +62,15 @@ public class AppUserDetails extends BaseEntity implements UserDetails {
   }
 
   @JsonIgnore
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "appUserDetails")
+  @OneToOne
   private Buyer buyer;
 
   @JsonIgnore
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "appUserDetails")
+  @OneToOne
   private Seller seller;
 
   @JsonIgnore
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "appUserDetails")
+  @OneToOne
   private Admin admin;
 
   @Column(unique = true)
@@ -99,6 +102,7 @@ public class AppUserDetails extends BaseEntity implements UserDetails {
   @Size(max = 512)
   private String profileImageUrl;
 
+  @Setter
   @Column(length = 20)
   @Enumerated(EnumType.STRING)
   @NotNull

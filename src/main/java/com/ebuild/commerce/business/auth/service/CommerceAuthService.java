@@ -3,6 +3,7 @@ package com.ebuild.commerce.business.auth.service;
 import com.ebuild.commerce.business.auth.domain.dto.LoginReqDto;
 import com.ebuild.commerce.business.auth.domain.dto.LoginResDto;
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
+import com.ebuild.commerce.business.buyer.service.BuyerQueryService;
 import com.ebuild.commerce.common.RedisService;
 import com.ebuild.commerce.exception.security.JwtTokenInvalidException;
 import com.ebuild.commerce.oauth.token.JWT;
@@ -21,8 +22,8 @@ public class CommerceAuthService {
 
   private final RedisService redisService;
   private final AuthenticationManager authenticationManager;
+  private final BuyerQueryService buyerQueryService;
   private final JWTProvider jwtProvider;
-  private final AppUserDetailsQueryService appUserDetailsQueryService;
 
   public LoginResDto login(LoginReqDto loginReqDto) {
     Authentication authentication = authenticationManager.authenticate(
@@ -52,7 +53,9 @@ public class CommerceAuthService {
     if (!jwt.validate())
       throw new JwtTokenInvalidException();
 
-    AppUserDetails appUserDetails = appUserDetailsQueryService.findByEmail(jwt.resolveOAuthLoginSuccessTokenEmail());
+    AppUserDetails appUserDetails = buyerQueryService
+        .findByEmail(jwt.resolveOAuthLoginSuccessTokenEmail())
+        .getAppUserDetails();
     LoginResDto loginResDto = LoginResDto.of(jwtProvider, appUserDetails);
 
     // Refresh 토큰 저장

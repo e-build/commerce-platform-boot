@@ -84,7 +84,7 @@ public class Order extends BaseEntity {
                 .receivingAddress(
                     baseOrderCreateReqDto.getUseBuyerBasicAddress()
                         ? cart.getBuyer().getReceivingAddress()
-                        : new Address(baseOrderCreateReqDto.getReceivingAddress())
+                        : baseOrderCreateReqDto.getReceivingAddress().toEntity()
                 ).build()
         ).collect(Collectors.toList());
     return order;
@@ -109,7 +109,7 @@ public class Order extends BaseEntity {
                 .receivingAddress(
                     baseOrderCreateReqDto.getUseBuyerBasicAddress()
                         ? buyer.getReceivingAddress()
-                        : new Address(baseOrderCreateReqDto.getReceivingAddress())
+                        : baseOrderCreateReqDto.getReceivingAddress().toEntity()
                 ).build()
         ).collect(Collectors.toList());
     return order;

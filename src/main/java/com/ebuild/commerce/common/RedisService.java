@@ -1,13 +1,9 @@
 package com.ebuild.commerce.common;
 
-import static java.util.Objects.isNull;
-
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
-import com.ebuild.commerce.business.auth.service.AppUserDetailsQueryService;
 import com.ebuild.commerce.config.JsonHelper;
 import com.ebuild.commerce.config.security.SecurityConstants;
 import java.time.Duration;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -18,7 +14,6 @@ public class RedisService {
 
   private final StringRedisTemplate redisTemplate;
   private final JsonHelper jsonHelper;
-  private final AppUserDetailsQueryService appUserDetailsQueryService;
 
   public void setData(String key, String value) {
     redisTemplate.opsForValue().set(key, value);
@@ -30,7 +25,7 @@ public class RedisService {
 
   public void setRefreshToken(AppUserDetails appUserDetails, String token) {
     redisTemplate.opsForValue().set(
-        SecurityConstants.REDIS_REFRESH_TOKEN_KEY + appUserDetails.getId()
+        SecurityConstants.REDIS_REFRESH_TOKEN_KEY + appUserDetails.getEmail()
         , token
         , Duration.ofDays(7)
     );
@@ -42,30 +37,30 @@ public class RedisService {
 
   public void removeRefreshToken(AppUserDetails appUserDetails) {
     redisTemplate.delete(
-        SecurityConstants.REDIS_REFRESH_TOKEN_KEY + appUserDetails.getId()
+        SecurityConstants.REDIS_REFRESH_TOKEN_KEY + appUserDetails.getEmail()
     );
   }
 
   public void removeUser(AppUserDetails appUserDetails) {
-    redisTemplate.delete(String.valueOf(appUserDetails.getId()));
+    redisTemplate.delete(String.valueOf(appUserDetails.getEmail()));
   }
 
   public void setUser(AppUserDetails appUserDetails) {
     redisTemplate.opsForValue()
-        .set(String.valueOf(appUserDetails.getId()), jsonHelper.serialize(appUserDetails));
+        .set(String.valueOf(appUserDetails.getEmail()), jsonHelper.serialize(appUserDetails));
   }
 
-  public AppUserDetails getUser(String email) {
-    String cachedData = Optional
-        .ofNullable(getData("USER_" + email))
-        .orElse(null);
-
-    if (!isNull(cachedData))
-      return jsonHelper.deserialize(cachedData, AppUserDetails.class);
-
-    AppUserDetails appUserDetails = appUserDetailsQueryService.findByEmail(email);
-    setUser(appUserDetails);
-    return appUserDetails;
-  }
+//  public AppUserDetails getUser(String email) {
+//    String cachedData = Optional
+//        .ofNullable(getData("USER_" + email))
+//        .orElse(null);
+//
+//    if (!isNull(cachedData))
+//      return jsonHelper.deserialize(cachedData, AppUserDetails.class);
+//
+//    AppUserDetails appUserDetails = appUserDetailsQueryService.findByEmail(email);
+//    setUser(appUserDetails);
+//    return appUserDetails;
+//  }
 
 }

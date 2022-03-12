@@ -2,12 +2,10 @@ package com.ebuild.commerce.config.security;
 
 import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import com.ebuild.commerce.business.auth.repository.JpaRefreshTokenRepository;
-import com.ebuild.commerce.business.auth.service.AppUserDetailsQueryService;
-import com.ebuild.commerce.common.RedisService;
+import com.ebuild.commerce.config.security.filter.TokenAuthenticationFilter;
 import com.ebuild.commerce.config.security.properties.AppProperties;
 import com.ebuild.commerce.config.security.properties.CorsProperties;
 import com.ebuild.commerce.oauth.exception.RestAuthenticationEntryPoint;
-import com.ebuild.commerce.config.security.filter.TokenAuthenticationFilter;
 import com.ebuild.commerce.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.ebuild.commerce.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.ebuild.commerce.oauth.handler.TokenAccessDeniedHandler;
@@ -19,6 +17,7 @@ import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -57,11 +56,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
             .requestMatchers(PathRequest
                 .toStaticResources()
-                .atCommonLocations());
+                .atCommonLocations()
+            );
     }
 
     @Override
@@ -82,6 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/v1/auth/**", "/oauth/redirect", "/error").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/buyers", "/api/v1/sellers").permitAll()
                 .antMatchers("/api/**").hasAnyAuthority(RoleType.BUYER.getCode())
                 .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
                 .anyRequest().authenticated()

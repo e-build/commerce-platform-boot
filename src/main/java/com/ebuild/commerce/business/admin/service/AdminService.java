@@ -4,14 +4,12 @@ import com.ebuild.commerce.business.admin.domain.dto.AdminSaveReqDto;
 import com.ebuild.commerce.business.admin.domain.dto.AdminSaveResDto;
 import com.ebuild.commerce.business.admin.domain.entity.Admin;
 import com.ebuild.commerce.business.admin.repository.JpaAdminRepository;
-import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
-import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import com.ebuild.commerce.business.auth.domain.entity.Role;
-import com.ebuild.commerce.business.auth.repository.JpaAppUserDetailsRepository;
+import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import com.ebuild.commerce.business.auth.repository.JpaRoleRepository;
 import com.ebuild.commerce.exception.AlreadyExistsException;
 import com.google.common.collect.Lists;
-import java.util.Optional;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,15 +19,14 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
   private final PasswordEncoder passwordEncoder;
-  private final JpaAppUserDetailsRepository jpaAppUserDetailsRepository;
+  private final AdminQueryService adminQueryService;
   private final JpaRoleRepository jpaRoleRepository;
   private final JpaAdminRepository jpaSellerRepository;
 
   public AdminSaveResDto signup(AdminSaveReqDto adminSaveReqDto) {
-    findCommerceUserByEmail(adminSaveReqDto.getCommerceUser().getEmail())
-        .ifPresent(user -> {
-            throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
-        });
+    Admin existUser = adminQueryService.findByEmail(adminSaveReqDto.getCommerceUser().getEmail());
+    if (!Objects.isNull(existUser))
+      throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
 
     // 권한 부여
     adminSaveReqDto.getCommerceUser()
@@ -53,7 +50,4 @@ public class AdminService {
         .build();
   }
 
-  private Optional<AppUserDetails> findCommerceUserByEmail(String email){
-    return jpaAppUserDetailsRepository.findOneByEmail(email);
-  }
 }

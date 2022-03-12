@@ -1,11 +1,9 @@
 package com.ebuild.commerce.business.seller.service;
 
-import com.ebuild.commerce.business.auth.repository.JpaAppUserDetailsRepository;
+import com.ebuild.commerce.business.auth.domain.entity.Role;
+import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import com.ebuild.commerce.business.auth.repository.JpaRoleRepository;
 import com.ebuild.commerce.business.company.repository.JpaCompanyRepository;
-import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
-import com.ebuild.commerce.business.auth.domain.entity.RoleType;
-import com.ebuild.commerce.business.auth.domain.entity.Role;
 import com.ebuild.commerce.business.seller.domain.dto.SellerSaveReqDto;
 import com.ebuild.commerce.business.seller.domain.dto.SellerSaveResDto;
 import com.ebuild.commerce.business.seller.domain.entity.Seller;
@@ -13,7 +11,7 @@ import com.ebuild.commerce.business.seller.repository.JpaSellerRepository;
 import com.ebuild.commerce.exception.AlreadyExistsException;
 import com.ebuild.commerce.exception.NotFoundException;
 import com.google.common.collect.Lists;
-import java.util.Optional;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,15 +21,17 @@ import org.springframework.stereotype.Service;
 public class SellerService {
 
   private final PasswordEncoder passwordEncoder;
-  private final JpaAppUserDetailsRepository jpaAppUserDetailsRepository;
   private final JpaRoleRepository jpaRoleRepository;
   private final JpaSellerRepository jpaSellerRepository;
   private final JpaCompanyRepository jpaCompanyRepository;
+  private final SellerQueryService sellerQueryService;
+
 
   public SellerSaveResDto signup(SellerSaveReqDto sellerSaveReqDto) {
-    findCommerceUserByEmail(sellerSaveReqDto.getAppUserDetails().getEmail()).ifPresent(user -> {
+    Seller existUser = sellerQueryService.findByEmail(sellerSaveReqDto.getAppUserDetails().getEmail());
+    if (!Objects.isNull(existUser)) {
       throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
-    });
+    }
 
     // 권한 부여
     sellerSaveReqDto.getAppUserDetails()
@@ -59,7 +59,4 @@ public class SellerService {
         .build();
   }
 
-  private Optional<AppUserDetails> findCommerceUserByEmail(String email){
-    return jpaAppUserDetailsRepository.findOneByEmail(email);
-  }
 }

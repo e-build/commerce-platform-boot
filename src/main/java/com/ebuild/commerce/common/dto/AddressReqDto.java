@@ -22,4 +22,13 @@ public class AddressReqDto {
           .build();
     }
 
+    public Address toEntity(){
+        return Address.builder()
+            .baseAddress(this.baseAddress)
+            .detailAddress(this.detailAddress)
+            .addressZipCode(this.addressZipCode)
+            .build();
+    }
+
+
 }

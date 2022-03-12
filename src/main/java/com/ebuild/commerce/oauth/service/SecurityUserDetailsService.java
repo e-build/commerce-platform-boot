@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class SecurityUserDetailsService implements UserDetailsService {
 
   private final JpaAppUserDetailsRepository jpaAppUserDetailsRepository;
@@ -16,7 +16,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     return jpaAppUserDetailsRepository
-        .findOneByEmail(email)
+        .findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("[" + email + "] 대한 계정은 존재하지 않습니다"));
   }
 

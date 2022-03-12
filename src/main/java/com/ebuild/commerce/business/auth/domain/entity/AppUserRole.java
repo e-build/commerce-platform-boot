@@ -23,7 +23,7 @@ public class AppUserRole {
   @GeneratedValue
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name="role_id")
   private Role role;
 

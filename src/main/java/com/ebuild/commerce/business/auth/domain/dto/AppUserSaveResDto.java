@@ -17,7 +17,6 @@ public class AppUserSaveResDto {
   private List<String> roles;
 
   public AppUserSaveResDto(AppUserDetails entity) {
-    this.id = entity.getId();
     this.email = entity.getEmail();
     this.nickname = entity.getNickname();
     this.phoneNumber = entity.getPhoneNumber();

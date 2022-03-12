@@ -3,6 +3,7 @@ package com.ebuild.commerce.business.admin.domain.entity;
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.common.BaseEntity;
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -24,7 +25,6 @@ public class Admin extends BaseEntity {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "app_user_detail_id")
   private AppUserDetails appUserDetails;
 
   @Builder

@@ -1,5 +1,6 @@
 package com.ebuild.commerce.business.order.controller;
 
+import com.ebuild.commerce.business.auth.domain.UserSubject;
 import com.ebuild.commerce.config.security.annotation.CurrentUser;
 import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto;
 import com.ebuild.commerce.business.order.service.OrderService;
@@ -28,13 +29,13 @@ public class OrderApiController {
   // 바로주문
   @PostMapping("")
   public ResponseEntity<CommonResponse> createDirectOrder(
-      @CurrentUser AppUserDetails appUserDetails,
+      @CurrentUser UserSubject userSubject,
       @RequestBody @Valid DirectOrderReqDto directOrderReqDto) {
 
     return ResponseEntity.ok(
         CommonResponse.OK(
             Pair.of("order",
-                orderService.createOrder(appUserDetails.getBuyer(), directOrderReqDto))
+                orderService.createOrder(userSubject.getEmail(), directOrderReqDto))
         )
     );
   }

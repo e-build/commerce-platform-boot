@@ -76,9 +76,9 @@ public class DataInitialization {
       em.persist(adminRole);
 
       AppUserDetails appUserDetails = AppUserDetails.builder()
-          .email("donggeol92@gmail.com")
+          .email("buyer@gmail.com")
           .password("$2a$10$zGIt8X9MFmR.TngaZQzvI..w3qIONVL3CDzTFDKvqP/8DiNpLbRdm") // 1234qwer!
-          .nickname("ebuild")
+          .nickname("이길동")
           .phoneNumber("010-9747-6477")
           .providerType(ProviderType.EMAIL)
           .build();

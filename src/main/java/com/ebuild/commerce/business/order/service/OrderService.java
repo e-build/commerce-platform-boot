@@ -1,6 +1,8 @@
 package com.ebuild.commerce.business.order.service;
 
 import com.ebuild.commerce.business.buyer.domain.Buyer;
+import com.ebuild.commerce.business.buyer.repository.JpaBuyerRepository;
+import com.ebuild.commerce.business.buyer.service.BuyerQueryService;
 import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto;
 import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto.OrderLineListDto;
 import com.ebuild.commerce.business.order.domain.dto.OrderResDto;
@@ -19,10 +21,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrderService {
 
+  private final BuyerQueryService buyerQueryService;
   private final JpaOrderRepository jpaOrderRepository;
   private final JpaProductRepository jpaProductRepository;
 
-  public OrderResDto createOrder(Buyer buyer, DirectOrderReqDto directOrderReqDto) {
+  public OrderResDto createOrder(String email, DirectOrderReqDto directOrderReqDto) {
+    Buyer buyer = buyerQueryService.findByEmail(email);
+
     List<Product> products = jpaProductRepository
         .findByIds(
             directOrderReqDto.getOrderLineList()

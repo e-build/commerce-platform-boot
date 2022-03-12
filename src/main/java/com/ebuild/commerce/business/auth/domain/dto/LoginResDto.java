@@ -24,7 +24,6 @@ public class LoginResDto {
 
   public static LoginResDto of(JWTProvider jwtProvider, AppUserDetails appUserDetails) {
     return LoginResDto.builder()
-        .id(appUserDetails.getId())
         .email(appUserDetails.getEmail())
         .nickname(appUserDetails.getNickname())
         .token(TokenDto.builder()

@@ -1,9 +1,9 @@
 package com.ebuild.commerce.business.buyer.domain;
 
+import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
+import com.ebuild.commerce.business.buyer.domain.dto.BuyerSaveReqDto;
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.order.domain.entity.Order;
-import com.ebuild.commerce.business.buyer.domain.dto.BuyerSaveReqDto;
-import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
 import com.google.common.collect.Lists;
@@ -33,7 +33,6 @@ public class Buyer extends BaseEntity {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "app_user_detail_id")
   private AppUserDetails appUserDetails;
 
   @Embedded

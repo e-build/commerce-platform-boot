@@ -23,12 +23,6 @@ public class Address {
     this.addressZipCode = addressZipCode;
   }
 
-  public Address(AddressReqDto addressReqDto) {
-    this.baseAddress = addressReqDto.getBaseAddress();
-    this.detailAddress = addressReqDto.getDetailAddress();
-    this.addressZipCode = addressReqDto.getAddressZipCode();
-  }
-
   public void update(AddressReqDto addressReqDto){
     this.baseAddress = addressReqDto.getBaseAddress();
     this.detailAddress = addressReqDto.getDetailAddress();
