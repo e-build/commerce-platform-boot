@@ -34,9 +34,7 @@ public class AuthApiController {
   public ResponseEntity<CommonResponse> logout(
       @CurrentUser AppUserDetails appUserDetails) {
     commerceAuthService.logout(appUserDetails);
-    return ResponseEntity.ok(
-        CommonResponse.OK()
-    );
+    return ResponseEntity.ok(CommonResponse.OK());
   }
 
   @GetMapping

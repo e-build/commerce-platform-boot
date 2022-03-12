@@ -75,7 +75,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         CookieUtil.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", tokenProvider.createOAuthLoginSuccessToken(userInfo.getEmail()))
+                .queryParam("token", tokenProvider.createOAuthLoginSuccessToken(userInfo.getEmail()).getToken())
                 .build().toUriString();
     }
 
