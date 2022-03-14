@@ -3,6 +3,8 @@ package com.ebuild.commerce.business.order.domain.entity;
 import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.order.domain.dto.BaseOrderCreateReqDto;
+import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto;
+import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto.OrderLineDto;
 import com.ebuild.commerce.business.orderProduct.domain.common.OrderStatus;
 import com.ebuild.commerce.business.orderProduct.domain.entity.OrderProduct;
 import com.ebuild.commerce.business.product.domain.entity.Product;
@@ -11,6 +13,7 @@ import com.ebuild.commerce.common.BaseEntity;
 import com.google.common.collect.Lists;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -78,14 +81,12 @@ public class Order extends BaseEntity {
     order.orderProductList = cart.getCartLineList()
         .stream()
         .map(cartLine ->
-            OrderProduct.builder()
-                .order(order)
-                .cartLine(cartLine)
-                .receivingAddress(
-                    baseOrderCreateReqDto.getUseBuyerBasicAddress()
-                        ? cart.getBuyer().getReceivingAddress()
-                        : baseOrderCreateReqDto.getReceivingAddress().toEntity()
-                ).build()
+            OrderProduct.of(
+                order,
+                cartLine.getProduct(),
+                findAddress(cart.getBuyer(),baseOrderCreateReqDto),
+                cartLine.getQuantity()
+            )
         ).collect(Collectors.toList());
     return order;
   }
@@ -93,25 +94,42 @@ public class Order extends BaseEntity {
   public static Order createDirectOrder(
       Buyer buyer,
       List<Product> products,
-      BaseOrderCreateReqDto baseOrderCreateReqDto) {
+      DirectOrderReqDto directOrderReqDto) {
+    BaseOrderCreateReqDto baseOrderInfo = directOrderReqDto.getBaseOrderInfo();
+
     Order order = new Order();
     order.buyer = buyer;
     order.orderStatus = OrderStatus.PAYED;
     order.orderDate = LocalDateTime.now();
     order.payment = Payment.builder()
-        .paymentReqDto(baseOrderCreateReqDto.getPayment())
+        .paymentReqDto(baseOrderInfo.getPayment())
         .build();
     order.orderProductList = products.stream()
         .map(product ->
-            OrderProduct.builder()
-                .order(order)
-                .product(product)
-                .receivingAddress(
-                    baseOrderCreateReqDto.getUseBuyerBasicAddress()
-                        ? buyer.getReceivingAddress()
-                        : baseOrderCreateReqDto.getReceivingAddress().toEntity()
-                ).build()
-        ).collect(Collectors.toList());
+            OrderProduct.of(
+                order,
+                product,
+                findAddress(buyer, baseOrderInfo),
+                findOrderProductQuantity(directOrderReqDto, product)
+            )
+        )
+        .collect(Collectors.toList());
     return order;
   }
+
+  private static Address findAddress(Buyer buyer, BaseOrderCreateReqDto baseOrderInfo) {
+    return baseOrderInfo.getUseBuyerBasicAddress()
+        ? buyer.getReceivingAddress()
+        : baseOrderInfo.getReceivingAddress().toEntity();
+  }
+
+  private static int findOrderProductQuantity(DirectOrderReqDto directOrderReqDto, Product product) {
+    int quantity = 0;
+    for ( OrderLineDto orderLine : directOrderReqDto.getOrderLineList() ){
+      if (Objects.equals(orderLine.getProductId(), product.getId()))
+        quantity = orderLine.getQuantity();
+    }
+    return quantity;
+  }
+
 }

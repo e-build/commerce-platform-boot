@@ -100,6 +100,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
     public static UserPrincipal create(AppUserDetails appUserDetails) {
         return UserPrincipal.builder()
+            .userId(appUserDetails.getEmail())
             .email(appUserDetails.getEmail())
             .password(appUserDetails.getPassword())
             .providerType(appUserDetails.getProviderType())

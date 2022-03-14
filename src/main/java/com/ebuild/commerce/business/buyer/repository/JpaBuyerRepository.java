@@ -10,7 +10,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JpaBuyerRepository extends JpaRepository<Buyer, Long> {
 
-  @Query("select buyer from Buyer buyer where buyer.appUserDetails.email = :email")
+  @Query(
+      "select distinct buyer "
+      + "from Buyer buyer "
+          + "join fetch buyer.appUserDetails aud "
+          + "join fetch aud.roleList roleList "
+          + "join fetch roleList.role role "
+      + "where aud.email = :email"
+  )
   Optional<Buyer> findByEmail(@Param("email") String email);
 
 

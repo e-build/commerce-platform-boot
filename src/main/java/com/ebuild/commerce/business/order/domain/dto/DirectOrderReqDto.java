@@ -9,13 +9,13 @@ import lombok.Getter;
 public class DirectOrderReqDto {
 
   @Valid
-  private List<OrderLineListDto> orderLineList;
+  private List<OrderLineDto> orderLineList;
 
   @Valid
   private BaseOrderCreateReqDto baseOrderInfo;
 
   @Getter
-  public static class OrderLineListDto {
+  public static class OrderLineDto {
 
     @NotNull
     private Long productId;

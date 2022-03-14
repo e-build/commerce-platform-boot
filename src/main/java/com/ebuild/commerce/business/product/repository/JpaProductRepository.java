@@ -21,8 +21,11 @@ public interface JpaProductRepository extends JpaRepository<Product, Long> {
 
   Page<Product> findAll(Specification<Product> spec, Pageable pageable);
 
-  @Query("select product"
-      + " from Product product"
-      + " where product.id in :productIds")
+  @Query("select distinct product "
+      + "from Product product "
+      + "join fetch product.company company "
+      + "join fetch company.address address "
+      + "where product.id in :productIds")
   List<Product> findByIds(@Param("productIds") List<Long> productIds);
+
 }

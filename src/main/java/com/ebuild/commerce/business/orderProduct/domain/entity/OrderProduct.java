@@ -1,13 +1,12 @@
 package com.ebuild.commerce.business.orderProduct.domain.entity;
 
-import com.ebuild.commerce.business.cart.domain.entity.CartLine;
 import com.ebuild.commerce.business.delivery.domain.common.DeliveryStatus;
 import com.ebuild.commerce.business.delivery.domain.entity.Delivery;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,7 +17,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +31,7 @@ public class OrderProduct extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id")
   private Order order;
@@ -50,17 +49,35 @@ public class OrderProduct extends BaseEntity {
 
   private Integer quantity;
 
+
   @Builder
-  public OrderProduct(Order order, CartLine cartLine, Product product, Address receivingAddress) {
-    this.product = !Objects.isNull(product) ? product : cartLine.getProduct();
+  public OrderProduct(Long id, Order order,
+      Product product, Delivery delivery, Integer unitAmount, Integer quantity) {
+    this.id = id;
     this.order = order;
+    this.product = product;
+    this.delivery = delivery;
+    this.unitAmount = unitAmount;
+    this.quantity = quantity;
+  }
+
+  public static OrderProduct of(Order order, Product product, Address receivingAddress, int quantity){
+    OrderProduct orderProduct = OrderProduct.builder()
+        .product(product)
+        .order(order)
+        .unitAmount(product.getSaleAmount())
+        .quantity(quantity)
+        .build();
+    orderProduct.initDelivery(DeliveryStatus.READY, product.getCompany().getAddress(), receivingAddress);
+    return orderProduct;
+  }
+
+  private void initDelivery(DeliveryStatus deliveryStatus, Address sendingAddress, Address receivingAddress) {
     this.delivery = Delivery.builder()
         .orderProduct(this)
-        .deliveryStatus(DeliveryStatus.READY)
+        .deliveryStatus(deliveryStatus)
         .receivingAddress(receivingAddress)
-        .shippingAddress(this.product.getCompany().getAddress())
+        .shippingAddress(sendingAddress)
         .build();
-    this.unitAmount = this.product.getSaleAmount();
-    this.quantity = cartLine.getQuantity();
   }
 }

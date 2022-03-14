@@ -3,6 +3,7 @@ package com.ebuild.commerce.oauth.service;
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.business.auth.domain.entity.Role;
 import com.ebuild.commerce.business.auth.domain.entity.RoleType;
+import com.ebuild.commerce.business.auth.repository.JpaAppUserDetailsRepository;
 import com.ebuild.commerce.business.auth.repository.JpaRoleRepository;
 import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.business.buyer.repository.JpaBuyerRepository;

@@ -5,6 +5,7 @@ import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.orderProduct.domain.entity.OrderProduct;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -37,6 +38,7 @@ public class Delivery extends BaseEntity {
   @Enumerated(value = EnumType.STRING)
   private DeliveryStatus deliveryStatus;
 
+  @JsonIgnore
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_product_id")
   private OrderProduct orderProduct;

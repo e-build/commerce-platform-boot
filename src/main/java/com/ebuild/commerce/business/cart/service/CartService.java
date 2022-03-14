@@ -59,7 +59,7 @@ public class CartService {
     Cart cart = findCartById(cartId);
     Order order = Order.createCartOrder(cart, baseOrderCreateReqDto);
     jpaOrderRepository.save(order);
-    return OrderResDto.builder().order(order).build();
+    return OrderResDto.of(order);
   }
 
   private Product findProductById(CartLineAddParam cartLineDto)
