@@ -1,6 +1,7 @@
 package com.ebuild.commerce.common.http;
 
 
+import com.ebuild.commerce.exception.CommerceException;
 import com.ebuild.commerce.util.RegexUtils;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.validation.FieldError;
 @ToString
 public class Error {
 
+    private String name;
     private String code;
     private String message;
 
@@ -36,9 +38,22 @@ public class Error {
      * @param e validation fail fields
      * @return Error
      */
+    public static Error of(CommerceException e) {
+        Error error = new Error();
+        error.setName(RegexUtils.camelCaseToUnderScoreUpperCase(e.getClass().getSimpleName()));
+        error.setCode(e.getCode());
+        error.setMessage(e.getMessage());
+        return error;
+    }
+
+    /**
+     * common exception
+     * @param e validation fail fields
+     * @return Error
+     */
     public static Error of(Exception e) {
         Error error = new Error();
-        error.setCode(RegexUtils.camelCaseToUnderScoreUpperCase(e.getClass().getSimpleName()));
+        error.setName(RegexUtils.camelCaseToUnderScoreUpperCase(e.getClass().getSimpleName()));
         error.setMessage(e.getMessage());
         return error;
     }

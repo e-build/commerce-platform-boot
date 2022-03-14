@@ -71,15 +71,6 @@ public class BuyerService {
         .build();
   }
 
-  @Transactional(readOnly = true)
-  public BuyerResDto findOneById(Long buyerId) {
-    return BuyerResDto.builder()
-        .buyer(jpaBuyerRepository
-            .findById(buyerId)
-            .orElseThrow(()->new NotFoundException(String.valueOf(buyerId), "사용자"))
-        ).build();
-  }
-
   public void deleteOne(Long buyerId) {
     jpaBuyerRepository.delete(
         jpaBuyerRepository

@@ -38,12 +38,10 @@ public class ProductApiController {
 
     return ResponseEntity.ok(
         CommonResponse.OK(
-            Pair.of(
-                "product"
-                , ProductResDto.builder()
-                    .product(productCommandService.register(productSaveReqDto))
-                    .build()
-            )
+            "product"
+            , ProductResDto.builder()
+                .product(productCommandService.register(productSaveReqDto))
+                .build()
         )
     );
   }
@@ -55,12 +53,10 @@ public class ProductApiController {
 
     return ResponseEntity.ok(
         CommonResponse.OK(
-            Pair.of(
-                "product"
-                , ProductResDto.builder()
-                    .product(productCommandService.update(productId, productSaveReqDto))
-                    .build()
-            )
+            "product"
+            , ProductResDto.builder()
+                .product(productCommandService.update(productId, productSaveReqDto))
+                .build()
         )
     );
   }
@@ -84,7 +80,8 @@ public class ProductApiController {
 
     return ResponseEntity.ok(
         CommonResponse.OK(
-            Pair.of("products", productCommandService.searchByCondition(productSearchReqDto))
+            "products",
+            productCommandService.searchByCondition(productSearchReqDto)
         )
     );
   }

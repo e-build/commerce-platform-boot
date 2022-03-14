@@ -2,6 +2,7 @@ package com.ebuild.commerce.business.buyer.controller;
 
 import com.ebuild.commerce.business.buyer.domain.dto.BuyerSaveReqDto;
 import com.ebuild.commerce.business.buyer.domain.dto.BuyerSearchReqDto;
+import com.ebuild.commerce.business.buyer.service.BuyerQueryService;
 import com.ebuild.commerce.business.buyer.service.BuyerService;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BuyerApiController {
 
+  private final BuyerQueryService buyerQueryService;
   private final BuyerService buyerService;
   private final JsonHelper jsonHelper;
 
@@ -33,7 +35,7 @@ public class BuyerApiController {
   public ResponseEntity<CommonResponse> buyerSignup(
       @RequestBody @Valid BuyerSaveReqDto buyerSaveReqDto) {
     return ResponseEntity.ok(
-        CommonResponse.OK(Pair.of("buyer", buyerService.signup(buyerSaveReqDto)))
+        CommonResponse.OK("buyer", buyerService.signup(buyerSaveReqDto))
     );
   }
 
@@ -42,7 +44,7 @@ public class BuyerApiController {
       @PathVariable("buyerId") Long buyerId
       , @RequestBody @Valid BuyerSaveReqDto buyerSaveReqDto) {
     return ResponseEntity.ok(
-        CommonResponse.OK(Pair.of("buyer", buyerService.update(buyerSaveReqDto)))
+        CommonResponse.OK("buyer", buyerService.update(buyerSaveReqDto))
     );
   }
 
@@ -53,7 +55,7 @@ public class BuyerApiController {
     log.info("principal : {}", jsonHelper.serialize(principal));
 
     return ResponseEntity.ok(
-        CommonResponse.OK(Pair.of("buyer", buyerService.findOneById(buyerId)))
+        CommonResponse.OK("buyer", buyerQueryService.findOneById(buyerId))
     );
   }
 
@@ -70,7 +72,7 @@ public class BuyerApiController {
   public ResponseEntity<CommonResponse> search(
       @RequestBody @Valid BuyerSearchReqDto buyerSearchReqDto) {
     return ResponseEntity.ok(
-        CommonResponse.OK(Pair.of("buyer", buyerService.search(buyerSearchReqDto)))
+        CommonResponse.OK("buyer", buyerService.search(buyerSearchReqDto))
     );
   }
 

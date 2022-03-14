@@ -50,7 +50,7 @@ public class CartApiController {
       @PathVariable("cartId") Long cartId) {
     return ResponseEntity.ok(
         CommonResponse.OK(
-            Pair.of("cart", cartService.findById(cartId))
+            "cart", cartService.findById(cartId)
         )
     );
   }
@@ -61,7 +61,7 @@ public class CartApiController {
       , @RequestBody @Valid BaseOrderCreateReqDto cartBaseOrderCreateReqDto) {
     return ResponseEntity.ok(
         CommonResponse.OK(
-            Pair.of("order", cartService.createOrder(cartId, cartBaseOrderCreateReqDto))
+            "order", cartService.createOrder(cartId, cartBaseOrderCreateReqDto)
         )
     );
   }

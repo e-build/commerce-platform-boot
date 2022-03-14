@@ -2,6 +2,7 @@ package com.ebuild.commerce.config.security;
 
 import com.ebuild.commerce.business.auth.domain.entity.RoleType;
 import com.ebuild.commerce.business.auth.repository.JpaRefreshTokenRepository;
+import com.ebuild.commerce.config.JsonHelper;
 import com.ebuild.commerce.config.security.filter.TokenAuthenticationFilter;
 import com.ebuild.commerce.config.security.properties.AppProperties;
 import com.ebuild.commerce.config.security.properties.CorsProperties;
@@ -45,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final JpaRefreshTokenRepository userRefreshTokenRepository;
+    private final JsonHelper jsonHelper;
 
     /*
     * UserDetailsService 설정
@@ -76,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint(jsonHelper))
                 .accessDeniedHandler(tokenAccessDeniedHandler)
             .and()
                 .authorizeRequests()
@@ -126,7 +128,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     * */
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
+        return new TokenAuthenticationFilter(tokenProvider, jsonHelper);
     }
 
     /*

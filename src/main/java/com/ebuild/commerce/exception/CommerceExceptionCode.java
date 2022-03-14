@@ -1,6 +1,8 @@
 package com.ebuild.commerce.exception;
 
+import com.ebuild.commerce.exception.security.JwtTokenExpiredException;
 import com.ebuild.commerce.exception.security.JwtTokenInvalidException;
+import com.ebuild.commerce.exception.security.UnauthorizedException;
 import lombok.Getter;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +15,8 @@ public enum CommerceExceptionCode {
   INVALID_PASSWORD_EXCEPTION(BadCredentialsException.class, "ERR-001-003", "이메일과 패스워드가 일치하지 않습니다."),
   METHOD_ARGUMENT_NOT_VALID_EXCEPTION(MethodArgumentNotValidException.class, "ERR-001-004", "이메일과 패스워드가 일치하지 않습니다."),
   JWT_INVALID_EXCEPTION(JwtTokenInvalidException.class, "ERR-001-005", "JWT 토큰이 유효하지 않습니다."),
+  JWT_EXPIRED_EXCEPTION(JwtTokenExpiredException.class, "ERR-002-002", "JWT 토큰이 만료되었습니다."),
+  UN_AUTHORIZED_EXCEPTION(UnauthorizedException.class, "ERR-002-001", "리소스에 대한 권한이 부족합니다."),
   ;
 
   private final Class<? extends Exception> exceptionClass;

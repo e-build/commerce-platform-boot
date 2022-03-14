@@ -1,6 +1,7 @@
 package com.ebuild.commerce.oauth.token;
 
 import com.ebuild.commerce.config.security.SecurityConstants;
+import com.ebuild.commerce.exception.security.JwtTokenInvalidException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -59,16 +60,17 @@ public class JWT {
     public Claims resolveTokenClaims() {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
         } catch (SecurityException e) {
             log.error("Invalid JWT signature.");
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token.");
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token.");
+            throw e;
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token.");
         } catch (IllegalArgumentException e) {

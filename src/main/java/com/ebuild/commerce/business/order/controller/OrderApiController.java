@@ -33,10 +33,7 @@ public class OrderApiController {
       @RequestBody @Valid DirectOrderReqDto directOrderReqDto) {
 
     return ResponseEntity.ok(
-        CommonResponse.OK(
-            Pair.of("order",
-                orderService.createOrder(userSubject.getEmail(), directOrderReqDto))
-        )
+        CommonResponse.OK("order", orderService.createOrder(userSubject.getEmail(), directOrderReqDto))
     );
   }
 

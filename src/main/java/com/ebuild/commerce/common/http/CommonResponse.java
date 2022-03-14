@@ -2,6 +2,7 @@ package com.ebuild.commerce.common.http;
 
 import static java.util.Objects.*;
 
+import com.ebuild.commerce.exception.CommerceException;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
@@ -23,27 +24,9 @@ public class CommonResponse {
         return CommonResponse.of(data, null);
     }
 
-    /**
-     * @param data data to insert directly
-     * @return CommonResponse
-     */
-    public static CommonResponse OK(Map<String, Object> data){
-        return CommonResponse.of(data, null);
-    }
-
     public static CommonResponse OK(String key, Object value){
         Map<String, Object> data = Maps.newHashMap();
         data.put(key, value);
-        return CommonResponse.of(data, null);
-    }
-
-    /**
-     * @param pair left: key, right: value
-     * @return CommonResponse
-     */
-    public static CommonResponse OK(Pair<String, Object> pair){
-        Map<String, Object> data = Maps.newHashMap();
-        put(data, pair);
         return CommonResponse.of(data, null);
     }
 
@@ -61,6 +44,8 @@ public class CommonResponse {
     public static CommonResponse ERROR(Exception e) {
         if ( e instanceof MethodArgumentNotValidException )
             return CommonResponse.of(null, Error.of(((MethodArgumentNotValidException)e).getFieldErrors()));
+        if ( e instanceof CommerceException)
+            return CommonResponse.of(null, Error.of((CommerceException)e));
         return CommonResponse.of(null, Error.of(e));
     }
 

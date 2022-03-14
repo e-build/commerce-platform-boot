@@ -10,19 +10,19 @@ import lombok.Getter;
 @Getter
 public class BuyerResDto {
 
-  private final Long buyerId;
-  private final AppUserSaveResDto commerceUser;
-  private final AddressSaveResDto receivingAddress;
-  private final LocalDateTime createdAt;
-  private final LocalDateTime updatedAt;
+  private Long buyerId;
+  private AppUserSaveResDto commerceUser;
+  private AddressSaveResDto receivingAddress;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 
   @Builder
   public BuyerResDto(Buyer buyer){
     this.buyerId = buyer.getId();
     this.commerceUser = new AppUserSaveResDto(buyer.getAppUserDetails());
-    this.receivingAddress = new AddressSaveResDto(buyer.getReceivingAddress());
+    if ( buyer.getReceivingAddress() != null )
+      this.receivingAddress = new AddressSaveResDto(buyer.getReceivingAddress());
     this.createdAt = buyer.getCreatedAt();
     this.updatedAt = buyer.getUpdatedAt();
-
   }
 }

@@ -51,7 +51,7 @@ public class CommerceAuthService {
   public LoginResDto oauthLogin(String token) {
     JWT jwt = jwtProvider.convertAuthToken(token);
     if (!jwt.validate())
-      throw new JwtTokenInvalidException();
+      throw new JwtTokenInvalidException("JWT 토큰이 유효하지 않습니다.");
 
     AppUserDetails appUserDetails = buyerQueryService
         .findByEmail(jwt.resolveOAuthLoginSuccessTokenEmail())
