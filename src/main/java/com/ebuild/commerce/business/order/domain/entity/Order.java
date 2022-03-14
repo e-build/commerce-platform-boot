@@ -54,7 +54,7 @@ public class Order extends BaseEntity {
       , cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
   private List<OrderProduct> orderProductList = Lists.newArrayList();
 
-  private LocalDateTime orderDate; //주문시간
+  private LocalDateTime orderDate;
 
   @Embedded
   private Payment payment;

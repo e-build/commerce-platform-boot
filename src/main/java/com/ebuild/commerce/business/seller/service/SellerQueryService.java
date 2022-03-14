@@ -14,7 +14,7 @@ public class SellerQueryService {
 
   public Seller findByEmail(String email){
     return jpaSellerRepository.findByEmail(email)
-        .orElseThrow(()-> new NotFoundException(email));
+        .orElseThrow(()-> new NotFoundException(email, "이메일"));
   }
 
 }

@@ -29,8 +29,8 @@ public class CartService {
   private final JpaOrderRepository jpaOrderRepository;
 
   @Transactional
-  public void addCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListPlusMinusReqDto)
-  {
+  public void addCartLineList(Long cartId,
+      CartLineListPlusMinusReqDto cartLineListPlusMinusReqDto) {
     Cart cart = findCartById(cartId);
     cartLineListPlusMinusReqDto.getCartLineList().forEach(cartLineDto -> {
       cart.addProduct(findProductById(cartLineDto), cartLineDto.getQuantity());
@@ -38,8 +38,8 @@ public class CartService {
   }
 
   @Transactional
-  public void removeCartLineList(Long cartId, CartLineListPlusMinusReqDto cartLineListPlusMinusReqDto)
-  {
+  public void removeCartLineList(Long cartId,
+      CartLineListPlusMinusReqDto cartLineListPlusMinusReqDto) {
     Cart cart = findCartById(cartId);
     cartLineListPlusMinusReqDto.getCartLineList().forEach(cartLineDto -> {
       cart.removeProduct(findProductById(cartLineDto), cartLineDto.getQuantity());
@@ -54,24 +54,23 @@ public class CartService {
   }
 
   @Transactional
-  public OrderResDto createOrder(Long cartId, BaseOrderCreateReqDto baseOrderCreateReqDto)
-  {
+  public OrderResDto createOrder(Long cartId, BaseOrderCreateReqDto baseOrderCreateReqDto) {
     Cart cart = findCartById(cartId);
     Order order = Order.createCartOrder(cart, baseOrderCreateReqDto);
     jpaOrderRepository.save(order);
     return OrderResDto.of(order);
   }
 
-  private Product findProductById(CartLineAddParam cartLineDto)
-  {
+  private Product findProductById(CartLineAddParam cartLineDto) {
+    Long productId = cartLineDto.getProductId();
     return jpaProductRepository
-        .findById(cartLineDto.getProductId())
-        .orElseThrow(()->new NotFoundException("해당 상품은 존재하지 않습니다."));
+        .findById(productId)
+        .orElseThrow(() -> new NotFoundException(String.valueOf(productId), "상품"));
   }
 
   private Cart findCartById(Long cartId) {
     return jpaCartRepository
         .findById(cartId)
-        .orElseThrow(() -> new NotFoundException("장바구니가 존재하지 않습니다. cartId : [" + cartId + "]"));
+        .orElseThrow(() -> new NotFoundException(String.valueOf(cartId), "장바구니"));
   }
 }

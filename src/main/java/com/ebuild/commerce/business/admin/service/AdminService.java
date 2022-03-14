@@ -24,9 +24,10 @@ public class AdminService {
   private final JpaAdminRepository jpaSellerRepository;
 
   public AdminSaveResDto signup(AdminSaveReqDto adminSaveReqDto) {
-    Admin existUser = adminQueryService.findByEmail(adminSaveReqDto.getCommerceUser().getEmail());
+    String email = adminSaveReqDto.getCommerceUser().getEmail();
+    Admin existUser = adminQueryService.findByEmail(email);
     if (!Objects.isNull(existUser))
-      throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
+      throw new AlreadyExistsException(email, "이메일");
 
     // 권한 부여
     adminSaveReqDto.getCommerceUser()

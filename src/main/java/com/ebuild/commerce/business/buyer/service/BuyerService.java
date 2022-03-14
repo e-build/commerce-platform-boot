@@ -30,9 +30,10 @@ public class BuyerService {
   private final PasswordEncoder passwordEncoder;
 
   public BuyerResDto signup(BuyerSaveReqDto buyerSaveReqDto) {
-    Buyer existUser= buyerQueryService.findByEmail(buyerSaveReqDto.getAppUserDetails().getEmail());
+    String email = buyerSaveReqDto.getAppUserDetails().getEmail();
+    Buyer existUser= buyerQueryService.findByEmail(email);
     if (!Objects.isNull(existUser))
-      throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
+      throw new AlreadyExistsException(email, "이메일");
 
     // 권한 부여
     buyerSaveReqDto.getAppUserDetails()
@@ -75,7 +76,7 @@ public class BuyerService {
     return BuyerResDto.builder()
         .buyer(jpaBuyerRepository
             .findById(buyerId)
-            .orElseThrow(()->new NotFoundException("해당 사용자를 찾을 수 없습니다."))
+            .orElseThrow(()->new NotFoundException(String.valueOf(buyerId), "사용자"))
         ).build();
   }
 
@@ -83,7 +84,7 @@ public class BuyerService {
     jpaBuyerRepository.delete(
         jpaBuyerRepository
             .findById(buyerId)
-            .orElseThrow(()->new NotFoundException("해당 사용자를 찾을 수 없습니다."))
+            .orElseThrow(()->new NotFoundException(String.valueOf(buyerId), "사용자"))
     );
   }
 

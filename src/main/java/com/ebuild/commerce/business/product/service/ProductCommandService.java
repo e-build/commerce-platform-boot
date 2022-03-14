@@ -27,13 +27,13 @@ public class ProductCommandService {
   private Product findProduct(Long productId) {
     return jpaProductRepository
         .findById(productId)
-        .orElseThrow(() -> new NotFoundException("존재하지 않는 상품 ID 입니다. : " + productId));
+        .orElseThrow(() -> new NotFoundException(String.valueOf(productId), "상품"));
   }
 
   private Company findCompany(Long companyId){
     return jpaCompanyRepository
         .findById(companyId)
-        .orElseThrow(() -> new NotFoundException("존재하지 않는 회사 ID 입니다. : " + companyId));
+        .orElseThrow(() -> new NotFoundException(String.valueOf(companyId), "회사"));
   }
 
   public Product register(ProductSaveReqDto productSaveReqDto) {

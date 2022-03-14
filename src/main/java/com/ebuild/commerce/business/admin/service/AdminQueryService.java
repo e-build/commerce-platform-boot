@@ -14,6 +14,6 @@ public class AdminQueryService {
 
   public Admin findByEmail(String email) {
     return jpaAdminRepository.findByEmail(email)
-        .orElseThrow(()->new NotFoundException(email));
+        .orElseThrow(()->new NotFoundException(email, "이메일"));
   }
 }

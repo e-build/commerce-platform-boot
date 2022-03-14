@@ -59,7 +59,7 @@ public class Product extends BaseEntity {
 
   public static Product create(JpaProductRepository jpaProductRepository, Company company, ProductSaveReqDto productSaveReqDto) {
     if ( isExists(jpaProductRepository, company, productSaveReqDto) )
-      throw new AlreadyExistsException("["+productSaveReqDto.getProduct().getName()+"] 은 이미 존재하는 상품명입니다.");
+      throw new AlreadyExistsException(productSaveReqDto.getProduct().getName(), "상품명");
 
     Product product = new Product(productSaveReqDto);
     product.registerCompany(company);
@@ -69,7 +69,7 @@ public class Product extends BaseEntity {
   public void update(JpaProductRepository jpaProductRepository, Company company, ProductSaveReqDto productSaveReqDto) {
     if ( isExists(jpaProductRepository, company, productSaveReqDto)
         && !isSameProduct(productSaveReqDto.getProduct().getId()) )
-      throw new AlreadyExistsException("["+productSaveReqDto.getProduct().getName()+"] 은 다른 상품에서 이미 사용중인 상품명입니다.");
+      throw new AlreadyExistsException(productSaveReqDto.getProduct().getName(), "상품명");
 
     this.name = productSaveReqDto.getProduct().getName();
     this.productStatus = ProductStatus.fromValue(productSaveReqDto.getProduct().getProductStatus());

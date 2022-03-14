@@ -75,7 +75,7 @@ public class Cart extends BaseEntity {
           return;
       }
     }
-    throw new NotFoundException("장바구니에 해당 상품이 존재하지 않습니다. productId : ["+product.getId()+"]");
+    throw new NotFoundException(String.valueOf(product.getId()), "장바구니 상품");
   }
 
   public void clear(){

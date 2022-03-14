@@ -28,9 +28,10 @@ public class SellerService {
 
 
   public SellerSaveResDto signup(SellerSaveReqDto sellerSaveReqDto) {
-    Seller existUser = sellerQueryService.findByEmail(sellerSaveReqDto.getAppUserDetails().getEmail());
+    String email = sellerSaveReqDto.getAppUserDetails().getEmail();
+    Seller existUser = sellerQueryService.findByEmail(email);
     if (!Objects.isNull(existUser)) {
-      throw new AlreadyExistsException("이미 다른 계정에서 사용중인 email 입니다.");
+      throw new AlreadyExistsException(email, "이메일");
     }
 
     // 권한 부여
@@ -44,13 +45,15 @@ public class SellerService {
     // 패스워드 암호화
     sellerSaveReqDto.getAppUserDetails().encryptPassword(passwordEncoder);
 
+    Long companyId = sellerSaveReqDto.getCompanyId();
+
     Seller seller = Seller.builder()
         .appUserDetails(sellerSaveReqDto.getAppUserDetails().toEntity())
         .shippingAddress(sellerSaveReqDto.getShippingAddress().get())
         .company(jpaCompanyRepository
-            .findById(sellerSaveReqDto.getCompanyId())
-            .orElseThrow(()-> new NotFoundException("회사를 찾을 수 없습니다. companyId : ["+sellerSaveReqDto.getCompanyId()+"]")))
-        .build();
+            .findById(companyId)
+            .orElseThrow(() -> new NotFoundException(String.valueOf(companyId), "회사"))
+        ).build();
 
     jpaSellerRepository.save(seller);
 
