@@ -8,8 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 public class HeaderUtil {
 
   public static String getAccessToken(HttpServletRequest request) {
-    String accessTokenString = request.getHeader(SecurityConstants.ACCESS_TOKEN_HEADER);
+    return tokenValue(request.getHeader(SecurityConstants.ACCESS_TOKEN_HEADER));
+  }
 
+  public static String getRefreshToken(HttpServletRequest request) {
+    return tokenValue(request.getHeader(SecurityConstants.REFRESH_TOKEN_HEADER));
+  }
+
+  private static String tokenValue(String accessTokenString) {
     if (isBlank(accessTokenString))
       return null;
 
@@ -18,5 +24,6 @@ public class HeaderUtil {
 
     return accessTokenString.substring(SecurityConstants.JWT_TOKEN_PREFIX.length());
   }
+
 
 }

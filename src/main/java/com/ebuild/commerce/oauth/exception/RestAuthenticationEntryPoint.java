@@ -26,11 +26,12 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
       HttpServletResponse response,
       AuthenticationException authException
   ) throws IOException, ServletException {
-    log.error("{}, {}, {}", authException.getMessage(), authException.getLocalizedMessage(),
-        authException.getCause());
-      if (authException instanceof InsufficientAuthenticationException) {
-          authException = new UnauthorizedException();
-      }
+    log.error("{}, {}, {}",
+        authException.getMessage(), authException.getLocalizedMessage(), authException.getCause());
+
+    if (authException instanceof InsufficientAuthenticationException) {
+      authException = new UnauthorizedException();
+    }
 
     HttpUtils.jsonFlush(
         response,

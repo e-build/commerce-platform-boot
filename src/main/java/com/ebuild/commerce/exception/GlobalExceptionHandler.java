@@ -36,7 +36,6 @@ public class GlobalExceptionHandler {
         , BadCredentialsException.class
     })
     public ResponseEntity<CommonResponse> securityException(Exception e) {
-        e.printStackTrace();
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
             .body(CommonResponse.ERROR(e));
@@ -46,7 +45,6 @@ public class GlobalExceptionHandler {
         Exception.class
     })
     public ResponseEntity<CommonResponse> etc(Exception e) {
-        e.printStackTrace();
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(CommonResponse.ERROR(e));

@@ -31,8 +31,8 @@ public class RedisService {
     );
   }
 
-  public String getRefreshToken(Long commerceUserDetailId) {
-    return redisTemplate.opsForValue().get(SecurityConstants.REDIS_REFRESH_TOKEN_KEY + commerceUserDetailId);
+  public String getRefreshToken(String email) {
+    return redisTemplate.opsForValue().get(SecurityConstants.REDIS_REFRESH_TOKEN_KEY + email);
   }
 
   public void removeRefreshToken(AppUserDetails appUserDetails) {

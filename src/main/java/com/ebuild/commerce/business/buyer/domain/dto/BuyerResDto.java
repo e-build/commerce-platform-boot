@@ -17,11 +17,12 @@ public class BuyerResDto {
   private LocalDateTime updatedAt;
 
   @Builder
-  public BuyerResDto(Buyer buyer){
+  public BuyerResDto(Buyer buyer) {
     this.buyerId = buyer.getId();
     this.commerceUser = new AppUserSaveResDto(buyer.getAppUserDetails());
-    if ( buyer.getReceivingAddress() != null )
+    if (buyer.getReceivingAddress() != null) {
       this.receivingAddress = new AddressSaveResDto(buyer.getReceivingAddress());
+    }
     this.createdAt = buyer.getCreatedAt();
     this.updatedAt = buyer.getUpdatedAt();
   }

@@ -1,9 +1,12 @@
 package com.ebuild.commerce.config.security.filter;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 import com.ebuild.commerce.business.auth.domain.AuthenticationAdapter;
 import com.ebuild.commerce.business.auth.domain.UserSubject;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
+import com.ebuild.commerce.config.security.SecurityConfig;
 import com.ebuild.commerce.exception.security.JwtTokenExpiredException;
 import com.ebuild.commerce.exception.security.JwtTokenInvalidException;
 import com.ebuild.commerce.oauth.token.JWT;
@@ -21,48 +24,59 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JWTProvider jwtProvider;
-    private final JsonHelper jsonHelper;
+  private final JWTProvider jwtProvider;
+  private final JsonHelper jsonHelper;
 
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)  throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain filterChain) throws ServletException, IOException {
 
-        String tokenStr = HeaderUtil.getAccessToken(request);
-        JWT jwt = jwtProvider.convertAuthToken(tokenStr);
+    String accessTokenString = HeaderUtil.getAccessToken(request);
+    if (isBlank(accessTokenString)) {
+      filterChain.doFilter(request, response);
+      return;
+    }
 
-        try{
-            if (jwt.validate())
-                SecurityContextHolder.getContext().setAuthentication(getAuthentication(jwt));
-        } catch (ExpiredJwtException e){
-            HttpUtils.jsonFlush(
-                response,
-                HttpServletResponse.SC_UNAUTHORIZED,
-                jsonHelper.serialize(CommonResponse.ERROR(new JwtTokenExpiredException()))
-            );
-            return;
-        }
-        filterChain.doFilter(request, response);
+    JWT jwt = jwtProvider.convertAuthToken(accessTokenString);
+    try {
+      if (jwt.validate()) {
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication(jwt));
+      }
+    } catch (ExpiredJwtException e) {
+      HttpUtils.jsonFlush(
+          response,
+          HttpServletResponse.SC_UNAUTHORIZED,
+          jsonHelper.serialize(CommonResponse.ERROR(new JwtTokenExpiredException()))
+      );
+      return;
+    } catch (Exception ignored) {
 
     }
 
-    private Authentication getAuthentication(JWT jwt) {
-        return new UsernamePasswordAuthenticationToken(
-            new AuthenticationAdapter(UserSubject.of(jwt.resolveEmail())),
-            jwt,
-            jwt.resolveRoleList()
-        );
-    }
+    filterChain.doFilter(request, response);
+  }
+
+  private Authentication getAuthentication(JWT jwt) {
+    return new UsernamePasswordAuthenticationToken(
+        new AuthenticationAdapter(UserSubject.of(jwt.resolveEmail())),
+        jwt,
+        jwt.resolveRoleList()
+    );
+  }
 
 }

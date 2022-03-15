@@ -17,6 +17,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
   private final HandlerExceptionResolver handlerExceptionResolver;
+
   /**
    * Handles an access denied failure.
    *

@@ -15,12 +15,13 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @RequiredArgsConstructor
 public class TokenAccessDeniedHandler implements AccessDeniedHandler {
 
-    private final HandlerExceptionResolver handlerExceptionResolver;
+  private final HandlerExceptionResolver handlerExceptionResolver;
 
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
-        //response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
-        log.info("접근 불가 예외 발생");
-        handlerExceptionResolver.resolveException(request, response, null, accessDeniedException);
-    }
+  @Override
+  public void handle(HttpServletRequest request, HttpServletResponse response,
+      AccessDeniedException accessDeniedException) throws IOException {
+    //response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
+    log.info("접근 불가 예외 발생");
+    handlerExceptionResolver.resolveException(request, response, null, accessDeniedException);
+  }
 }
