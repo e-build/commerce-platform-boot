@@ -4,6 +4,8 @@ import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.business.buyer.service.BuyerQueryService;
 import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto;
 import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto.OrderLineDto;
+import com.ebuild.commerce.business.order.domain.dto.OrderPagingListDto;
+import com.ebuild.commerce.business.order.domain.dto.OrderQueryParamsDto;
 import com.ebuild.commerce.business.order.domain.dto.OrderResDto;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.order.repository.JpaOrderRepository;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class OrderService {
 
   private final BuyerQueryService buyerQueryService;
+  private final OrderQueryService orderQueryService;
   private final JpaOrderRepository jpaOrderRepository;
   private final JpaProductRepository jpaProductRepository;
 
@@ -35,4 +38,6 @@ public class OrderService {
 
     return OrderResDto.of(jpaOrderRepository.save(Order.createDirectOrder(buyer, products, directOrderReqDto)));
   }
+
+
 }

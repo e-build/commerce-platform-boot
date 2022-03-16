@@ -21,7 +21,9 @@ public enum CommerceExceptionCode {
   UN_AUTHORIZED_EXCEPTION(UnauthorizedException.class, "ERR-002-001", "리소스에 대한 권한이 부족합니다."),
   JWT_EXPIRED_EXCEPTION(JwtTokenExpiredException.class, "ERR-002-002", "JWT 토큰이 만료되었습니다."),
   RE_AUTHENTICATE_REQUIRED_EXCEPTION(ReAuthenticateRequiredException.class, "ERR-002-003", "재인증이 필요합니다 - %s"),
-  JWT_NOT_EXISTS_EXCEPTION(JwtTokenNotExistsException.class, "ERR-002-004", "JWT 토큰이 존재하지 않습니다. accessToken, refreshToken 둘 다 필요합니다.")
+  JWT_NOT_EXISTS_EXCEPTION(JwtTokenNotExistsException.class, "ERR-002-004", "JWT 토큰이 존재하지 않습니다. accessToken, refreshToken 둘 다 필요합니다."),
+
+  PAGING_DO_NOT_HAVE_TOTAL_COUNT_EXCEPTION(PagingDoNotHaveTotalCountException.class, "ERR-003-001", "올바른 페이징을 위해서 totalCount 정보를 입력해주시기 바랍니다.")
   ;
 
   private final Class<? extends Exception> exceptionClass;

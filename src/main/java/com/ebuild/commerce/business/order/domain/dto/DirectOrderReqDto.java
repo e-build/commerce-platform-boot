@@ -16,7 +16,6 @@ public class DirectOrderReqDto {
 
   @Getter
   public static class OrderLineDto {
-
     @NotNull
     private Long productId;
     @NotNull
