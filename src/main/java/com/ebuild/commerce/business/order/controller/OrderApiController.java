@@ -46,8 +46,6 @@ public class OrderApiController {
   public ResponseEntity<CommonResponse> findMyOrders(
       @CurrentUser UserSubject userSubject, OrderQueryParamsDto params) {
 
-    log.info("params : {}", jsonHelper.serialize(params));
-
     return ResponseEntity.ok(
         CommonResponse.OK("order", orderQueryService.search(userSubject.getEmail(), params))
     );

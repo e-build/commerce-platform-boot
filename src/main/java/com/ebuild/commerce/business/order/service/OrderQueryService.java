@@ -23,12 +23,10 @@ public class OrderQueryService {
 
   @Transactional(readOnly = true)
   public OrderPagingListDto search(String email, OrderQueryParamsDto orderQueryParamsDto) {
-    PageRequest pageRequest = PageRequest.of(1, 10);
     Paging paging = orderQueryParamsDto.getPaging();
     paging.setTotalCount(orderQueryRepository.countBy(email, orderQueryParamsDto));
 
-    List<Order> orderList = orderQueryRepository
-        .searchByPagingAndSorting(email, orderQueryParamsDto);
+    List<Order> orderList = orderQueryRepository.searchBy(email, orderQueryParamsDto);
 
     return OrderPagingListDto.builder()
         .orders(orderList.stream().map(OrderResDto::of)

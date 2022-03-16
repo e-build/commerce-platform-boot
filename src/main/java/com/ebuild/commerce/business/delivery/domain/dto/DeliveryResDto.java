@@ -5,7 +5,6 @@ import com.ebuild.commerce.business.delivery.domain.entity.Delivery;
 import com.ebuild.commerce.common.dto.AddressSaveResDto;
 import java.time.LocalDateTime;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.Setter;
 

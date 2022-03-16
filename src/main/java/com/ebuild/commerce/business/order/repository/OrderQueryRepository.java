@@ -1,6 +1,5 @@
 package com.ebuild.commerce.business.order.repository;
 
-
 import com.ebuild.commerce.business.order.domain.dto.OrderQueryParamsDto;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.common.Paging;
@@ -15,35 +14,38 @@ public class OrderQueryRepository {
 
   private final EntityManager em;
 
-  public int countBy(String email, OrderQueryParamsDto params){
-    return em.createQuery(orderListPagingQuery(email, params, "select count o "), Integer.class)
+  public Long countBy(String email, OrderQueryParamsDto params) {
+    return em.createQuery(
+            "select count(o) "
+                + "from Order o "
+                + "join o.buyer buyer " + "join buyer.appUserDetails appUserDetails "
+                + "where 1 = 1 "
+                + eqEmail(email)
+                + "order by " + params.getSort().toString() + " ", Long.class)
+        .setParameter("email", email)
         .getSingleResult();
   }
 
-  private String orderListPagingQuery(String email, OrderQueryParamsDto params, String s) {
-    return s
-        + "from Order o "
-        + "join fetch o.buyer buyer "
-        + "join fetch buyer.appUserDetails appUserDetails "
-        + "where 1 = 1 "
-        + eqEmail(email)
-        + "order by " + params.getSort().toString() + " ";
-  }
-
-  public List<Order> searchByPagingAndSorting(String email, OrderQueryParamsDto params) {
+  public List<Order> searchBy(String email, OrderQueryParamsDto params) {
     Paging paging = params.getPaging();
-
     return em.createQuery(
-            orderListPagingQuery(email, params, "select o "), Order.class)
+            "select o "
+                + "from Order o "
+                + "join fetch o.buyer buyer "
+                + "join fetch buyer.appUserDetails appUserDetails "
+                + "where 1 = 1 "
+                + eqEmail(email)
+                + "order by " + params.getSort().toString() + " ", Order.class)
         .setParameter("email", email)
         .setFirstResult(paging.offset())
-        .setMaxResults(paging.getPage() * paging.getSize())
+        .setMaxResults(paging.getSize())
         .getResultList();
   }
 
   private String eqEmail(String email) {
-    if( email != null)
+    if (email != null) {
       return "and appUserDetails.email = :email ";
+    }
     return "";
   }
 
