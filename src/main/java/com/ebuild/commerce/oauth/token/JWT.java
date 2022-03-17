@@ -81,10 +81,8 @@ public class JWT {
     }
 
     public List<? extends GrantedAuthority> resolveRoleList(){
-        return Arrays.stream(
-            String.valueOf(
-                resolveTokenClaims().get(SecurityConstants.JWT_AUTHORITIES_KEY)).split(",")
-            )
+        return Arrays.stream(String.valueOf(resolveTokenClaims().get(SecurityConstants.JWT_AUTHORITIES_KEY))
+                .split(","))
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList()
         );

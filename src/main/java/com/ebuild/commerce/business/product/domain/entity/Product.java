@@ -6,8 +6,12 @@ import com.ebuild.commerce.business.product.repository.JpaProductRepository;
 import com.ebuild.commerce.common.BaseEntity;
 import com.ebuild.commerce.exception.AlreadyExistsException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,12 +21,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 
 
+@Slf4j
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,8 +45,8 @@ public class Product extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private ProductStatus productStatus;
 
-  @Enumerated(EnumType.STRING)
-  private ProductCategory category;
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<ProductCategory> categoryList;
 
   private Integer normalAmount;
 
@@ -61,7 +69,7 @@ public class Product extends BaseEntity {
     if ( isExists(jpaProductRepository, company, productSaveReqDto) )
       throw new AlreadyExistsException(productSaveReqDto.getProduct().getName(), "상품명");
 
-    Product product = new Product(productSaveReqDto);
+    Product product = productSaveReqDto.toEntity();
     product.registerCompany(company);
     return product;
   }
@@ -73,12 +81,18 @@ public class Product extends BaseEntity {
 
     this.name = productSaveReqDto.getProduct().getName();
     this.productStatus = ProductStatus.fromValue(productSaveReqDto.getProduct().getProductStatus());
-    this.category = ProductCategory.fromValue(productSaveReqDto.getProduct().getCategory());
     this.normalAmount = productSaveReqDto.getProduct().getNormalAmount();
     this.saleAmount = productSaveReqDto.getProduct().getSaleAmount();
     this.saleStartDate = productSaveReqDto.getProduct().getSaleStartDate();
     this.saleEndDate = productSaveReqDto.getProduct().getSaleEndDate();
     this.quantity = productSaveReqDto.getProduct().getQuantity();
+
+    this.categoryList.addAll(productSaveReqDto
+        .getProduct()
+        .getCategoryList()
+        .stream()
+        .map(category -> ProductCategory.builder().product(this).category(category).build())
+        .collect(Collectors.toList()));
   }
 
   private boolean isSameProduct(Long targetProductId) {
@@ -98,35 +112,51 @@ public class Product extends BaseEntity {
         .isPresent();
   }
 
-  public Product(String name, ProductStatus productStatus,
-      ProductCategory category, Integer normalAmount, Integer saleAmount,
-      LocalDate saleStartDate, LocalDate saleEndDate, Integer quantity,
-      Company company) {
+  @Builder
+  public Product(Long id, String name,
+      ProductStatus productStatus,
+      List<ProductCategory> categoryList, Integer normalAmount, Integer saleAmount,
+      Integer shippingTime, LocalDate saleStartDate, LocalDate saleEndDate,
+      Integer quantity, Company company) {
+    this.id = id;
     this.name = name;
     this.productStatus = productStatus;
-    this.category = category;
+    if (CollectionUtils.isEmpty(categoryList))
+      this.categoryList = Lists.newArrayList();
     this.normalAmount = normalAmount;
     this.saleAmount = saleAmount;
+    this.shippingTime = shippingTime;
     this.saleStartDate = saleStartDate;
     this.saleEndDate = saleEndDate;
     this.quantity = quantity;
     this.company = company;
   }
 
-  @Builder
-  public Product(ProductSaveReqDto productSaveReqDto){
-    this.id = productSaveReqDto.getProduct().getId();
-    this.name = productSaveReqDto.getProduct().getName();
-    this.productStatus = ProductStatus.fromValue(productSaveReqDto.getProduct().getProductStatus());
-    this.category = ProductCategory.fromValue(productSaveReqDto.getProduct().getCategory());
-    this.normalAmount = productSaveReqDto.getProduct().getNormalAmount();
-    this.saleAmount = productSaveReqDto.getProduct().getSaleAmount();
-    this.saleStartDate = productSaveReqDto.getProduct().getSaleStartDate();
-    this.saleEndDate = productSaveReqDto.getProduct().getSaleEndDate();
-    this.quantity = productSaveReqDto.getProduct().getQuantity();
-  }
-
   public void changeSaleStatus(ProductStatus productStatus){
     this.productStatus = productStatus;
+  }
+
+  public void addCategory(Category category) {
+    if (alreadyExists(category))
+      return;
+    this.categoryList.add(
+        ProductCategory.builder()
+            .product(this)
+            .category(category)
+            .build()
+    );
+  }
+
+  private boolean alreadyExists(Category category) {
+    if(CollectionUtils.isEmpty(categoryList))
+      categoryList = Lists.newArrayList();
+
+    for (ProductCategory productCategory : categoryList) {
+      if (productCategory.getCategory().getId() == category.getId()){
+        log.info("[{}] 상품은 이미 [{}] 카테고리를 가지고 있습니다.", this.name, category.getName());
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -98,16 +98,6 @@ public class CommerceAuthService {
       throw new ReAuthenticateRequiredException(ReAuthReasonType.INVALID_TOKEN);
     }
 
-    // 저장되어있는 Refresh Token 조회
-    String email = accessJwt.resolveEmail();
-    AppRefreshToken savedAppRefreshToken = jpaRefreshTokenRepository.findByUserId(email)
-        .orElseThrow(() -> new ReAuthenticateRequiredException(ReAuthReasonType.NO_TOKEN_STORED));
-
-    // Refresh Token 동일여부 비교
-    if (!equalsIgnoreCase(refreshToken, savedAppRefreshToken.getRefreshToken())) {
-      throw new ReAuthenticateRequiredException(ReAuthReasonType.TOKENS_DO_NOT_MATCH);
-    }
-
     // 요청 Refresh Token 유효성 검사
     try {
       refreshJwt.validate();
@@ -115,6 +105,16 @@ public class CommerceAuthService {
       throw new ReAuthenticateRequiredException(ReAuthReasonType.EXPIRED_REFRESH_TOKEN);
     } catch (Exception e) {
       throw new ReAuthenticateRequiredException(ReAuthReasonType.INVALID_TOKEN);
+    }
+
+    // 저장되어있는 Refresh Token 조회
+    String email = refreshJwt.resolveEmail();
+    AppRefreshToken savedAppRefreshToken = jpaRefreshTokenRepository.findByUserId(email)
+        .orElseThrow(() -> new ReAuthenticateRequiredException(ReAuthReasonType.NO_TOKEN_STORED));
+
+    // Refresh Token 동일여부 비교
+    if (!equalsIgnoreCase(refreshToken, savedAppRefreshToken.getRefreshToken())) {
+      throw new ReAuthenticateRequiredException(ReAuthReasonType.TOKENS_DO_NOT_MATCH);
     }
 
     return TokenDto.builder()

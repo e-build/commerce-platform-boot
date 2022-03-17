@@ -58,12 +58,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(getAuthentication(jwt));
       }
     } catch (ExpiredJwtException e) {
-      HttpUtils.jsonFlush(
-          response,
-          HttpServletResponse.SC_UNAUTHORIZED,
-          jsonHelper.serialize(CommonResponse.ERROR(new JwtTokenExpiredException()))
-      );
-      return;
+      if ( !StringUtils.contains(request.getRequestURI(), "/auth/refresh") ){
+        HttpUtils.jsonFlush(
+            response,
+            HttpServletResponse.SC_UNAUTHORIZED,
+            jsonHelper.serialize(CommonResponse.ERROR(new JwtTokenExpiredException()))
+        );
+        return;
+      }
     } catch (Exception ignored) {
 
     }

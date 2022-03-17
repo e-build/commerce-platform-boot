@@ -1,9 +1,8 @@
 package com.ebuild.commerce.business.order.domain.dto;
 
 import com.ebuild.commerce.business.order.domain.entity.PaymentMeans;
-import com.ebuild.commerce.common.Enum;
+import com.ebuild.commerce.common.validation.Enum;
 import java.time.LocalDateTime;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 

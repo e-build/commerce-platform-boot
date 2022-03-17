@@ -1,10 +1,13 @@
 package com.ebuild.commerce.business.product.domain.dto;
 
-import com.ebuild.commerce.business.product.domain.entity.ProductCategory;
+import com.ebuild.commerce.business.product.domain.entity.Category;
 import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.business.product.domain.entity.Product;
-import com.ebuild.commerce.common.Enum;
+import com.ebuild.commerce.business.product.repository.JpaCategoryRepository;
+import com.ebuild.commerce.common.validation.Enum;
+import com.ebuild.commerce.common.validation.NotEmptyCollection;
 import java.time.LocalDate;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -43,9 +46,10 @@ public class ProductSaveReqDto {
     @Min(value = 100, message = "판매는 100원 이상의 값을 입력해주시기 바랍니다.")
     private Integer saleAmount;
 
-    @NotBlank(message = "상품 카테고리는 필수 입력 값입니다.")
-    @Enum(enumClass = ProductCategory.class, ignoreCase = true, message = "BOOK, CLOTH 값 중 하나를 입력해주시기 바랍니다.")
-    private String category;
+    @NotEmptyCollection(message = "상품 카테고리는 필수 입력 값입니다.")
+    private List<Long> categoryIdList;
+
+    private List<Category> categoryList;
 
     private LocalDate saleStartDate;
 
@@ -55,9 +59,19 @@ public class ProductSaveReqDto {
 
   }
 
+  public void convertCategoryEntity(JpaCategoryRepository jpaCategoryRepository){
+    this.getProduct().categoryList = jpaCategoryRepository.findByIdIn(this.getProduct().getCategoryIdList());
+  }
+
   public Product toEntity() {
     return Product.builder()
-        .productSaveReqDto(this)
+        .name(this.getProduct().getName())
+        .productStatus(ProductStatus.fromValue(this.getProduct().getProductStatus()))
+        .normalAmount(this.getProduct().getNormalAmount())
+        .saleAmount(this.getProduct().getSaleAmount())
+        .saleStartDate(this.getProduct().getSaleStartDate())
+        .saleEndDate(this.getProduct().getSaleEndDate())
+        .quantity(this.getProduct().getQuantity())
         .build();
   }
 

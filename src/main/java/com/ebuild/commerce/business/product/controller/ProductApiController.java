@@ -1,16 +1,15 @@
 package com.ebuild.commerce.business.product.controller;
 
 import com.ebuild.commerce.business.product.domain.dto.ProductChangeStatusReqDto;
-import com.ebuild.commerce.business.product.domain.dto.ProductSearchReqDto;
-import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
 import com.ebuild.commerce.business.product.domain.dto.ProductResDto;
+import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
+import com.ebuild.commerce.business.product.domain.dto.ProductSearchReqDto;
 import com.ebuild.commerce.business.product.service.ProductCommandService;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +38,7 @@ public class ProductApiController {
     return ResponseEntity.ok(
         CommonResponse.OK(
             "product"
-            , ProductResDto.builder()
-                .product(productCommandService.register(productSaveReqDto))
-                .build()
+            , ProductResDto.of(productCommandService.register(productSaveReqDto))
         )
     );
   }
@@ -54,9 +51,7 @@ public class ProductApiController {
     return ResponseEntity.ok(
         CommonResponse.OK(
             "product"
-            , ProductResDto.builder()
-                .product(productCommandService.update(productId, productSaveReqDto))
-                .build()
+            , ProductResDto.of(productCommandService.update(productId, productSaveReqDto))
         )
     );
   }

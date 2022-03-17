@@ -16,9 +16,7 @@ public class CartLineResDto {
   @Builder
   public CartLineResDto(CartLine cartLine) {
     this.cartLineId = cartLine.getId();
-    this.product = ProductResDto.builder()
-        .product(cartLine.getProduct())
-        .build();
+    this.product = ProductResDto.of(cartLine.getProduct());
     this.quantity = cartLine.getQuantity();
   }
 }

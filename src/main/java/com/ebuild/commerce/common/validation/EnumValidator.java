@@ -1,4 +1,4 @@
-package com.ebuild.commerce.common;
+package com.ebuild.commerce.common.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

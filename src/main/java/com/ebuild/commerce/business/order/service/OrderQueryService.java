@@ -10,7 +10,6 @@ import com.ebuild.commerce.common.Paging;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +28,9 @@ public class OrderQueryService {
     List<Order> orderList = orderQueryRepository.searchBy(email, orderQueryParamsDto);
 
     return OrderPagingListDto.builder()
-        .orders(orderList.stream().map(OrderResDto::of)
+        .orders(
+            orderList.stream()
+            .map(OrderResDto::of)
             .collect(Collectors.toList()))
         .paging(paging)
         .sort(orderQueryParamsDto.getSort())

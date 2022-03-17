@@ -1,4 +1,4 @@
-package com.ebuild.commerce.common;
+package com.ebuild.commerce.common.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
