@@ -8,6 +8,6 @@ public class AlreadyExistsException extends RuntimeException implements Commerce
   }
 
   public AlreadyExistsException(String contents, String type) {
-    super(String.format(CommerceExceptionCode.ALREADY_EXIST_EXCEPTION.getDetail(), type));
+    super(String.format(CommerceExceptionCode.ALREADY_EXIST_EXCEPTION.getDetail(), contents, type));
   }
 }

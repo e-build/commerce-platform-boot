@@ -65,16 +65,17 @@ public class Product extends BaseEntity {
   @JoinColumn(name = "company_id")
   private Company company;
 
-  public static Product create(JpaProductRepository jpaProductRepository, Company company, ProductSaveReqDto productSaveReqDto) {
+  public static Product create(JpaProductRepository jpaProductRepository, Company company, List<Category> categoryList, ProductSaveReqDto productSaveReqDto) {
     if ( isExists(jpaProductRepository, company, productSaveReqDto) )
       throw new AlreadyExistsException(productSaveReqDto.getProduct().getName(), "상품명");
 
     Product product = productSaveReqDto.toEntity();
     product.registerCompany(company);
+    categoryList.forEach(product::addCategory);
     return product;
   }
 
-  public void update(JpaProductRepository jpaProductRepository, Company company, ProductSaveReqDto productSaveReqDto) {
+  public void update(JpaProductRepository jpaProductRepository, Company company, List<Category> categoryList, ProductSaveReqDto productSaveReqDto) {
     if ( isExists(jpaProductRepository, company, productSaveReqDto)
         && !isSameProduct(productSaveReqDto.getProduct().getId()) )
       throw new AlreadyExistsException(productSaveReqDto.getProduct().getName(), "상품명");
@@ -87,12 +88,7 @@ public class Product extends BaseEntity {
     this.saleEndDate = productSaveReqDto.getProduct().getSaleEndDate();
     this.quantity = productSaveReqDto.getProduct().getQuantity();
 
-    this.categoryList.addAll(productSaveReqDto
-        .getProduct()
-        .getCategoryList()
-        .stream()
-        .map(category -> ProductCategory.builder().product(this).category(category).build())
-        .collect(Collectors.toList()));
+    categoryList.forEach(this::addCategory);
   }
 
   private boolean isSameProduct(Long targetProductId) {

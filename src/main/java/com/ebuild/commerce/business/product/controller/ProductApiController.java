@@ -33,32 +33,26 @@ public class ProductApiController {
 
   @PostMapping("")
   public ResponseEntity<CommonResponse> register(
-      @RequestBody @Valid ProductSaveReqDto productSaveReqDto){
+      @RequestBody @Valid ProductSaveReqDto productSaveReqDto) {
 
     return ResponseEntity.ok(
-        CommonResponse.OK(
-            "product"
-            , ProductResDto.of(productCommandService.register(productSaveReqDto))
-        )
+        CommonResponse.OK("product", productCommandService.register(productSaveReqDto))
     );
   }
 
   @PutMapping("/{productId}")
   public ResponseEntity<CommonResponse> update(
       @PathVariable Long productId,
-      @RequestBody @Valid ProductSaveReqDto productSaveReqDto){
+      @RequestBody @Valid ProductSaveReqDto productSaveReqDto) {
 
     return ResponseEntity.ok(
-        CommonResponse.OK(
-            "product"
-            , ProductResDto.of(productCommandService.update(productId, productSaveReqDto))
-        )
+        CommonResponse.OK("product", productCommandService.update(productId, productSaveReqDto))
     );
   }
 
   @DeleteMapping("/{productId}")
   public ResponseEntity<CommonResponse> delete(
-      @PathVariable("productId") Long productId ){
+      @PathVariable("productId") Long productId) {
 
     productCommandService.delete(productId);
     return ResponseEntity.ok(
@@ -68,22 +62,20 @@ public class ProductApiController {
 
   @GetMapping("")
   public ResponseEntity<CommonResponse> searchProduct(
-      @PageableDefault(sort={"id"}, direction= Direction.DESC)
-      @Valid ProductSearchReqDto productSearchReqDto){
+      @PageableDefault(sort = {"id"}, direction = Direction.DESC)
+      @Valid ProductSearchReqDto productSearchReqDto) {
 
     log.info("productSearchReqDto : {}", jsonHelper.serialize(productSearchReqDto));
 
     return ResponseEntity.ok(
-        CommonResponse.OK(
-            "products",
-            productCommandService.searchByCondition(productSearchReqDto)
-        )
+        CommonResponse.OK("products", productCommandService.searchByCondition(productSearchReqDto))
     );
   }
+
   @PutMapping("/{productId}/change-status")
   public ResponseEntity<CommonResponse> changeStatus(
       @PathVariable("productId") Long productId,
-      @RequestBody @Valid ProductChangeStatusReqDto productChangeStatusReqDto){
+      @RequestBody @Valid ProductChangeStatusReqDto productChangeStatusReqDto) {
 
     productCommandService.changeStatus(productId, productChangeStatusReqDto);
 

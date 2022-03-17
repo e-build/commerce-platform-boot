@@ -1,7 +1,6 @@
 package com.ebuild.commerce.business.product.domain.dto;
 
 import com.ebuild.commerce.business.product.domain.entity.ProductCategory;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +24,7 @@ public class CategoryResDto {
 
   public static CategoryResDto of(ProductCategory productCategory) {
     return CategoryResDto.builder()
+        .id(productCategory.getCategory().getId())
         .name(productCategory.getCategory().getName())
         .code(productCategory.getCategory().getCode())
         .superCode(productCategory.getCategory().getSuperCode())

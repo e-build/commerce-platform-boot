@@ -1,5 +1,6 @@
 package com.ebuild.commerce.business.product.domain.dto;
 
+import com.ebuild.commerce.business.company.repository.JpaCompanyRepository;
 import com.ebuild.commerce.business.product.domain.entity.Category;
 import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.business.product.domain.entity.Product;
@@ -49,18 +50,12 @@ public class ProductSaveReqDto {
     @NotEmptyCollection(message = "상품 카테고리는 필수 입력 값입니다.")
     private List<Long> categoryIdList;
 
-    private List<Category> categoryList;
-
     private LocalDate saleStartDate;
 
     private LocalDate saleEndDate;
 
     private Integer quantity;
 
-  }
-
-  public void convertCategoryEntity(JpaCategoryRepository jpaCategoryRepository){
-    this.getProduct().categoryList = jpaCategoryRepository.findByIdIn(this.getProduct().getCategoryIdList());
   }
 
   public Product toEntity() {
