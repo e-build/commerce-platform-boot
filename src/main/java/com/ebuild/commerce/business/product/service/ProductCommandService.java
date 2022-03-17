@@ -2,12 +2,12 @@ package com.ebuild.commerce.business.product.service;
 
 import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.company.repository.JpaCompanyRepository;
-import com.ebuild.commerce.business.product.domain.dto.ProductResDto;
+import com.ebuild.commerce.business.product.controller.dto.ProductResDto;
 import com.ebuild.commerce.business.product.domain.entity.Category;
 import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
-import com.ebuild.commerce.business.product.domain.dto.ProductChangeStatusReqDto;
-import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
-import com.ebuild.commerce.business.product.domain.dto.ProductSearchReqDto;
+import com.ebuild.commerce.business.product.controller.dto.ProductChangeStatusReqDto;
+import com.ebuild.commerce.business.product.controller.dto.ProductSaveReqDto;
+import com.ebuild.commerce.business.product.controller.dto.ProductSearchReqDto;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.business.product.repository.JpaCategoryRepository;
 import com.ebuild.commerce.business.product.repository.JpaProductRepository;

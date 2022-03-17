@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.buyer.domain;
 
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
-import com.ebuild.commerce.business.buyer.domain.dto.BuyerSaveReqDto;
+import com.ebuild.commerce.business.buyer.controller.dto.BuyerSaveReqDto;
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.common.Address;

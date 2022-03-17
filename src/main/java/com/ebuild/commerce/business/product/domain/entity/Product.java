@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.product.domain.entity;
 
 import com.ebuild.commerce.business.company.domain.entity.Company;
-import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
+import com.ebuild.commerce.business.product.controller.dto.ProductSaveReqDto;
 import com.ebuild.commerce.business.product.repository.JpaProductRepository;
 import com.ebuild.commerce.common.BaseEntity;
 import com.ebuild.commerce.exception.AlreadyExistsException;
@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

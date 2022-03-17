@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.order.domain.entity;
 
-import com.ebuild.commerce.business.order.domain.dto.PaymentReqDto;
+import com.ebuild.commerce.business.order.controller.dto.PaymentReqDto;
 import java.time.LocalDateTime;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;

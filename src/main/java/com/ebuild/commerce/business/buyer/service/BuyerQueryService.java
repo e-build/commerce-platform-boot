@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.buyer.service;
 
 import com.ebuild.commerce.business.buyer.domain.Buyer;
-import com.ebuild.commerce.business.buyer.domain.dto.BuyerResDto;
+import com.ebuild.commerce.business.buyer.controller.dto.BuyerResDto;
 import com.ebuild.commerce.business.buyer.repository.JpaBuyerRepository;
 import com.ebuild.commerce.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

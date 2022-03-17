@@ -1,8 +1,7 @@
 package com.ebuild.commerce.business.auth.controller;
 
 import com.ebuild.commerce.business.auth.domain.UserSubject;
-import com.ebuild.commerce.business.auth.domain.dto.LoginReqDto;
-import com.ebuild.commerce.business.auth.domain.dto.TokenDto;
+import com.ebuild.commerce.business.auth.controller.dto.LoginReqDto;
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
 import com.ebuild.commerce.business.auth.service.CommerceAuthService;
 import com.ebuild.commerce.common.http.CommonResponse;

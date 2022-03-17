@@ -1,7 +1,5 @@
 package com.ebuild.commerce.business.delivery.domain.entity;
 
-import com.ebuild.commerce.business.delivery.domain.common.DeliveryStatus;
-import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.orderProduct.domain.entity.OrderProduct;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.common.BaseEntity;
@@ -21,7 +19,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

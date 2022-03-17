@@ -1,9 +1,8 @@
 package com.ebuild.commerce.business.product.controller;
 
-import com.ebuild.commerce.business.product.domain.dto.ProductChangeStatusReqDto;
-import com.ebuild.commerce.business.product.domain.dto.ProductResDto;
-import com.ebuild.commerce.business.product.domain.dto.ProductSaveReqDto;
-import com.ebuild.commerce.business.product.domain.dto.ProductSearchReqDto;
+import com.ebuild.commerce.business.product.controller.dto.ProductChangeStatusReqDto;
+import com.ebuild.commerce.business.product.controller.dto.ProductSaveReqDto;
+import com.ebuild.commerce.business.product.controller.dto.ProductSearchReqDto;
 import com.ebuild.commerce.business.product.service.ProductCommandService;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;

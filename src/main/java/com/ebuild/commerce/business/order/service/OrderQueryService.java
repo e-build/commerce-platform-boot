@@ -1,8 +1,8 @@
 package com.ebuild.commerce.business.order.service;
 
-import com.ebuild.commerce.business.order.domain.dto.OrderPagingListDto;
-import com.ebuild.commerce.business.order.domain.dto.OrderQueryParamsDto;
-import com.ebuild.commerce.business.order.domain.dto.OrderResDto;
+import com.ebuild.commerce.business.order.controller.dto.OrderPagingListDto;
+import com.ebuild.commerce.business.order.controller.dto.OrderQueryParamsDto;
+import com.ebuild.commerce.business.order.controller.dto.OrderResDto;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.order.repository.JpaOrderRepository;
 import com.ebuild.commerce.business.order.repository.OrderQueryRepository;
@@ -30,12 +30,11 @@ public class OrderQueryService {
     return OrderPagingListDto.builder()
         .orders(
             orderList.stream()
-            .map(OrderResDto::of)
-            .collect(Collectors.toList()))
+                .map(OrderResDto::of)
+                .collect(Collectors.toList()))
         .paging(paging)
         .sort(orderQueryParamsDto.getSort())
         .build();
   }
-
 
 }

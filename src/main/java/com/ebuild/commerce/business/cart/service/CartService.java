@@ -1,12 +1,12 @@
 package com.ebuild.commerce.business.cart.service;
 
-import com.ebuild.commerce.business.cart.domain.dto.CartLineListPlusMinusReqDto;
-import com.ebuild.commerce.business.cart.domain.dto.CartLineListPlusMinusReqDto.CartLineAddParam;
-import com.ebuild.commerce.business.cart.domain.dto.CartResDto;
+import com.ebuild.commerce.business.cart.controller.dto.CartLineListPlusMinusReqDto;
+import com.ebuild.commerce.business.cart.controller.dto.CartLineListPlusMinusReqDto.CartLineAddParam;
+import com.ebuild.commerce.business.cart.controller.dto.CartResDto;
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
 import com.ebuild.commerce.business.cart.repository.JpaCartRepository;
-import com.ebuild.commerce.business.order.domain.dto.BaseOrderCreateReqDto;
-import com.ebuild.commerce.business.order.domain.dto.OrderResDto;
+import com.ebuild.commerce.business.order.controller.dto.BaseOrderCreateReqDto;
+import com.ebuild.commerce.business.order.controller.dto.OrderResDto;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.order.repository.JpaOrderRepository;
 import com.ebuild.commerce.business.product.domain.entity.Product;

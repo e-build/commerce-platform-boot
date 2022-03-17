@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.order.repository;
 
-import com.ebuild.commerce.business.order.domain.dto.OrderQueryParamsDto;
+import com.ebuild.commerce.business.order.controller.dto.OrderQueryParamsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

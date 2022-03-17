@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.admin.service;
 
-import com.ebuild.commerce.business.admin.domain.dto.AdminSaveReqDto;
-import com.ebuild.commerce.business.admin.domain.dto.AdminSaveResDto;
+import com.ebuild.commerce.business.admin.controller.dto.AdminSaveReqDto;
+import com.ebuild.commerce.business.admin.controller.dto.AdminSaveResDto;
 import com.ebuild.commerce.business.admin.domain.entity.Admin;
 import com.ebuild.commerce.business.admin.repository.JpaAdminRepository;
 import com.ebuild.commerce.business.auth.domain.entity.Role;

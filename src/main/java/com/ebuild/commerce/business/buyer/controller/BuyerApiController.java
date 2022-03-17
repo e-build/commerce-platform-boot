@@ -1,7 +1,7 @@
 package com.ebuild.commerce.business.buyer.controller;
 
-import com.ebuild.commerce.business.buyer.domain.dto.BuyerSaveReqDto;
-import com.ebuild.commerce.business.buyer.domain.dto.BuyerSearchReqDto;
+import com.ebuild.commerce.business.buyer.controller.dto.BuyerSaveReqDto;
+import com.ebuild.commerce.business.buyer.controller.dto.BuyerSearchReqDto;
 import com.ebuild.commerce.business.buyer.service.BuyerQueryService;
 import com.ebuild.commerce.business.buyer.service.BuyerService;
 import com.ebuild.commerce.common.http.CommonResponse;
@@ -10,7 +10,6 @@ import java.security.Principal;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

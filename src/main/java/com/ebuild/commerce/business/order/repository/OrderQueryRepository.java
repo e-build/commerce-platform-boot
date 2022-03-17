@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.order.repository;
 
-import com.ebuild.commerce.business.order.domain.dto.OrderQueryParamsDto;
+import com.ebuild.commerce.business.order.controller.dto.OrderQueryParamsDto;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.common.Paging;
 import java.util.List;

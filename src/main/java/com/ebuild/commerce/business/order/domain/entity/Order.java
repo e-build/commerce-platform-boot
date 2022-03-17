@@ -2,10 +2,10 @@ package com.ebuild.commerce.business.order.domain.entity;
 
 import com.ebuild.commerce.business.buyer.domain.Buyer;
 import com.ebuild.commerce.business.cart.domain.entity.Cart;
-import com.ebuild.commerce.business.order.domain.dto.BaseOrderCreateReqDto;
-import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto;
-import com.ebuild.commerce.business.order.domain.dto.DirectOrderReqDto.OrderLineDto;
-import com.ebuild.commerce.business.orderProduct.domain.common.OrderStatus;
+import com.ebuild.commerce.business.order.controller.dto.BaseOrderCreateReqDto;
+import com.ebuild.commerce.business.order.controller.dto.DirectOrderReqDto;
+import com.ebuild.commerce.business.order.controller.dto.DirectOrderReqDto.OrderLineDto;
+import com.ebuild.commerce.business.orderProduct.domain.entity.OrderStatus;
 import com.ebuild.commerce.business.orderProduct.domain.entity.OrderProduct;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.common.Address;

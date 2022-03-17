@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.orderProduct.domain.entity;
 
-import com.ebuild.commerce.business.delivery.domain.common.DeliveryStatus;
+import com.ebuild.commerce.business.delivery.domain.entity.DeliveryStatus;
 import com.ebuild.commerce.business.delivery.domain.entity.Delivery;
 import com.ebuild.commerce.business.order.domain.entity.Order;
 import com.ebuild.commerce.business.product.domain.entity.Product;
@@ -45,19 +45,22 @@ public class OrderProduct extends BaseEntity {
   @JoinColumn(name = "delivery_id")
   private Delivery delivery;
 
-  private Integer unitAmount;
+  private Integer normalAmount;
+
+  private Integer saleAmount;
 
   private Integer quantity;
 
-
   @Builder
   public OrderProduct(Long id, Order order,
-      Product product, Delivery delivery, Integer unitAmount, Integer quantity) {
+      Product product, Delivery delivery, Integer normalAmount, Integer saleAmount,
+      Integer quantity) {
     this.id = id;
     this.order = order;
     this.product = product;
     this.delivery = delivery;
-    this.unitAmount = unitAmount;
+    this.normalAmount = normalAmount;
+    this.saleAmount = saleAmount;
     this.quantity = quantity;
   }
 
@@ -65,7 +68,8 @@ public class OrderProduct extends BaseEntity {
     OrderProduct orderProduct = OrderProduct.builder()
         .product(product)
         .order(order)
-        .unitAmount(product.getSaleAmount())
+        .normalAmount(product.getNormalAmount())
+        .saleAmount(product.getSaleAmount())
         .quantity(quantity)
         .build();
     orderProduct.initDelivery(DeliveryStatus.READY, product.getCompany().getAddress(), receivingAddress);
