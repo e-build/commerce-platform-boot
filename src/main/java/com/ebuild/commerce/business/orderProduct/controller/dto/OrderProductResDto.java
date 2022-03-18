@@ -4,8 +4,6 @@ import com.ebuild.commerce.business.delivery.controller.dto.DeliveryResDto;
 import com.ebuild.commerce.business.orderProduct.domain.entity.OrderProduct;
 import com.ebuild.commerce.business.product.controller.dto.CategoryResDto;
 import com.ebuild.commerce.business.product.domain.entity.Product;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +15,7 @@ public class OrderProductResDto {
   private Long id;
   private Long productId;
   private String productName;
-  private List<CategoryResDto> categoryList;
+  private CategoryResDto category;
   private Integer normalAmount;
   private Integer saleAmount;
   private Integer quantity;
@@ -25,12 +23,12 @@ public class OrderProductResDto {
 
   @Builder
   public OrderProductResDto(Long id, Long productId, String productName,
-      List<CategoryResDto> categoryList, Integer normalAmount, Integer saleAmount,
+      CategoryResDto category, Integer normalAmount, Integer saleAmount,
       Integer quantity, DeliveryResDto delivery) {
     this.id = id;
     this.productId = productId;
     this.productName = productName;
-    this.categoryList = categoryList;
+    this.category = category;
     this.normalAmount = normalAmount;
     this.saleAmount = saleAmount;
     this.quantity = quantity;
@@ -43,11 +41,7 @@ public class OrderProductResDto {
         .id(entity.getId())
         .productId(product.getId())
         .productName(product.getName())
-        .categoryList(product
-            .getCategoryList()
-            .stream()
-            .map(CategoryResDto::of)
-            .collect(Collectors.toList()))
+        .category(CategoryResDto.of(product.getCategory()))
         .normalAmount(product.getNormalAmount())
         .saleAmount(product.getSaleAmount())
         .quantity(entity.getQuantity())

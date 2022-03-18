@@ -6,8 +6,6 @@ import com.ebuild.commerce.business.company.domain.dto.CompanyResDto;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,7 +17,7 @@ public class ProductResDto {
   private final String productStatus;
   private final Integer normalAmount;
   private final Integer saleAmount;
-  private final List<CategoryResDto> categoryList;
+  private final CategoryResDto category;
   private final LocalDate saleStartDate;
   private final LocalDate saleEndDate;
   private final Integer quantity;
@@ -30,7 +28,7 @@ public class ProductResDto {
   @Builder
   public ProductResDto(Long id, String name, String productStatus, Integer normalAmount,
       Integer saleAmount,
-      List<CategoryResDto> categoryList, LocalDate saleStartDate, LocalDate saleEndDate,
+      CategoryResDto category, LocalDate saleStartDate, LocalDate saleEndDate,
       Integer quantity, CompanyResDto company, LocalDateTime createdAt,
       LocalDateTime updatedAt) {
     this.id = id;
@@ -38,7 +36,7 @@ public class ProductResDto {
     this.productStatus = productStatus;
     this.normalAmount = normalAmount;
     this.saleAmount = saleAmount;
-    this.categoryList = categoryList;
+    this.category = category;
     this.saleStartDate = saleStartDate;
     this.saleEndDate = saleEndDate;
     this.quantity = quantity;
@@ -54,7 +52,7 @@ public class ProductResDto {
         .productStatus(nullableValue(product.getProductStatus()))
         .normalAmount(product.getNormalAmount())
         .saleAmount(product.getSaleAmount())
-        .categoryList(product.getCategoryList().stream().map(CategoryResDto::of).collect(Collectors.toList()))
+        .category(CategoryResDto.of(product.getCategory()))
         .saleStartDate(product.getSaleStartDate())
         .saleEndDate(product.getSaleEndDate())
         .quantity(product.getQuantity())

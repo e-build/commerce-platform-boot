@@ -45,7 +45,7 @@ public class ProductSaveReqDto {
     private Integer saleAmount;
 
     @NotEmptyCollection(message = "상품 카테고리는 필수 입력 값입니다.")
-    private List<Long> categoryIdList;
+    private Long categoryId;
 
     private LocalDate saleStartDate;
 
