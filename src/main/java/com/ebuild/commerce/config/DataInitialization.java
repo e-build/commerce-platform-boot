@@ -3,7 +3,6 @@ package com.ebuild.commerce.config;
 import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.company.domain.entity.SettlementInfo;
 import com.ebuild.commerce.business.product.domain.entity.Category;
-import com.ebuild.commerce.business.product.domain.entity.ProductCategory;
 import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.business.admin.domain.entity.Admin;
@@ -14,7 +13,9 @@ import com.ebuild.commerce.business.auth.domain.entity.Role;
 import com.ebuild.commerce.business.seller.domain.entity.Seller;
 import com.ebuild.commerce.common.Address;
 import com.ebuild.commerce.oauth.domain.ProviderType;
+import com.google.common.collect.Lists;
 import java.time.LocalDate;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -73,17 +74,26 @@ public class DataInitialization {
       em.persist(category1_3);
       em.persist(category2);
       em.persist(category2_1);
+      em.flush();
 
       /********************
        **** 상품 생성 ****
        ********************/
       Product product1 = createProduct("매슬로우 욕구위계이론", company, category1_1, 25000, 21000);
       Product product2 = createProduct("달러굿즈의 세계모험기", company, category2_1, 10000, 8000);
-      Product product3 = createProduct("홍길동은 왜 달리기가 빠를까?", company, category1_2,10000, 8000);
+      Product product3 = createProduct("홍길동은 왜 달리기가 빠를까?", company, category1_2, 10000, 8000);
 
       em.persist(product1);
       em.persist(product2);
       em.persist(product3);
+      em.flush();
+
+      List<Product> productList = Lists.newArrayList();
+      for (int i = 0; i < 100; i++) {
+        em.persist(createProduct("BOOK" + i, company, i % 2 == 0 ? category1_1 : category1_2, i*500, i*500-200));
+      }
+      em.flush();
+      em.clear();
     }
 
     private Category createCategory(String name, String code, String superCode) {
@@ -153,8 +163,8 @@ public class DataInitialization {
 
     private Company createCompany(Address address) {
       SettlementInfo settlementInfo = new SettlementInfo("69123123-12343123", "국민", 1);
-      return new Company("seller company", "000-000000-000", "010-0000-0000", address,
-          settlementInfo);
+      return new Company("seller company", "000-000000-000",
+          "010-0000-0000", address, settlementInfo);
     }
 
     private Address createAddress() {
@@ -163,9 +173,10 @@ public class DataInitialization {
 
     private Product createProduct(String name, Company company,
         Category category, Integer normalAmount, Integer saleAmount) {
-      Product product = Product.builder()
+      return Product.builder()
           .name(name)
           .productStatus(ProductStatus.SALE)
+          .category(category)
           .normalAmount(normalAmount)
           .saleAmount(saleAmount)
           .saleStartDate(LocalDate.now())
@@ -173,10 +184,9 @@ public class DataInitialization {
           .quantity(999)
           .company(company)
           .build();
-
-      product.addCategory(category);
-      return product;
     }
+
+
   }
 
 
