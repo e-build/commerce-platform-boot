@@ -21,6 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,8 +45,8 @@ public class Product extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private ProductStatus productStatus;
 
-  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-  private List<ProductCategory> categoryList;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Category category;
 
   private Integer normalAmount;
 
@@ -64,17 +65,17 @@ public class Product extends BaseEntity {
   @JoinColumn(name = "company_id")
   private Company company;
 
-  public static Product create(JpaProductRepository jpaProductRepository, Company company, List<Category> categoryList, ProductSaveReqDto productSaveReqDto) {
+  public static Product create(JpaProductRepository jpaProductRepository, Company company, Category category, ProductSaveReqDto productSaveReqDto) {
     if ( isExists(jpaProductRepository, company, productSaveReqDto) )
       throw new AlreadyExistsException(productSaveReqDto.getProduct().getName(), "상품명");
 
     Product product = productSaveReqDto.toEntity();
     product.registerCompany(company);
-    categoryList.forEach(product::addCategory);
+    product.category = category;
     return product;
   }
 
-  public void update(JpaProductRepository jpaProductRepository, Company company, List<Category> categoryList, ProductSaveReqDto productSaveReqDto) {
+  public void update(JpaProductRepository jpaProductRepository, Company company, Category category, ProductSaveReqDto productSaveReqDto) {
     if ( isExists(jpaProductRepository, company, productSaveReqDto)
         && !isSameProduct(productSaveReqDto.getProduct().getId()) )
       throw new AlreadyExistsException(productSaveReqDto.getProduct().getName(), "상품명");
@@ -86,8 +87,7 @@ public class Product extends BaseEntity {
     this.saleStartDate = productSaveReqDto.getProduct().getSaleStartDate();
     this.saleEndDate = productSaveReqDto.getProduct().getSaleEndDate();
     this.quantity = productSaveReqDto.getProduct().getQuantity();
-
-    categoryList.forEach(this::addCategory);
+    this.category = category;
   }
 
   private boolean isSameProduct(Long targetProductId) {
@@ -110,14 +110,13 @@ public class Product extends BaseEntity {
   @Builder
   public Product(Long id, String name,
       ProductStatus productStatus,
-      List<ProductCategory> categoryList, Integer normalAmount, Integer saleAmount,
+      Category category, Integer normalAmount, Integer saleAmount,
       Integer shippingTime, LocalDate saleStartDate, LocalDate saleEndDate,
       Integer quantity, Company company) {
     this.id = id;
     this.name = name;
     this.productStatus = productStatus;
-    if (CollectionUtils.isEmpty(categoryList))
-      this.categoryList = Lists.newArrayList();
+    this.category = category;
     this.normalAmount = normalAmount;
     this.saleAmount = saleAmount;
     this.shippingTime = shippingTime;
@@ -131,27 +130,4 @@ public class Product extends BaseEntity {
     this.productStatus = productStatus;
   }
 
-  public void addCategory(Category category) {
-    if (alreadyExists(category))
-      return;
-    this.categoryList.add(
-        ProductCategory.builder()
-            .product(this)
-            .category(category)
-            .build()
-    );
-  }
-
-  private boolean alreadyExists(Category category) {
-    if(CollectionUtils.isEmpty(categoryList))
-      categoryList = Lists.newArrayList();
-
-    for (ProductCategory productCategory : categoryList) {
-      if (productCategory.getCategory().getId() == category.getId()){
-        log.info("[{}] 상품은 이미 [{}] 카테고리를 가지고 있습니다.", this.name, category.getName());
-        return true;
-      }
-    }
-    return false;
-  }
 }

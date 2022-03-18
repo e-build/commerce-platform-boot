@@ -1,6 +1,6 @@
 package com.ebuild.commerce.business.product.controller.dto;
 
-import com.ebuild.commerce.business.product.domain.entity.ProductCategory;
+import com.ebuild.commerce.business.product.domain.entity.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,12 +22,12 @@ public class CategoryResDto {
     this.superCode = superCode;
   }
 
-  public static CategoryResDto of(ProductCategory productCategory) {
+  public static CategoryResDto of(Category category) {
     return CategoryResDto.builder()
-        .id(productCategory.getCategory().getId())
-        .name(productCategory.getCategory().getName())
-        .code(productCategory.getCategory().getCode())
-        .superCode(productCategory.getCategory().getSuperCode())
+        .id(category.getId())
+        .name(category.getName())
+        .code(category.getCode())
+        .superCode(category.getSuperCode())
         .build();
   }
 }

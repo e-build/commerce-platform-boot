@@ -27,7 +27,7 @@ public class Category {
   private String superCode;
 
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-  private List<ProductCategory> productList = Lists.newArrayList();
+  private List<Product> productList = Lists.newArrayList();
 
   @Builder
   public Category(Long id, String name, String code, String superCode) {

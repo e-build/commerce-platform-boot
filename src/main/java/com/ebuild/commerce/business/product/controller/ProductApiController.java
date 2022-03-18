@@ -1,9 +1,10 @@
 package com.ebuild.commerce.business.product.controller;
 
+import com.ebuild.commerce.business.product.controller.dto.PageableProductSearchCondition;
 import com.ebuild.commerce.business.product.controller.dto.ProductChangeStatusReqDto;
 import com.ebuild.commerce.business.product.controller.dto.ProductSaveReqDto;
-import com.ebuild.commerce.business.product.controller.dto.ProductSearchReqDto;
-import com.ebuild.commerce.business.product.service.ProductCommandService;
+import com.ebuild.commerce.business.product.service.ProductQueryService;
+import com.ebuild.commerce.business.product.service.ProductService;
 import com.ebuild.commerce.common.http.CommonResponse;
 import com.ebuild.commerce.config.JsonHelper;
 import javax.validation.Valid;
@@ -27,7 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductApiController {
 
-  private final ProductCommandService productCommandService;
+  private final ProductService productService;
+  private final ProductQueryService productQueryService;
   private final JsonHelper jsonHelper;
 
   @PostMapping("")
@@ -35,7 +37,7 @@ public class ProductApiController {
       @RequestBody @Valid ProductSaveReqDto productSaveReqDto) {
 
     return ResponseEntity.ok(
-        CommonResponse.OK("product", productCommandService.register(productSaveReqDto))
+        CommonResponse.OK("product", productService.register(productSaveReqDto))
     );
   }
 
@@ -45,7 +47,7 @@ public class ProductApiController {
       @RequestBody @Valid ProductSaveReqDto productSaveReqDto) {
 
     return ResponseEntity.ok(
-        CommonResponse.OK("product", productCommandService.update(productId, productSaveReqDto))
+        CommonResponse.OK("product", productService.update(productId, productSaveReqDto))
     );
   }
 
@@ -53,7 +55,7 @@ public class ProductApiController {
   public ResponseEntity<CommonResponse> delete(
       @PathVariable("productId") Long productId) {
 
-    productCommandService.delete(productId);
+    productService.delete(productId);
     return ResponseEntity.ok(
         CommonResponse.OK()
     );
@@ -61,13 +63,11 @@ public class ProductApiController {
 
   @GetMapping("")
   public ResponseEntity<CommonResponse> searchProduct(
-      @PageableDefault(sort = {"id"}, direction = Direction.DESC)
-      @Valid ProductSearchReqDto productSearchReqDto) {
-
-    log.info("productSearchReqDto : {}", jsonHelper.serialize(productSearchReqDto));
+      @PageableDefault(sort = {"id"}, direction = Direction.DESC) @Valid PageableProductSearchCondition condition) {
+    log.info("productSearchReqDto : {}", jsonHelper.serialize(condition));
 
     return ResponseEntity.ok(
-        CommonResponse.OK("products", productCommandService.searchByCondition(productSearchReqDto))
+        CommonResponse.OK("result", productQueryService.search(condition))
     );
   }
 
@@ -76,7 +76,7 @@ public class ProductApiController {
       @PathVariable("productId") Long productId,
       @RequestBody @Valid ProductChangeStatusReqDto productChangeStatusReqDto) {
 
-    productCommandService.changeStatus(productId, productChangeStatusReqDto);
+    productService.changeStatus(productId, productChangeStatusReqDto);
 
     return ResponseEntity.ok(
         CommonResponse.OK()

@@ -2,20 +2,17 @@ package com.ebuild.commerce.business.product.service;
 
 import com.ebuild.commerce.business.company.domain.entity.Company;
 import com.ebuild.commerce.business.company.repository.JpaCompanyRepository;
-import com.ebuild.commerce.business.product.controller.dto.ProductResDto;
-import com.ebuild.commerce.business.product.domain.entity.Category;
-import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.business.product.controller.dto.ProductChangeStatusReqDto;
+import com.ebuild.commerce.business.product.controller.dto.ProductResDto;
 import com.ebuild.commerce.business.product.controller.dto.ProductSaveReqDto;
-import com.ebuild.commerce.business.product.controller.dto.ProductSearchReqDto;
+import com.ebuild.commerce.business.product.domain.entity.Category;
 import com.ebuild.commerce.business.product.domain.entity.Product;
+import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
 import com.ebuild.commerce.business.product.repository.JpaCategoryRepository;
 import com.ebuild.commerce.business.product.repository.JpaProductRepository;
 import com.ebuild.commerce.exception.NotFoundException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ProductCommandService {
+public class ProductService {
 
   private final JpaCategoryRepository jpaCategoryRepository;
   private final JpaProductRepository jpaProductRepository;
@@ -36,7 +33,7 @@ public class ProductCommandService {
             Product.create(
                 jpaProductRepository
                 , findCompany(productSaveReqDto.getProduct().getCompanyId())
-                , findCategoryList(productSaveReqDto.getProduct().getCategoryIdList())
+                , findCategory(productSaveReqDto.getProduct().getCategoryId())
                 , productSaveReqDto
             )
         ));
@@ -48,7 +45,7 @@ public class ProductCommandService {
     product.update(
         jpaProductRepository
         , findCompany(productSaveReqDto.getProduct().getCompanyId())
-        , findCategoryList(productSaveReqDto.getProduct().getCategoryIdList())
+        , findCategory(productSaveReqDto.getProduct().getCategoryId())
         , productSaveReqDto
     );
 
@@ -57,20 +54,6 @@ public class ProductCommandService {
 
   public void delete(Long productId) {
     jpaProductRepository.delete(findProduct(productId));
-  }
-
-  public Page<Product> searchWithPaging(ProductSearchReqDto productSearchReqDto) {
-    return jpaProductRepository.findAll(
-        productSearchReqDto.getPageable()
-    );
-  }
-
-  public Page<Product> searchByCondition(ProductSearchReqDto productSearchReqDto) {
-    return jpaProductRepository.findAllByCompanyAndNameContaining(
-        findCompany(productSearchReqDto.getCompanyId())
-        , productSearchReqDto.getName()
-        , productSearchReqDto.getPageable()
-    );
   }
 
   @Transactional
@@ -89,8 +72,9 @@ public class ProductCommandService {
     product.changeSaleStatus(targetStatus);
   }
 
-  private List<Category> findCategoryList(List<Long> categoryIdList) {
-    return jpaCategoryRepository.findByIdIn(categoryIdList);
+  private Category findCategory(Long categoryId) {
+    return jpaCategoryRepository.findById(categoryId)
+        .orElseThrow(()-> new NotFoundException(String.valueOf(categoryId), "카테고리"));
   }
 
   private Product findProduct(Long productId) {
