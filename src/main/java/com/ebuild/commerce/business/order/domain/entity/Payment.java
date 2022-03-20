@@ -18,7 +18,7 @@ public class Payment {
   @Enumerated(value = EnumType.STRING)
   private PaymentMeans paymentMeans;
   private String cardVendor;
-  private Integer paymentAmounts;
+  private Long paymentAmounts;
   private LocalDateTime paymentDateTime;
 
   @Builder

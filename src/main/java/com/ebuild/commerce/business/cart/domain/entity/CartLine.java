@@ -35,22 +35,22 @@ public class CartLine extends BaseEntity {
   @JoinColumn(name = "product_id")
   private Product product;
 
-  private int quantity;
+  private Long quantity;
 
   @Builder
-  public CartLine(Cart cart, Product product, int quantity) {
+  public CartLine(Cart cart, Product product, Long quantity) {
     this.cart = cart;
     this.product = product;
     this.quantity = quantity;
   }
 
-  public void minusQuantity(int quantity) {
+  public void minusQuantity(Long quantity) {
     if (this.quantity < quantity)
       throw new IllegalArgumentException("장바구니에 담긴 상품의 수량이 감소시키려는 상품의 수량의 크기보다 작습니다.");
     this.quantity -= quantity;
   }
 
-  public void plusQuantity(int quantity) {
+  public void plusQuantity(Long quantity) {
     this.quantity += quantity;
   }
 }

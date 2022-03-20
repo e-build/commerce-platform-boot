@@ -4,23 +4,26 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Data
-public class ProductSearchParamDto {
+@NoArgsConstructor
+public class ProductSearchCondition {
 
-  private final Long id;
-  private final String name;
-  private final List<String> productStatusList;
-  private final Integer normalAmountGoe;
-  private final Integer normalAmountLoe;
-  private final Integer saleAmountGoe;
-  private final Integer saleAmountLoe;
-  private final List<Long> categoryIdList;
-  private final Integer quantityGoe;
-  private final Integer quantityLoe;
-  private final String companyName;
+  private Long id;
+  private String name;
+  private List<String> productStatusList;
+  private Integer normalAmountGoe;
+  private Integer normalAmountLoe;
+  private Integer saleAmountGoe;
+  private Integer saleAmountLoe;
+  private List<Long> categoryIdList;
+  private Integer quantityGoe;
+  private Integer quantityLoe;
+  private String companyName;
   @DateTimeFormat(iso = ISO.DATE)
   private LocalDate saleStartDateGoe;
   @DateTimeFormat(iso = ISO.DATE)
@@ -30,12 +33,12 @@ public class ProductSearchParamDto {
   @DateTimeFormat(iso = ISO.DATE)
   private LocalDate saleEndDateLoe;
   @DateTimeFormat(iso = ISO.DATE)
-  private final LocalDateTime createdAtGoe;
+  private LocalDateTime createdAtGoe;
   @DateTimeFormat(iso = ISO.DATE)
-  private final LocalDateTime createdAtLoe;
+  private LocalDateTime createdAtLoe;
   @DateTimeFormat(iso = ISO.DATE)
-  private final LocalDateTime updatedAtGoe;
+  private LocalDateTime updatedAtGoe;
   @DateTimeFormat(iso = ISO.DATE)
-  private final LocalDateTime updatedAtLoe;
+  private LocalDateTime updatedAtLoe;
 
 }

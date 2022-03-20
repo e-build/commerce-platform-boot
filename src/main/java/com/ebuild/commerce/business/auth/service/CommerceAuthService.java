@@ -113,7 +113,7 @@ public class CommerceAuthService {
 
     return TokenDto.builder()
         .accessToken(
-            jwtProvider.createAccessToken(email, accessJwt.resolveRoleStringList()).getToken())
+            jwtProvider.createAccessToken(email, refreshJwt.resolveRoleStringList()).getToken())
         .refreshToken(refreshToken)
         .build();
   }

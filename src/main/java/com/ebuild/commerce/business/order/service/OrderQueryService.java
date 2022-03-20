@@ -1,15 +1,12 @@
 package com.ebuild.commerce.business.order.service;
 
-import com.ebuild.commerce.business.order.controller.dto.OrderPagingListDto;
-import com.ebuild.commerce.business.order.controller.dto.OrderQueryParamsDto;
 import com.ebuild.commerce.business.order.controller.dto.OrderResDto;
-import com.ebuild.commerce.business.order.domain.entity.Order;
+import com.ebuild.commerce.business.order.controller.dto.OrderSearchCondition;
 import com.ebuild.commerce.business.order.repository.JpaOrderRepository;
 import com.ebuild.commerce.business.order.repository.OrderQueryRepository;
-import com.ebuild.commerce.common.Paging;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +18,8 @@ public class OrderQueryService {
   private final OrderQueryRepository orderQueryRepository;
 
   @Transactional(readOnly = true)
-  public OrderPagingListDto search(String email, OrderQueryParamsDto orderQueryParamsDto) {
-    Paging paging = orderQueryParamsDto.getPaging();
-    paging.setTotalCount(orderQueryRepository.countBy(email, orderQueryParamsDto));
-
-    List<Order> orderList = orderQueryRepository.searchBy(email, orderQueryParamsDto);
-
-    return OrderPagingListDto.builder()
-        .orders(
-            orderList.stream()
-                .map(OrderResDto::of)
-                .collect(Collectors.toList()))
-        .paging(paging)
-        .sort(orderQueryParamsDto.getSort())
-        .build();
+  public Page<OrderResDto> search(OrderSearchCondition condition, Pageable pageable) {
+    return orderQueryRepository.search(condition, pageable);
   }
 
 }

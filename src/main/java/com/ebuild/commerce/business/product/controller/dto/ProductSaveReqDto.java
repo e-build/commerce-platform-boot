@@ -39,10 +39,10 @@ public class ProductSaveReqDto {
     private String productStatus;
 
     @Min(value = 100, message = "정가는 100원 이상의 값을 입력해주시기 바랍니다.")
-    private Integer normalAmount;
+    private Long normalAmount;
 
     @Min(value = 100, message = "판매는 100원 이상의 값을 입력해주시기 바랍니다.")
-    private Integer saleAmount;
+    private Long saleAmount;
 
     @NotEmptyCollection(message = "상품 카테고리는 필수 입력 값입니다.")
     private Long categoryId;
@@ -51,7 +51,7 @@ public class ProductSaveReqDto {
 
     private LocalDate saleEndDate;
 
-    private Integer quantity;
+    private Long quantity;
 
   }
 

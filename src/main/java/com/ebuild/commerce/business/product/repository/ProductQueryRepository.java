@@ -4,18 +4,25 @@ import static com.ebuild.commerce.business.company.domain.entity.QCompany.compan
 import static com.ebuild.commerce.business.product.domain.entity.QProduct.product;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import com.ebuild.commerce.business.product.controller.dto.PageableProductSearchCondition;
+import com.ebuild.commerce.business.product.controller.dto.ProductSearchCondition;
 import com.ebuild.commerce.business.product.controller.dto.ProductResDto;
+import com.ebuild.commerce.business.product.controller.dto.QProductResDto;
 import com.ebuild.commerce.business.product.domain.entity.Product;
 import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
@@ -26,81 +33,71 @@ public class ProductQueryRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public Page<ProductResDto> search(PageableProductSearchCondition condition) {
+  public Page<ProductResDto> search(ProductSearchCondition condition, Pageable pageable) {
 
-    List<Product> productList = jpaQueryFactory.select(product)
+    JPAQuery<ProductResDto> contentsQuery = jpaQueryFactory
+        .select(new QProductResDto(product.id, product.name, product.productStatus,
+            product.normalAmount, product.saleAmount, product.category, product.saleStartDate,
+            product.saleEndDate, product.quantity, product.company, product.createdAt,
+            product.updatedAt))
         .from(product)
         .join(product.company, company)
         .where(
-            nameEq(condition.getParams().getName())
-            , companyNameEq(condition.getParams().getCompanyName())
-            , normalAmountBetween(
-                condition.getParams().getNormalAmountGoe()
-                , condition.getParams().getNormalAmountLoe()
-            )
-            , saleAmountBetween(
-                condition.getParams().getSaleAmountGoe()
-                , condition.getParams().getSaleAmountLoe()
-            )
-            , quantityBetween(
-                condition.getParams().getQuantityGoe()
-                , condition.getParams().getQuantityLoe()
-            )
-            , productStatusIn(condition.getParams().getProductStatusList())
-            , categoryIdIn(condition.getParams().getCategoryIdList())
+            nameEq(condition.getName())
+            , companyNameEq(condition.getCompanyName())
+            , normalAmountGoe(condition.getNormalAmountGoe())
+            , normalAmountLoe(condition.getNormalAmountLoe())
+            , saleAmountGoe(condition.getSaleAmountGoe())
+            , saleAmountLoe(condition.getSaleAmountLoe())
+            , quantityGoe(condition.getQuantityGoe())
+            , quantityLoe(condition.getQuantityLoe())
+            , productStatusIn(condition.getProductStatusList())
+            , categoryIdIn(condition.getCategoryIdList())
         )
-        .offset(condition.getPageable().getOffset())
-        .limit(condition.getPageable().getPageSize())
-        .fetch();
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize());
 
-    long totalCount = jpaQueryFactory.select(product)
+    List<ProductResDto> contents = contentsOrderBy(contentsQuery, pageable.getSort());
+
+    JPAQuery<Long> countQuery = jpaQueryFactory
+        .select(product.count())
         .from(product)
         .join(product.company, company)
         .where(
-            nameEq(condition.getParams().getName())
-            , companyNameEq(condition.getParams().getCompanyName())
-            , normalAmountBetween(condition.getParams().getNormalAmountGoe(),
-                condition.getParams().getNormalAmountLoe())
-            , saleAmountBetween(condition.getParams().getSaleAmountGoe(),
-                condition.getParams().getSaleAmountLoe())
-            , quantityBetween(condition.getParams().getQuantityGoe(),
-                condition.getParams().getQuantityLoe())
-            , productStatusIn(condition.getParams().getProductStatusList())
-            , categoryIdIn(condition.getParams().getCategoryIdList())
-        )
-        .offset(condition.getPageable().getOffset())
-        .limit(condition.getPageable().getPageSize())
-        .fetchCount();
+            nameEq(condition.getName())
+            , companyNameEq(condition.getCompanyName())
+            , normalAmountGoe(condition.getNormalAmountGoe())
+            , normalAmountLoe(condition.getNormalAmountLoe())
+            , saleAmountGoe(condition.getSaleAmountGoe())
+            , saleAmountLoe(condition.getSaleAmountLoe())
+            , quantityGoe(condition.getQuantityGoe())
+            , quantityLoe(condition.getQuantityLoe())
+            , productStatusIn(condition.getProductStatusList())
+            , categoryIdIn(condition.getCategoryIdList())
+        );
 
-    List<ProductResDto> collect = productList.stream().map(ProductResDto::of)
-        .collect(Collectors.toList());
-
-    return new PageImpl<>(collect, condition.getPageable(), totalCount);
+    return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne);
   }
 
-  private BooleanExpression normalAmountBetween(int normalAmountGoe, int normalAmountLoe) {
-    return normalAmountGoe(normalAmountGoe).and(normalAmountLoe(normalAmountLoe));
-  }
-
-  private BooleanExpression saleAmountBetween(int saleAmountGoe, int saleAmountLoe) {
-    return saleAmountGoe(saleAmountGoe).and(saleAmountLoe(saleAmountLoe));
-  }
-
-  private BooleanExpression quantityBetween(int quantityGoe, int quantityLoe) {
-    return quantityGoe(quantityGoe).and(quantityLoe(quantityLoe));
+  private List<ProductResDto> contentsOrderBy(JPAQuery<ProductResDto> contenstQuery, Sort sort) {
+    for (Sort.Order o : sort) {
+      PathBuilder<Product> orderByExpression = new PathBuilder<>(Product.class, "product");
+      contenstQuery.orderBy(
+          new OrderSpecifier(
+              o.isAscending() ? Order.ASC : Order.DESC
+              , orderByExpression.get(o.getProperty())
+          )
+      );
+    }
+    return contenstQuery.fetch();
   }
 
   private BooleanExpression quantityLoe(Integer quantityLoe) {
     return quantityLoe != null ? product.quantity.loe(quantityLoe) : null;
   }
 
-
   private BooleanExpression quantityGoe(Integer quantityGoe) {
     return quantityGoe != null ? product.quantity.goe(quantityGoe) : null;
-  }
-
-  private BooleanExpression categoryIdIn(List<Long> categoryIdList) {
-    return !CollectionUtils.isEmpty(categoryIdList) ? product.category.id.in(categoryIdList) : null;
   }
 
   private BooleanExpression saleAmountLoe(Integer saleAmountLoe) {
@@ -119,19 +116,30 @@ public class ProductQueryRepository {
     return normalAmountGoe != null ? product.normalAmount.goe(normalAmountGoe) : null;
   }
 
-  private BooleanExpression productStatusIn(List<String> productStatusList) {
-    List<ProductStatus> collect = productStatusList.stream()
-        .map(ProductStatus::fromValue)
-        .collect(Collectors.toList());
-    return !CollectionUtils.isEmpty(productStatusList) ? product.productStatus.in(collect) : null;
-  }
-
   private BooleanExpression nameEq(String name) {
     return isNotBlank(name) ? product.name.equalsIgnoreCase(name) : null;
   }
 
   private BooleanExpression companyNameEq(String companyName) {
     return isNotBlank(companyName) ? company.name.equalsIgnoreCase(companyName) : null;
+  }
+
+  private BooleanExpression categoryIdIn(List<Long> categoryIdList) {
+    if (CollectionUtils.isEmpty(categoryIdList)) {
+      return null;
+    }
+    return product.category.id.in(categoryIdList);
+  }
+
+  private BooleanExpression productStatusIn(List<String> productStatusList) {
+    if (CollectionUtils.isEmpty(productStatusList)) {
+      return null;
+    }
+
+    List<ProductStatus> collect = productStatusList.stream()
+        .map(ProductStatus::fromValue)
+        .collect(Collectors.toList());
+    return product.productStatus.in(collect);
   }
 
 }

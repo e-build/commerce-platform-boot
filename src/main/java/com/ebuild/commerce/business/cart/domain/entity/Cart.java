@@ -40,7 +40,7 @@ public class Cart extends BaseEntity {
     return new Cart();
   }
 
-  public void addProduct(Product product, int quantity){
+  public void addProduct(Product product, Long quantity){
     // 장바구니에 해당 상품이 존재하면 수량 증가
     boolean isProductExists = this.cartLineList
         .stream()
@@ -66,7 +66,7 @@ public class Cart extends BaseEntity {
     );
   }
 
-  public void removeProduct(Product product, int quantity){
+  public void removeProduct(Product product, Long quantity){
     for (CartLine cartLine : this.cartLineList) {
       if (Objects.equals(cartLine.getProduct().getId(), product.getId())){
           cartLine.minusQuantity(quantity);

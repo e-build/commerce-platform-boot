@@ -13,7 +13,7 @@ public class CartLineListPlusMinusReqDto {
   @Getter
   public static class CartLineAddParam{
     private Long productId;
-    private Integer quantity;
+    private Long quantity;
   }
 
 

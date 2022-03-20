@@ -11,7 +11,7 @@ public class CartLineResDto {
 
   private final Long cartLineId;
   private final ProductResDto product;
-  private final Integer quantity;
+  private final Long quantity;
 
   @Builder
   public CartLineResDto(CartLine cartLine) {

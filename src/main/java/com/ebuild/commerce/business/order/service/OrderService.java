@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class OrderService {
   private final JpaOrderRepository jpaOrderRepository;
   private final JpaProductRepository jpaProductRepository;
 
+  @Transactional
   public OrderResDto createOrder(String email, DirectOrderReqDto directOrderReqDto) {
     Buyer buyer = buyerQueryService.findByEmail(email);
 

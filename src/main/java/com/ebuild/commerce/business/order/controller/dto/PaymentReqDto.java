@@ -13,7 +13,7 @@ public class PaymentReqDto {
   private String paymentMeans;
   private String cardVendor;
   @NotNull
-  private Integer paymentAmounts;
+  private Long paymentAmounts;
   @NotNull
   private LocalDateTime paymentDateTime;
 

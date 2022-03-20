@@ -45,16 +45,16 @@ public class OrderProduct extends BaseEntity {
   @JoinColumn(name = "delivery_id")
   private Delivery delivery;
 
-  private Integer normalAmount;
+  private Long normalAmount;
 
-  private Integer saleAmount;
+  private Long saleAmount;
 
-  private Integer quantity;
+  private Long quantity;
 
   @Builder
   public OrderProduct(Long id, Order order,
-      Product product, Delivery delivery, Integer normalAmount, Integer saleAmount,
-      Integer quantity) {
+      Product product, Delivery delivery, Long normalAmount, Long saleAmount,
+      Long quantity) {
     this.id = id;
     this.order = order;
     this.product = product;
@@ -64,7 +64,7 @@ public class OrderProduct extends BaseEntity {
     this.quantity = quantity;
   }
 
-  public static OrderProduct of(Order order, Product product, Address receivingAddress, int quantity){
+  public static OrderProduct of(Order order, Product product, Address receivingAddress, Long quantity){
     OrderProduct orderProduct = OrderProduct.builder()
         .product(product)
         .order(order)

@@ -48,9 +48,9 @@ public class Product extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Category category;
 
-  private Integer normalAmount;
+  private Long normalAmount;
 
-  private Integer saleAmount;
+  private Long saleAmount;
 
   private Integer shippingTime;
 
@@ -58,7 +58,7 @@ public class Product extends BaseEntity {
 
   private LocalDate saleEndDate;
 
-  private Integer quantity;
+  private Long quantity;
 
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
@@ -110,9 +110,9 @@ public class Product extends BaseEntity {
   @Builder
   public Product(Long id, String name,
       ProductStatus productStatus,
-      Category category, Integer normalAmount, Integer saleAmount,
+      Category category, Long normalAmount, Long saleAmount,
       Integer shippingTime, LocalDate saleStartDate, LocalDate saleEndDate,
-      Integer quantity, Company company) {
+      Long quantity, Company company) {
     this.id = id;
     this.name = name;
     this.productStatus = productStatus;

@@ -3,7 +3,11 @@ package com.ebuild.commerce.business.product.controller.dto;
 import static com.ebuild.commerce.util.NullUtils.nullableValue;
 
 import com.ebuild.commerce.business.company.domain.dto.CompanyResDto;
+import com.ebuild.commerce.business.company.domain.entity.Company;
+import com.ebuild.commerce.business.product.domain.entity.Category;
 import com.ebuild.commerce.business.product.domain.entity.Product;
+import com.ebuild.commerce.business.product.domain.entity.ProductStatus;
+import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -15,22 +19,41 @@ public class ProductResDto {
   private final Long id;
   private final String name;
   private final String productStatus;
-  private final Integer normalAmount;
-  private final Integer saleAmount;
+  private final Long normalAmount;
+  private final Long saleAmount;
   private final CategoryResDto category;
   private final LocalDate saleStartDate;
   private final LocalDate saleEndDate;
-  private final Integer quantity;
+  private final Long quantity;
   private final CompanyResDto company;
   private final LocalDateTime createdAt;
   private final LocalDateTime updatedAt;
 
-  @Builder
-  public ProductResDto(Long id, String name, String productStatus, Integer normalAmount,
-      Integer saleAmount,
-      CategoryResDto category, LocalDate saleStartDate, LocalDate saleEndDate,
-      Integer quantity, CompanyResDto company, LocalDateTime createdAt,
+  @QueryProjection
+  public ProductResDto(Long id, String name, ProductStatus productStatus, Long normalAmount,
+      Long saleAmount, Category category, LocalDate saleStartDate, LocalDate saleEndDate,
+      Long quantity, Company company, LocalDateTime createdAt,
       LocalDateTime updatedAt) {
+    this.id = id;
+    this.name = name;
+    this.productStatus = productStatus.value();
+    this.normalAmount = normalAmount;
+    this.saleAmount = saleAmount;
+    this.category = CategoryResDto.of(category);
+    this.saleStartDate = saleStartDate;
+    this.saleEndDate = saleEndDate;
+    this.quantity = quantity;
+    this.company = CompanyResDto.builder().company(company).build();
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  @Builder
+  public ProductResDto(Long id, String name, String productStatus,
+      Long normalAmount, Long saleAmount, CategoryResDto category,
+      LocalDate saleStartDate, LocalDate saleEndDate,
+      Long quantity, CompanyResDto company,
+      LocalDateTime createdAt, LocalDateTime updatedAt) {
     this.id = id;
     this.name = name;
     this.productStatus = productStatus;
@@ -45,7 +68,7 @@ public class ProductResDto {
     this.updatedAt = updatedAt;
   }
 
-  public static ProductResDto of(Product product){
+  public static ProductResDto of(Product product) {
     return ProductResDto.builder()
         .id(product.getId())
         .name(product.getName())

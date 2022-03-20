@@ -32,6 +32,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -50,14 +51,20 @@ public class Order extends BaseEntity {
   @JoinColumn(name = "buyer_id")
   private Buyer buyer;
 
+  @Setter
   @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true
       , cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
   private List<OrderProduct> orderProductList = Lists.newArrayList();
 
-  private LocalDateTime orderDate;
-
   @Embedded
   private Payment payment;
+
+//  private Long totalNormalAmount;
+//
+//  private Long totalSaleAmount;
+
+  private LocalDateTime orderDate;
+
 
   @Builder
   public Order(Long id, OrderStatus orderStatus
@@ -123,8 +130,8 @@ public class Order extends BaseEntity {
         : baseOrderInfo.getReceivingAddress().toEntity();
   }
 
-  private static int findOrderProductQuantity(DirectOrderReqDto directOrderReqDto, Product product) {
-    int quantity = 0;
+  private static Long findOrderProductQuantity(DirectOrderReqDto directOrderReqDto, Product product) {
+    Long quantity = 0L;
     for ( OrderLineDto orderLine : directOrderReqDto.getOrderLineList() ){
       if (Objects.equals(orderLine.getProductId(), product.getId()))
         quantity = orderLine.getQuantity();

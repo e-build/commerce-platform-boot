@@ -1,6 +1,5 @@
 package com.ebuild.commerce.business.product.domain.entity;
 
-import com.ebuild.commerce.business.auth.domain.entity.AppUserRole;
 import com.google.common.collect.Lists;
 import java.util.List;
 import javax.persistence.Entity;
