@@ -42,9 +42,22 @@ public class OrderQueryRepository extends Querydsl4RepositorySupport {
 
   public Page<OrderResDto> search(OrderSearchCondition condition, Pageable pageable) {
     // Order 조회
-    JPAQuery<OrderResDto> contentsQuery = getContentsQuery(condition, pageable);
-    List<OrderResDto> contents = contentsQuery.fetch();
-    List<Long> orderIds = contents.stream().map(OrderResDto::getId).collect(Collectors.toList());
+    JPAQuery<OrderResDto> orderQuery = getOrderQuery(condition, pageable);
+    List<OrderResDto> contents = orderQuery.fetch();
+
+    // OrderProduct 조회 및 조합
+    List<Long> orderIds = contents.stream()
+        .map(OrderResDto::getId)
+        .collect(Collectors.toList());
+    List<OrderResDto> result = includeOrderProductList(condition, contents, orderIds);
+
+    return PageableExecutionUtils.getPage(result, pageable, () -> getCountQuery(condition).fetchOne());
+  }
+
+  private List<OrderResDto> includeOrderProductList(
+      OrderSearchCondition condition,
+      List<OrderResDto> contents,
+      List<Long> orderIds) {
 
     // OrderProduct 조회
     Map<Long, List<OrderProductResDto>> orderProductResDtoListMap =
@@ -52,19 +65,19 @@ public class OrderQueryRepository extends Querydsl4RepositorySupport {
         .stream()
         .collect(Collectors.groupingBy(OrderProductResDto::getOrderId));
 
-    // OrderResDto, OrderProductResDto 조합
+    // Order, OrderProduct 조합
     List<OrderResDto> result = Lists.newArrayList();
     for (Long orderId : orderProductResDtoListMap.keySet()) {
-      for (OrderResDto o : contents) {
-        if (Objects.equals(o.getId(), orderId)) {
-          o.setOrderProductList(orderProductResDtoListMap.get(o.getId()));
-          result.add(o);
+      for (OrderResDto order : contents) {
+        if (Objects.equals(order.getId(), orderId)) {
+          order.setOrderProductList(orderProductResDtoListMap.get(order.getId()));
+          result.add(order);
           break;
         }
       }
     }
 
-    return PageableExecutionUtils.getPage(result, pageable, () -> getCountQuery(condition).fetchOne());
+    return result;
   }
 
   private JPAQuery<Long> getCountQuery(OrderSearchCondition condition) {
@@ -87,40 +100,6 @@ public class OrderQueryRepository extends Querydsl4RepositorySupport {
             paymentDateTimeLoe(condition.getPaymentDateTimeLoe()),
             productNameContains(condition.getProductName())
         );
-  }
-
-  private JPAQuery<OrderResDto> getContentsQuery(
-      OrderSearchCondition condition, Pageable pageable) {
-
-    QOrderProduct op = new QOrderProduct("op");
-    return select(
-        new QOrderResDto(
-            order.id,
-            order.orderStatus,
-            select(op.saleAmount.sum())
-                .from(op)
-                .where(op.order.eq(order)),
-            order.payment.paymentAmounts,
-            order.orderDate,
-            order.payment)
-        )
-        .from(order)
-        .join(order.buyer, buyer)
-        .join(buyer.appUserDetails, appUserDetails)
-        .where(
-            orderStatusIn(condition.getOrderStatusList()),
-            buyerIdEq(condition.getBuyerId()),
-            buyerEmailEq(condition.getBuyerEmail()),
-            paymentMeansIn(condition.getPaymentMeansList()),
-            paymentAmountsGoe(condition.getPaymentAmountsGoe()),
-            paymentAmountsLoe(condition.getPaymentAmountsLoe()),
-            orderDateGoe(condition.getOrderDateGoe()),
-            orderDateLoe(condition.getOrderDateLoe()),
-            paymentDateTimeGoe(condition.getPaymentDateTimeGoe()),
-            paymentDateTimeLoe(condition.getPaymentDateTimeLoe())
-        )
-        .offset(pageable.getOffset())
-        .limit(pageable.getPageSize());
   }
 
   private List<OrderProductResDto> getOrderProductList(
@@ -148,7 +127,40 @@ public class OrderQueryRepository extends Querydsl4RepositorySupport {
         .fetch();
   }
 
-  private Predicate orderIdIn(List<Long> orderIds) {
+  private JPAQuery<OrderResDto> getOrderQuery(
+      OrderSearchCondition condition, Pageable pageable) {
+    QOrderProduct op = new QOrderProduct("op");
+    return select(
+        new QOrderResDto(
+            order.id,
+            order.orderStatus,
+            select(op.saleAmount.sum())
+                .from(op)
+                .where(op.order.eq(order)),
+            order.payment.paymentAmounts,
+            order.orderDate,
+            order.payment)
+    )
+        .from(order)
+        .join(order.buyer, buyer)
+        .join(buyer.appUserDetails, appUserDetails)
+        .where(
+            orderStatusIn(condition.getOrderStatusList()),
+            buyerIdEq(condition.getBuyerId()),
+            buyerEmailEq(condition.getBuyerEmail()),
+            paymentMeansIn(condition.getPaymentMeansList()),
+            paymentAmountsGoe(condition.getPaymentAmountsGoe()),
+            paymentAmountsLoe(condition.getPaymentAmountsLoe()),
+            orderDateGoe(condition.getOrderDateGoe()),
+            orderDateLoe(condition.getOrderDateLoe()),
+            paymentDateTimeGoe(condition.getPaymentDateTimeGoe()),
+            paymentDateTimeLoe(condition.getPaymentDateTimeLoe())
+        )
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize());
+  }
+
+  private BooleanExpression orderIdIn(List<Long> orderIds) {
     return !CollectionUtils.isEmpty(orderIds) ? orderProduct.order.id.in(orderIds) : null;
   }
 

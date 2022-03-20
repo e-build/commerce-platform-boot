@@ -43,8 +43,8 @@ public class ProductQueryRepository {
         .from(product)
         .join(product.company, company)
         .where(
-            nameEq(condition.getName())
-            , companyNameEq(condition.getCompanyName())
+            nameContains(condition.getName())
+            , companyNameContains(condition.getCompanyName())
             , normalAmountGoe(condition.getNormalAmountGoe())
             , normalAmountLoe(condition.getNormalAmountLoe())
             , saleAmountGoe(condition.getSaleAmountGoe())
@@ -64,8 +64,8 @@ public class ProductQueryRepository {
         .from(product)
         .join(product.company, company)
         .where(
-            nameEq(condition.getName())
-            , companyNameEq(condition.getCompanyName())
+            nameContains(condition.getName())
+            , companyNameContains(condition.getCompanyName())
             , normalAmountGoe(condition.getNormalAmountGoe())
             , normalAmountLoe(condition.getNormalAmountLoe())
             , saleAmountGoe(condition.getSaleAmountGoe())
@@ -116,12 +116,12 @@ public class ProductQueryRepository {
     return normalAmountGoe != null ? product.normalAmount.goe(normalAmountGoe) : null;
   }
 
-  private BooleanExpression nameEq(String name) {
-    return isNotBlank(name) ? product.name.equalsIgnoreCase(name) : null;
+  private BooleanExpression nameContains(String name) {
+    return isNotBlank(name) ? product.name.contains(name) : null;
   }
 
-  private BooleanExpression companyNameEq(String companyName) {
-    return isNotBlank(companyName) ? company.name.equalsIgnoreCase(companyName) : null;
+  private BooleanExpression companyNameContains(String companyName) {
+    return isNotBlank(companyName) ? company.name.contains(companyName) : null;
   }
 
   private BooleanExpression categoryIdIn(List<Long> categoryIdList) {
