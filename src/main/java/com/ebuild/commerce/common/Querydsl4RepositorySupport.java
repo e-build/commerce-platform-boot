@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.Querydsl;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
-import org.springframework.data.repository.support.PageableExecutionUtils;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -82,20 +82,16 @@ public abstract class Querydsl4RepositorySupport {
   protected <T> Page<T> applyPagination(Pageable pageable,
       Function<JPAQueryFactory, JPAQuery> contentQuery) {
     JPAQuery jpaQuery = contentQuery.apply(getQueryFactory());
-    List<T> content = getQuerydsl().applyPagination(pageable,
-        jpaQuery).fetch();
-    return PageableExecutionUtils.getPage(content, pageable,
-        jpaQuery::fetchCount);
+    List<T> content = getQuerydsl().applyPagination(pageable, jpaQuery).fetch();
+    return PageableExecutionUtils.getPage(content, pageable, jpaQuery::fetchCount);
   }
 
   protected <T> Page<T> applyPagination(Pageable pageable,
-      Function<JPAQueryFactory, JPAQuery> contentQuery, Function<JPAQueryFactory,
-      JPAQuery> countQuery) {
+      Function<JPAQueryFactory, JPAQuery> contentQuery,
+      Function<JPAQueryFactory, JPAQuery> countQuery) {
     JPAQuery jpaContentQuery = contentQuery.apply(getQueryFactory());
-    List<T> content = getQuerydsl().applyPagination(pageable,
-        jpaContentQuery).fetch();
+    List<T> content = getQuerydsl().applyPagination(pageable, jpaContentQuery).fetch();
     JPAQuery countResult = countQuery.apply(getQueryFactory());
-    return PageableExecutionUtils.getPage(content, pageable,
-        countResult::fetchCount);
+    return PageableExecutionUtils.getPage(content, pageable, countResult::fetchCount);
   }
 }
