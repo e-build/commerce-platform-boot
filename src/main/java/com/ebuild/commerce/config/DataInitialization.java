@@ -80,6 +80,7 @@ public class DataInitialization {
       em.persist(category1_3);
       em.persist(category2);
       em.persist(category2_1);
+      em.persist(category2_2);
       em.flush();
       em.clear();
 
