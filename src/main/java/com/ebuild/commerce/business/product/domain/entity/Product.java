@@ -46,6 +46,7 @@ public class Product extends BaseEntity {
   private ProductStatus productStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
   private Category category;
 
   private Long normalAmount;
@@ -65,9 +66,12 @@ public class Product extends BaseEntity {
   @JoinColumn(name = "company_id")
   private Company company;
 
-  public static Product create(JpaProductRepository jpaProductRepository, Company company, Category category, ProductSaveReqDto productSaveReqDto) {
-    if ( isExists(jpaProductRepository, company, productSaveReqDto) )
+  public static Product create(
+      JpaProductRepository jpaProductRepository, Company company,
+      Category category, ProductSaveReqDto productSaveReqDto) {
+    if (isExists(jpaProductRepository, company, productSaveReqDto)) {
       throw new AlreadyExistsException(productSaveReqDto.getProduct().getName(), "상품명");
+    }
 
     Product product = productSaveReqDto.toEntity();
     product.registerCompany(company);
@@ -75,10 +79,12 @@ public class Product extends BaseEntity {
     return product;
   }
 
-  public void update(JpaProductRepository jpaProductRepository, Company company, Category category, ProductSaveReqDto productSaveReqDto) {
-    if ( isExists(jpaProductRepository, company, productSaveReqDto)
-        && !isSameProduct(productSaveReqDto.getProduct().getId()) )
+  public void update(JpaProductRepository jpaProductRepository, Company company, Category category,
+      ProductSaveReqDto productSaveReqDto) {
+    if (isExists(jpaProductRepository, company, productSaveReqDto)
+        && !isSameProduct(productSaveReqDto.getProduct().getId())) {
       throw new AlreadyExistsException(productSaveReqDto.getProduct().getName(), "상품명");
+    }
 
     this.name = productSaveReqDto.getProduct().getName();
     this.productStatus = ProductStatus.fromValue(productSaveReqDto.getProduct().getProductStatus());
@@ -94,7 +100,7 @@ public class Product extends BaseEntity {
     return Objects.equals(this.id, targetProductId);
   }
 
-  public void registerCompany(Company company){
+  public void registerCompany(Company company) {
     this.company = company;
   }
 
@@ -126,7 +132,7 @@ public class Product extends BaseEntity {
     this.company = company;
   }
 
-  public void changeSaleStatus(ProductStatus productStatus){
+  public void changeSaleStatus(ProductStatus productStatus) {
     this.productStatus = productStatus;
   }
 

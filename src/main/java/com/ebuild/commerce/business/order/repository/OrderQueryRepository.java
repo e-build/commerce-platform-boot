@@ -2,10 +2,10 @@ package com.ebuild.commerce.business.order.repository;
 
 import static com.ebuild.commerce.business.auth.domain.entity.QAppUserDetails.appUserDetails;
 import static com.ebuild.commerce.business.buyer.domain.QBuyer.buyer;
-import static com.ebuild.commerce.business.delivery.domain.entity.QDelivery.*;
+import static com.ebuild.commerce.business.delivery.domain.entity.QDelivery.delivery;
 import static com.ebuild.commerce.business.order.domain.entity.QOrder.order;
 import static com.ebuild.commerce.business.orderProduct.domain.entity.QOrderProduct.orderProduct;
-import static com.ebuild.commerce.business.product.domain.entity.QProduct.*;
+import static com.ebuild.commerce.business.product.domain.entity.QProduct.product;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import com.ebuild.commerce.business.order.controller.dto.OrderResDto;
@@ -19,7 +19,6 @@ import com.ebuild.commerce.business.orderProduct.domain.entity.OrderStatus;
 import com.ebuild.commerce.business.orderProduct.domain.entity.QOrderProduct;
 import com.ebuild.commerce.common.Querydsl4RepositorySupport;
 import com.google.common.collect.Lists;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import java.time.LocalDateTime;

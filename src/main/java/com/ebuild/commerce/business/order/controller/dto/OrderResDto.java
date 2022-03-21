@@ -45,13 +45,15 @@ public class OrderResDto {
   }
 
   @Builder
-  public OrderResDto(Long id,
-      OrderStatus orderStatus,
+  public OrderResDto(Long id, OrderStatus orderStatus,
       List<OrderProductResDto> orderProductList,
+      Long totalSaleAmount, Long totalPayAmount,
       LocalDateTime orderDate, Payment payment) {
     this.id = id;
     this.orderStatus = orderStatus;
     this.orderProductList = orderProductList;
+    this.totalSaleAmount = totalSaleAmount;
+    this.totalPayAmount = totalPayAmount;
     this.orderDate = orderDate;
     this.payment = payment;
   }
@@ -61,7 +63,8 @@ public class OrderResDto {
         .id(order.getId())
         .orderStatus(order.getOrderStatus())
 //        .address(order.getBuyer().getReceivingAddress())
-        .orderProductList(order.getOrderProductList()
+        .orderProductList(
+            order.getOrderProductList()
             .stream()
             .map(OrderProductResDto::of)
             .collect(Collectors.toList()))

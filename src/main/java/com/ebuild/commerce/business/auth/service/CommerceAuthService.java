@@ -23,6 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class CommerceAuthService {
   private final JpaRefreshTokenRepository jpaRefreshTokenRepository;
   private final JWTProvider jwtProvider;
 
+  @Transactional
   public LoginResDto login(LoginReqDto loginReqDto) {
     Authentication authentication = authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
@@ -48,8 +50,15 @@ public class CommerceAuthService {
     LoginResDto loginResDto = LoginResDto.of(jwtProvider, appUserDetails);
 
     // Refresh 토큰 저장
-    jpaRefreshTokenRepository.save(new AppRefreshToken(appUserDetails.getEmail(), loginResDto.getToken().getRefreshToken()));
-//    redisService.setRefreshToken(appUserDetails, loginResDto.getToken().getRefreshToken()));
+    String refreshToken = loginResDto.getToken().getRefreshToken();
+    AppRefreshToken appRefreshToken = jpaRefreshTokenRepository.findByUserId(
+            appUserDetails.getEmail())
+        .orElseGet(() ->
+            jpaRefreshTokenRepository.save(
+                new AppRefreshToken(appUserDetails.getEmail(), refreshToken))
+        );
+    appRefreshToken.setRefreshToken(refreshToken);
+
     return loginResDto;
   }
 

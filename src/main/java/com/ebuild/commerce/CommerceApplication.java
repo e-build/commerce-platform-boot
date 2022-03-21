@@ -7,11 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@EnableConfigurationProperties({
-    CorsProperties.class,
-    AppProperties.class
-})
-@EnableJpaAuditing
 @SpringBootApplication
 public class CommerceApplication {
 

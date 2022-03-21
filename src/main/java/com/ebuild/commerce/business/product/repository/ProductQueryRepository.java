@@ -81,6 +81,7 @@ public class ProductQueryRepository {
 
   private List<ProductResDto> contentsOrderBy(JPAQuery<ProductResDto> contenstQuery, Sort sort) {
     for (Sort.Order o : sort) {
+//      PathBuilder<Product> orderByExpression = new PathBuilder<>(Product.class, product.getMetadata()); // 동작 테스트 안해봄
       PathBuilder<Product> orderByExpression = new PathBuilder<>(Product.class, "product");
       contenstQuery.orderBy(
           new OrderSpecifier(

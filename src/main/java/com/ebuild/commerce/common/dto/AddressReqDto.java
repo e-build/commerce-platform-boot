@@ -2,9 +2,11 @@ package com.ebuild.commerce.common.dto;
 
 import com.ebuild.commerce.common.Address;
 import javax.validation.constraints.NotBlank;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+
+@Data
 public class AddressReqDto {
 
     @NotBlank

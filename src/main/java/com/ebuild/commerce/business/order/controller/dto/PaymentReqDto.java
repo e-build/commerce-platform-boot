@@ -1,5 +1,6 @@
 package com.ebuild.commerce.business.order.controller.dto;
 
+import com.ebuild.commerce.business.order.domain.entity.Payment;
 import com.ebuild.commerce.business.order.domain.entity.PaymentMeans;
 import com.ebuild.commerce.common.validation.Enum;
 import java.time.LocalDateTime;
@@ -16,5 +17,14 @@ public class PaymentReqDto {
   private Long paymentAmounts;
   @NotNull
   private LocalDateTime paymentDateTime;
+
+  public Payment toEntity() {
+    return Payment.builder()
+        .paymentMeans(PaymentMeans.fromValue(getPaymentMeans()))
+        .cardVendor(getCardVendor())
+        .paymentAmounts(getPaymentAmounts())
+         .paymentDateTime(getPaymentDateTime())
+        .build();
+  }
 
 }

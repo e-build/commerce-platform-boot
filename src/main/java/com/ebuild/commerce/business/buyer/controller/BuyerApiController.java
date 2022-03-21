@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,9 +42,9 @@ public class BuyerApiController {
   @PostMapping("")
   public ResponseEntity<CommonResponse> buyerSignup(
       @RequestBody @Valid BuyerSaveReqDto buyerSaveReqDto) {
-    return ResponseEntity.ok(
-        CommonResponse.OK("buyer", buyerService.signup(buyerSaveReqDto))
-    );
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(CommonResponse.OK("buyer", buyerService.signup(buyerSaveReqDto)));
   }
 
   @PutMapping("/{buyerId}")
@@ -57,10 +58,7 @@ public class BuyerApiController {
 
   @GetMapping("/{buyerId}")
   public ResponseEntity<CommonResponse> findOne(
-      @PathVariable("buyerId") Long buyerId
-      , Principal principal) {
-    log.info("principal : {}", jsonHelper.serialize(principal));
-
+      @PathVariable("buyerId") Long buyerId) {
     return ResponseEntity.ok(
         CommonResponse.OK("buyer", buyerQueryService.findOneById(buyerId))
     );
@@ -72,14 +70,6 @@ public class BuyerApiController {
     buyerService.deleteOne(buyerId);
     return ResponseEntity.ok(
         CommonResponse.OK()
-    );
-  }
-
-  @GetMapping("")
-  public ResponseEntity<CommonResponse> search(
-      @RequestBody @Valid BuyerSearchReqDto buyerSearchReqDto) {
-    return ResponseEntity.ok(
-        CommonResponse.OK("buyer", buyerService.search(buyerSearchReqDto))
     );
   }
 

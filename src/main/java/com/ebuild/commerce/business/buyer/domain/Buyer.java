@@ -47,7 +47,8 @@ public class Buyer extends BaseEntity {
   private List<Order> orderList = Lists.newArrayList();
 
   @Builder
-  public Buyer(AppUserDetails appUserDetails, Address receivingAddress) {
+  public Buyer(Long id, AppUserDetails appUserDetails, Address receivingAddress) {
+    this.id = id;
     this.appUserDetails = appUserDetails;
     this.receivingAddress = receivingAddress;
     this.cart = Cart.newInstance();

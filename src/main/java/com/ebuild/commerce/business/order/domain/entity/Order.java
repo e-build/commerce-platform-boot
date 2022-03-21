@@ -82,9 +82,7 @@ public class Order extends BaseEntity {
     order.buyer = cart.getBuyer();
     order.orderStatus = OrderStatus.PAYED;
     order.orderDate = LocalDateTime.now();
-    order.payment = Payment.builder()
-        .paymentReqDto(baseOrderCreateReqDto.getPayment())
-        .build();
+    order.payment = baseOrderCreateReqDto.getPayment().toEntity();
     order.orderProductList = cart.getCartLineList()
         .stream()
         .map(cartLine ->
@@ -108,9 +106,7 @@ public class Order extends BaseEntity {
     order.buyer = buyer;
     order.orderStatus = OrderStatus.PAYED;
     order.orderDate = LocalDateTime.now();
-    order.payment = Payment.builder()
-        .paymentReqDto(baseOrderInfo.getPayment())
-        .build();
+    order.payment = baseOrderInfo.getPayment().toEntity();
     order.orderProductList = products.stream()
         .map(product ->
             OrderProduct.of(

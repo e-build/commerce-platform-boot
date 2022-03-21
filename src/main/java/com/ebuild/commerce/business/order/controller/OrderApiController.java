@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,9 +38,14 @@ public class OrderApiController {
       @CurrentUser UserSubject userSubject,
       @RequestBody @Valid DirectOrderReqDto directOrderReqDto) {
 
-    return ResponseEntity.ok(
-        CommonResponse.OK("order", orderService.createOrder(userSubject.getEmail(), directOrderReqDto))
-    );
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(
+            CommonResponse.OK(
+                "order",
+                orderService.createOrder(userSubject.getEmail(), directOrderReqDto)
+            )
+        );
   }
 
   // 주문 리스트 조회 (페이징)
@@ -54,5 +60,4 @@ public class OrderApiController {
   }
 
   // 주문 상세 조회
-
 }

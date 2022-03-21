@@ -1,6 +1,5 @@
 package com.ebuild.commerce.business.order.domain.entity;
 
-import com.ebuild.commerce.business.order.controller.dto.PaymentReqDto;
 import java.time.LocalDateTime;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -22,10 +21,12 @@ public class Payment {
   private LocalDateTime paymentDateTime;
 
   @Builder
-  public Payment(PaymentReqDto paymentReqDto) {
-    this.paymentMeans = PaymentMeans.fromValue(paymentReqDto.getPaymentMeans());
-    this.cardVendor = paymentReqDto.getCardVendor();
-    this.paymentAmounts = paymentReqDto.getPaymentAmounts();
-    this.paymentDateTime = paymentReqDto.getPaymentDateTime();
+  public Payment(PaymentMeans paymentMeans, String cardVendor, Long paymentAmounts,
+      LocalDateTime paymentDateTime) {
+    this.paymentMeans = paymentMeans;
+    this.cardVendor = cardVendor;
+    this.paymentAmounts = paymentAmounts;
+    this.paymentDateTime = paymentDateTime;
   }
+
 }
