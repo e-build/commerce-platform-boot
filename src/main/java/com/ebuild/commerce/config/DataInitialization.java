@@ -47,10 +47,9 @@ public class DataInitialization {
   @Component
   @Transactional
   @RequiredArgsConstructor
-  static class DataInitService {
+  public static class DataInitService {
 
     private final EntityManager em;
-    private final PasswordEncoder passwordEncoder;
 
     public void init() {
 //      em.clear();

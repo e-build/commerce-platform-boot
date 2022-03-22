@@ -58,15 +58,15 @@ public class AppUserDetails implements UserDetails{
   }
 
   @JsonIgnore
-  @OneToOne
+  @OneToOne(mappedBy = "appUserDetails")
   private Buyer buyer;
 
   @JsonIgnore
-  @OneToOne
+  @OneToOne(mappedBy = "appUserDetails")
   private Seller seller;
 
   @JsonIgnore
-  @OneToOne
+  @OneToOne(mappedBy = "appUserDetails")
   private Admin admin;
 
   @Column(unique = true)
