@@ -31,8 +31,11 @@ public class BuyerService {
 
   public BuyerResDto signup(BuyerSaveReqDto buyerSaveReqDto) {
     String email = buyerSaveReqDto.getAppUserDetails().getEmail();
-    Buyer existUser= buyerQueryService.findByEmail(email);
-    if (!Objects.isNull(existUser))
+    boolean alreadyExists = jpaBuyerRepository
+        .findByEmail(email)
+        .isPresent();
+
+    if ( alreadyExists )
       throw new AlreadyExistsException(email, "이메일");
 
     // 권한 부여
@@ -54,10 +57,10 @@ public class BuyerService {
         .receivingAddress(buyerSaveReqDto.getReceiveAddress().get())
         .build();
 
-    jpaBuyerRepository.save(buyer);
+    Buyer savedBuyer = jpaBuyerRepository.save(buyer);
 
     return BuyerResDto.builder()
-        .buyer(buyer)
+        .buyer(savedBuyer)
         .build();
   }
 
@@ -77,10 +80,6 @@ public class BuyerService {
             .findById(buyerId)
             .orElseThrow(()->new NotFoundException(String.valueOf(buyerId), "사용자"))
     );
-  }
-
-  public BuyerSearchResDto search(BuyerSearchReqDto buyerSearchReqDto) {
-    return null;
   }
 
 }
