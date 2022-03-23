@@ -1,7 +1,5 @@
 
 spring:
-  profiles:
-    active: test
 
   application:
     name: e-commerce-platform
@@ -68,7 +66,7 @@ spring:
       fail-on-empty-beans: false
 
   redis:
-    host: 127.0.0.1
+    host: 172.17.0.4
     port: 6379
 
 # 로깅 설정
