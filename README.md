@@ -20,7 +20,9 @@
 1. 유지보수 용이한 코드 작성
    * 객체 지향 설계 5원칙과 객체지향 특성을 고려한 설계 고민
    * [리팩토링 정량적 원칙](https://github.com/e-build/commerce-platform-boot/wiki/5.-Techical-Issue) 에 따른 코드 작성
-   * Java, Git 컨벤션과 Git Flow에 따른 개발 진행
+   * [Java](https://newwisdom.tistory.com/96), 
+   [Git Commit 컨벤션](https://overcome-the-limits.tistory.com/entry/%ED%98%91%EC%97%85-%ED%98%91%EC%97%85%EC%9D%84-%EC%9C%84%ED%95%9C-%EA%B8%B0%EB%B3%B8%EC%A0%81%EC%9D%B8-git-%EC%BB%A4%EB%B0%8B%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0) 과 
+   [Git Flow](https://hellowoori.tistory.com/56) 에 따른 개발 진행
     
 2. 대용량 트래픽을 고려한 아키텍처
    * [시스템 구성](https://github.com/e-build/commerce-platform-boot/wiki/2.-Architecture#%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B5%AC%EC%84%B1)
@@ -39,7 +41,9 @@
    * 프로젝트 구축 이후 유지보수 단계에서는 자동화된 API 문서 업데이트를 위하여 Spring RestDocs를 적용했습니다.
 
 5. CI/CD를 구축을 통한 개발 효율성 향상
-   * 다수의 개발자가 하나의 서비스를 개발해나가는 환경에서는 각자의 코드를 머지하고 충돌을 해결하고 테스트하고 빌드, 배포하는 과정에도 많은 리소스가 소요됩니다. 이러한 문제를 해결하기 위한 방법으로 CI/CD를 직접 구축하여 애자일한 개발 프로세스를 실현하기 위해 노력합니다.
+   * 협업하는 환경에서 각자의 코드를 통합, 배포하는 과정에도 많은 리소스가 소요됩니다. 
+   * 이러한 리소스를 최소화하기 위한 방법으로 젠킨스를 활용하여 CI/CD 시스템을 구축했습니다.
+   * 반복되는 업무에 대한 비용을 최소화하고 비즈니스 로직을 개발하는데 집중하도록 노력했습니다.
 
 6. 성능 테스트를 통한 성능 개선
    * 실제 서비스 환경에서 트래픽이 몰리는 경우 예상치 못한 문제들이 발생할 수 있기 때문에 성능 테스트 역시 반드시 병행되어야 합니다. 성능 테스트를 통해 병목 지점을 개선하고 컴퓨팅 자원을 더 효율적을 활용할 수 있는 방안들을 고민하여 성능을 향상시키기 위해 노력합니다. 
