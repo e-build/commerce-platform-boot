@@ -26,9 +26,14 @@ pipeline {
                 sh 'ls -al'
             }
         }
+        stage('Test') {
+            steps {
+                sh './gradlew clean test'
+            }
+        }
         stage('Build Jar') {
             steps {
-                sh './gradlew clean build'
+                sh './gradlew clean build -x test'
             }
         }
         stage('Check') {

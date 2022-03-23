@@ -62,9 +62,9 @@ jar {
     enabled = false
 }
 
-//test {
-//    useJUnitPlatform()
-//}
+test {
+    useJUnitPlatform()
+}
 
 //querydsl 추가 시작
 def querydslDir = "$buildDir/generated/querydsl"
