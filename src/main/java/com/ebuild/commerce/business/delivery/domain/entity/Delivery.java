@@ -36,8 +36,7 @@ public class Delivery extends BaseEntity {
   private DeliveryStatus deliveryStatus;
 
   @JsonIgnore
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "order_product_id")
+  @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
   private OrderProduct orderProduct;
 
   @Embedded
