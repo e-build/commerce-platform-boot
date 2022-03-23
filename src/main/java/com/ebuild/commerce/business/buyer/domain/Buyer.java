@@ -33,6 +33,7 @@ public class Buyer extends BaseEntity {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name="app_user_details_id", nullable = false)
   private AppUserDetails appUserDetails;
 
   @Embedded

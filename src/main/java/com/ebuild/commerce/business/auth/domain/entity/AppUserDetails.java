@@ -42,7 +42,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AppUserDetails implements UserDetails{
+public class AppUserDetails implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +51,7 @@ public class AppUserDetails implements UserDetails{
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<AppUserRole> roleList = Lists.newArrayList();
 
-  public List<String> mapRoleToString(){
+  public List<String> mapRoleToString() {
     return roleList.stream()
         .map(appUserRole -> appUserRole.getRole().getName().getCode())
         .collect(Collectors.toList());
@@ -111,7 +111,8 @@ public class AppUserDetails implements UserDetails{
   private Boolean enabled = true;
 
   @Builder
-  public AppUserDetails(String email, String password, String nickname, String phoneNumber, ProviderType providerType){
+  public AppUserDetails(String email, String password,
+      String nickname, String phoneNumber, ProviderType providerType) {
     this.email = email;
     this.password = password;
     this.nickname = nickname;
@@ -119,22 +120,22 @@ public class AppUserDetails implements UserDetails{
     this.providerType = providerType;
   }
 
-  public void addRoles(Role... roles){
+  public void addRoles(Role... roles) {
     if (isEmpty(this.roleList)) {
       this.roleList = Lists.newArrayList();
     }
 
     this.roleList.addAll(Arrays.stream(roles)
-            .map(r ->
-                AppUserRole.builder()
-                    .appUserDetails(this)
-                    .role(r)
-                    .build()
-            ).collect(Collectors.toList())
+        .map(r ->
+            AppUserRole.builder()
+                .appUserDetails(this)
+                .role(r)
+                .build()
+        ).collect(Collectors.toList())
     );
   }
 
-  public void update(AppUserDetailsSaveReqDto dto){
+  public void update(AppUserDetailsSaveReqDto dto) {
     this.nickname = dto.getNickname();
     this.phoneNumber = dto.getPhoneNumber();
   }
@@ -181,14 +182,19 @@ public class AppUserDetails implements UserDetails{
   }
 
   public void modifyOauthInfo(OAuth2UserInfo oAuth2UserInfo) {
-    if (oAuth2UserInfo.getName() != null && !StringUtils.equals(oAuth2UserInfo.getName(), this.nickname))
+    if (oAuth2UserInfo.getName() != null && !StringUtils.equals(oAuth2UserInfo.getName(),
+        this.nickname)) {
       this.nickname = oAuth2UserInfo.getName();
+    }
 
-    if (oAuth2UserInfo.getImageUrl() != null && !StringUtils.equals(oAuth2UserInfo.getImageUrl(), this.profileImageUrl))
+    if (oAuth2UserInfo.getImageUrl() != null && !StringUtils.equals(oAuth2UserInfo.getImageUrl(),
+        this.profileImageUrl)) {
       this.profileImageUrl = oAuth2UserInfo.getImageUrl();
+    }
   }
 
-  public static AppUserDetails newInstanceByOauth(OAuth2UserInfo userInfo, ProviderType providerType){
+  public static AppUserDetails newInstanceByOauth(OAuth2UserInfo userInfo,
+      ProviderType providerType) {
     AppUserDetails appUserDetails = AppUserDetails.builder()
         .email(userInfo.getEmail())
         .nickname(userInfo.getName())

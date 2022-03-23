@@ -51,11 +51,11 @@ public class CommerceAuthService {
 
     // Refresh 토큰 저장
     String refreshToken = loginResDto.getToken().getRefreshToken();
-    AppRefreshToken appRefreshToken = jpaRefreshTokenRepository.findByUserId(
+    AppRefreshToken appRefreshToken = jpaRefreshTokenRepository.findByEmail(
             appUserDetails.getEmail())
         .orElseGet(() ->
             jpaRefreshTokenRepository.save(
-                new AppRefreshToken(appUserDetails.getEmail(), refreshToken))
+                new AppRefreshToken(appUserDetails, refreshToken))
         );
     appRefreshToken.setRefreshToken(refreshToken);
 
@@ -79,7 +79,9 @@ public class CommerceAuthService {
     LoginResDto loginResDto = LoginResDto.of(jwtProvider, appUserDetails);
 
     // Refresh 토큰 저장
-    jpaRefreshTokenRepository.save(new AppRefreshToken(appUserDetails.getEmail(), loginResDto.getToken().getRefreshToken()));
+    jpaRefreshTokenRepository.save(
+        new AppRefreshToken(appUserDetails, loginResDto.getToken().getRefreshToken())
+    );
 //    redisService.setRefreshToken(appUserDetails, loginResDto.getToken().getRefreshToken());
     return loginResDto;
   }
@@ -112,7 +114,7 @@ public class CommerceAuthService {
 
     // 저장되어있는 Refresh Token 조회
     String email = refreshJwt.resolveEmail();
-    AppRefreshToken savedAppRefreshToken = jpaRefreshTokenRepository.findByUserId(email)
+    AppRefreshToken savedAppRefreshToken = jpaRefreshTokenRepository.findByEmail(email)
         .orElseThrow(() -> new ReAuthenticateRequiredException(ReAuthReasonType.NO_TOKEN_STORED));
 
     // Refresh Token 동일여부 비교
