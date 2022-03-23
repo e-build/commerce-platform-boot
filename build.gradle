@@ -9,6 +9,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" //querydsl 추가
     id 'java'
+    id 'jacoco'
+
 }
 
 group = 'com.ebuild'
@@ -23,6 +25,36 @@ configurations {
 
 repositories {
     mavenCentral()
+}
+
+jacoco {
+    toolVersion = "0.8.5"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = true
+            element = 'CLASS'
+            // includes = []
+
+//            limit {
+//                counter = 'LINE'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.60
+//            }
+            excludes = []
+        }
+    }
 }
 
 dependencies {
