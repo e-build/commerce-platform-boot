@@ -21,10 +21,10 @@
    * 객체 지향 설계 5원칙과 객체지향 특성을 고려한 설계 고민
    * [리팩토링 정량적 원칙](https://github.com/e-build/commerce-platform-boot/wiki/5.-Techical-Issue) 에 따른 코드 작성
    * Java, Git 컨벤션과 Git Flow에 따른 개발 진행
-   
+    
 2. 대용량 트래픽을 고려한 아키텍처
-   * [시스템 구성]()
-   * [ERD]()
+   * [시스템 구성](https://github.com/e-build/commerce-platform-boot/wiki/2.-Architecture#%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B5%AC%EC%84%B1)
+   * [ERD](https://github.com/e-build/commerce-platform-boot/wiki/2.-Architecture#erd)
 
 3. 테스트 코드 작성
    * 레이어 아키텍처별 테스트 코드 작성

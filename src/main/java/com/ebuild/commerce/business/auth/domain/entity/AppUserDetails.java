@@ -48,7 +48,7 @@ public class AppUserDetails implements UserDetails {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "appUserDetails", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<AppUserRole> roleList = Lists.newArrayList();
 
   public List<String> mapRoleToString() {
