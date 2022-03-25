@@ -44,7 +44,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  public static final String[] PERMIT_ALL_URI_ARRAY = {"/api/v1/auth/**", "/oauth/redirect", "/error"};
+  public static final String[] PERMIT_ALL_URI_ARRAY = {"/api/v1/auth/**", "/oauth/redirect", "/error", "/test/**"};
 
   private final CorsProperties corsProperties;
   private final AppProperties appProperties;
