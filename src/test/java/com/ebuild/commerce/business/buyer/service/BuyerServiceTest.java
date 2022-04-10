@@ -1,8 +1,8 @@
 package com.ebuild.commerce.business.buyer.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import com.ebuild.commerce.business.auth.controller.dto.AppUserDetailsSaveReqDto;
 import com.ebuild.commerce.business.auth.domain.entity.AppUserDetails;
@@ -18,14 +18,11 @@ import com.ebuild.commerce.common.dto.AddressReqDto;
 import com.ebuild.commerce.oauth.domain.ProviderType;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
